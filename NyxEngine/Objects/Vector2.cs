@@ -1,4 +1,4 @@
-﻿namespace NyxEngine
+﻿namespace NyxEngine.Objects
 {
     public class Vector2
     {

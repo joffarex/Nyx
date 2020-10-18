@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using NyxEngine.Objects;
 using NyxEngine.Utils;
 
 namespace NyxEngine

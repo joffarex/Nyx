@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using NyxEngine.Utils;
+using NyxEngine.Objects;
 
 namespace NyxEngine
 {

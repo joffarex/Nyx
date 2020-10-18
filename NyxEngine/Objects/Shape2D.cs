@@ -1,6 +1,6 @@
 ﻿using NyxEngine.Utils;
 
-namespace NyxEngine
+namespace NyxEngine.Objects
 {
     public class Shape2D
     {
