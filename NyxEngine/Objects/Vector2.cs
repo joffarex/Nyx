@@ -1,10 +1,9 @@
-﻿namespace NyxEngine.Objects
-{
-    public class Vector2
-    {
-        public float X { get; set; }
-        public float Y { get; set; }
+﻿using System;
 
+namespace NyxEngine.Objects
+{
+    public class Vector2 : Disposable
+    {
         public Vector2()
         {
             X = Zero().X;
@@ -17,9 +16,30 @@
             Y = y;
         }
 
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        ~Vector2()
+        {
+            Dispose(false);
+        }
+
         public static Vector2 Zero()
         {
             return new Vector2(0, 0);
+        }
+
+        public override void Dispose()
+        {
+            try
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            finally
+            {
+                base.Dispose(true);
+            }
         }
     }
 }
