@@ -10,20 +10,21 @@ namespace NyxEngine
         {
         }
 
-        public override void OnLoad()
+        protected override void OnLoad()
         {
             Console.WriteLine("Loaded...");
             BackgroundColor = Color.BlueViolet;
         }
 
         private int frame = 0;
-        public override void OnUpdate()
+
+        protected override void OnUpdate()
         {
             Console.WriteLine($"Frames: {frame}");
             frame++;
         }
 
-        public override void OnDraw()
+        protected override void OnDraw()
         {
         }
     }

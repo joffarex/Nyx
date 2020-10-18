@@ -12,14 +12,14 @@ namespace NyxEngine
         private Canvas _window;
         private Thread _gameLoopThread;
 
-        public Color BackgroundColor = Color.Aqua;
+        protected Color BackgroundColor = Color.Aqua;
 
-        public NyxEngine()
+        protected NyxEngine()
         {
             CreateWindow();
         }
 
-        public NyxEngine(Vector2 screenSize, string title)
+        protected NyxEngine(Vector2 screenSize, string title)
         {
             _screenSize = screenSize;
             _title = title;
@@ -66,8 +66,8 @@ namespace NyxEngine
             g.Clear(BackgroundColor);
         }
 
-        public abstract void OnLoad();
-        public abstract void OnUpdate();
-        public abstract void OnDraw();
+        protected abstract void OnLoad();
+        protected abstract void OnUpdate();
+        protected abstract void OnDraw();
     }
 }
