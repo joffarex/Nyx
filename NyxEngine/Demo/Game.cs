@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using NyxEngine.Objects;
 
 namespace NyxEngine.Demo
@@ -18,7 +19,7 @@ namespace NyxEngine.Demo
             {".", ".", ".", "#", ".", "."}
         };
 
-        public Sprite2D Player;
+        public Player Player;
 
         public Game() : base(ScreenSize, "Demo")
         {
@@ -33,7 +34,7 @@ namespace NyxEngine.Demo
 
             var (scaleX, scaleY) =
                 new Tuple<float, float>(ScreenSize.X / Map.GetLength(0), ScreenSize.Y / Map.GetLength(1));
-            
+
             for (var i = 0; i < Map.GetLength(0); i++)
             for (var j = 0; j < Map.GetLength(1); j++)
                 if (Map[j, i] == "#")
@@ -41,6 +42,8 @@ namespace NyxEngine.Demo
                     var sprite = new Sprite2D(new Vector2(i * 40, j * 40), new Vector2(40, 40),
                         "Block.png");
                 }
+
+            Player = new Player(new Vector2(10, 10), new Vector2(20, 20), $"{nameof(Player)}.png");
         }
 
         protected override void OnUpdate()
@@ -48,6 +51,14 @@ namespace NyxEngine.Demo
         }
 
         protected override void OnDraw()
+        {
+        }
+
+        protected override void GetKeyDown(KeyEventArgs e)
+        {
+        }
+
+        protected override void GetKeyUp(KeyEventArgs e)
         {
         }
     }
