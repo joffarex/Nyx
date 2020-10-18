@@ -2,7 +2,7 @@
 using System.Drawing;
 using NyxEngine.Objects;
 
-namespace NyxEngine
+namespace NyxEngine.Demo
 {
     public class Game : NyxEngine
     {
