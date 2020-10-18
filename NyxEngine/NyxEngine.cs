@@ -12,12 +12,16 @@ namespace NyxEngine
     {
         private static readonly List<Shape2D> Shapes = new List<Shape2D>();
         private static readonly List<Sprite2D> Sprites = new List<Sprite2D>();
+        private static readonly List<KinematicBody2D> KinematicBodies = new List<KinematicBody2D>();
+        private static Canvas _window;
         private readonly Vector2 _screenSize = new Vector2(512, 512);
         private readonly string _title = "New game";
         private Thread _gameLoopThread;
-        private Canvas _window;
 
         protected Color BackgroundColor = Color.Aqua;
+        public float CameraAngle = 0f;
+
+        public Vector2 CameraPosition = Vector2.Zero();
 
         protected NyxEngine()
         {
@@ -31,9 +35,6 @@ namespace NyxEngine
 
             CreateWindow();
         }
-        
-        public Vector2 CameraPosition = Vector2.Zero();
-        public float CameraAngle = 0f;
 
         private void CreateWindow()
         {
@@ -42,6 +43,8 @@ namespace NyxEngine
             _window.Size = new Size((int) _screenSize.X, (int) _screenSize.Y);
             _window.Text = _title;
             _window.Paint += Renderer;
+            _window.KeyDown += InputKeyDown;
+            _window.KeyUp += InputKeyUp;
 
             _gameLoopThread = new Thread(GameLoop);
             _gameLoopThread.Start();
@@ -85,19 +88,40 @@ namespace NyxEngine
             // Camera
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
-            
+
             foreach (var shape in Shapes)
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X,
                     shape.Scale.Y);
 
             foreach (var sprite in Sprites)
                 g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
-            
+
+            foreach (var kinematicBody in KinematicBodies)
+                g.DrawImage(kinematicBody.Sprite, kinematicBody.Position.X, kinematicBody.Position.Y,
+                    kinematicBody.Scale.X, kinematicBody.Scale.Y);
+        }
+
+        public static void SubscribeKinematicBodyKeyEvents(KinematicBody2D kinematicBody)
+        {
+            _window.KeyDown += kinematicBody.InputKeyDown;
+            _window.KeyUp += kinematicBody.InputKeyUp;
+        }
+
+        private void InputKeyUp(object sender, KeyEventArgs e)
+        {
+            GetKeyUp(e);
+        }
+
+        private void InputKeyDown(object sender, KeyEventArgs e)
+        {
+            GetKeyDown(e);
         }
 
         protected abstract void OnLoad();
         protected abstract void OnUpdate();
         protected abstract void OnDraw();
+        protected abstract void GetKeyDown(KeyEventArgs e);
+        protected abstract void GetKeyUp(KeyEventArgs e);
 
         public static void RegisterShape(Shape2D shape)
         {
@@ -117,6 +141,16 @@ namespace NyxEngine
         public static void UnregisterSprite(Sprite2D sprite)
         {
             Sprites.Remove(sprite);
+        }
+
+        public static void RegisterKinematicBody(KinematicBody2D kinematicBody)
+        {
+            KinematicBodies.Add(kinematicBody);
+        }
+
+        public static void UnregisterKinematicBody(KinematicBody2D kinematicBody)
+        {
+            KinematicBodies.Remove(kinematicBody);
         }
     }
 }
