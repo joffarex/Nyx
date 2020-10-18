@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -10,11 +9,11 @@ namespace NyxEngine
 {
     public abstract class NyxEngine
     {
-        private readonly Vector2 _screenSize = new Vector2(512, 512);
-        private string _title = "New game";
-        private Canvas _window;
-        private Thread _gameLoopThread;
         private static readonly List<Shape2D> Shapes = new List<Shape2D>();
+        private readonly Vector2 _screenSize = new Vector2(512, 512);
+        private Thread _gameLoopThread;
+        private readonly string _title = "New game";
+        private Canvas _window;
 
         protected Color BackgroundColor = Color.Aqua;
 
@@ -50,7 +49,6 @@ namespace NyxEngine
             OnLoad();
 
             while (_gameLoopThread.IsAlive)
-            {
                 try
                 {
                     OnDraw();
@@ -62,7 +60,6 @@ namespace NyxEngine
                 {
                     Logger.Error("Game has not been found...");
                 }
-            }
         }
 
         private void Renderer(object sender, PaintEventArgs e)
@@ -73,10 +70,8 @@ namespace NyxEngine
             g.Clear(BackgroundColor);
 
             foreach (var shape in Shapes)
-            {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X,
                     shape.Scale.Y);
-            }
         }
 
         protected abstract void OnLoad();
