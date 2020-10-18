@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using NyxEngine.Utils;
 
 namespace NyxEngine
 {
@@ -12,7 +13,7 @@ namespace NyxEngine
         private string _title = "New game";
         private Canvas _window;
         private Thread _gameLoopThread;
-        private static readonly List<Shape2D> _shapes = new List<Shape2D>();
+        private static readonly List<Shape2D> Shapes = new List<Shape2D>();
 
         protected Color BackgroundColor = Color.Aqua;
 
@@ -31,6 +32,7 @@ namespace NyxEngine
 
         private void CreateWindow()
         {
+            Logger.Info("Game is starting");
             _window = new Canvas();
             _window.Size = new Size((int) _screenSize.X, (int) _screenSize.Y);
             _window.Text = _title;
@@ -57,7 +59,7 @@ namespace NyxEngine
                 }
                 catch
                 {
-                    Console.WriteLine("Game is loading..");
+                    Logger.Error("Game has not been found...");
                 }
             }
         }
@@ -69,7 +71,7 @@ namespace NyxEngine
             // Change background color
             g.Clear(BackgroundColor);
 
-            foreach (var shape in _shapes)
+            foreach (var shape in Shapes)
             {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X,
                     shape.Scale.Y);
@@ -82,12 +84,12 @@ namespace NyxEngine
 
         public static void RegisterShape(Shape2D shape)
         {
-            _shapes.Add(shape);
+            Shapes.Add(shape);
         }
 
         public static void UnregisterShape(Shape2D shape)
         {
-            _shapes.Remove(shape);
+            Shapes.Remove(shape);
         }
     }
 }

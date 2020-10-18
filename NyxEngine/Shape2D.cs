@@ -1,4 +1,6 @@
-﻿namespace NyxEngine
+﻿using NyxEngine.Utils;
+
+namespace NyxEngine
 {
     public class Shape2D
     {
@@ -12,11 +14,13 @@
             Scale = scale;
             Tag = tag;
 
+            Logger.Info($"Registering {nameof(Shape2D)} - ({Tag})");
             NyxEngine.RegisterShape(this);
         }
 
         public void DestroySelf()
         {
+            Logger.Info($"Unregistering {nameof(Shape2D)} - ({Tag})");
             NyxEngine.UnregisterShape(this);
         }
     }
