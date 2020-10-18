@@ -7,7 +7,26 @@ namespace NyxEngine.Objects
 {
     public class Sprite2D : Disposable
     {
+        public Sprite2D(Vector2 position, Vector2 scale, string filePath, string parent)
+        {
+            InitializeSprite2D(position, scale, filePath, parent);
+        }
+
         public Sprite2D(Vector2 position, Vector2 scale, string filePath)
+        {
+            InitializeSprite2D(position, scale, filePath, nameof(Sprite2D));
+
+            Logger.Info($"Registering {nameof(Shape2D)} - ({Tag})");
+            NyxEngine.RegisterSprite(this);
+        }
+
+        public Vector2 Position { get; set; }
+        public Vector2 Scale { get; set; }
+        public string Tag { get; protected set; }
+        public string FilePath { get; set; }
+        public Bitmap Sprite { get; set; }
+
+        private void InitializeSprite2D(Vector2 position, Vector2 scale, string filePath, string parent)
         {
             if (!IsFilePathValid(filePath))
             {
@@ -17,19 +36,10 @@ namespace NyxEngine.Objects
 
             Position = position;
             Scale = scale;
-            Tag = Guid.NewGuid().ToString();
+            Tag = $"{parent}:{Guid.NewGuid().ToString()}";
             FilePath = filePath;
             LoadAsset();
-
-            Logger.Info($"Registering {nameof(Shape2D)} - ({Tag})");
-            NyxEngine.RegisterSprite(this);
         }
-
-        public Vector2 Position { get; set; }
-        public Vector2 Scale { get; set; }
-        public string Tag { get; private set; }
-        public string FilePath { get; set; }
-        public Bitmap Sprite { get; set; }
 
         ~Sprite2D()
         {
@@ -58,7 +68,7 @@ namespace NyxEngine.Objects
             NyxEngine.UnregisterSprite(this);
         }
 
-        public sealed override void Dispose()
+        public override void Dispose()
         {
             try
             {
