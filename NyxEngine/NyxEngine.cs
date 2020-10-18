@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -47,7 +48,15 @@ namespace NyxEngine
 
         private void GameLoop()
         {
-            OnLoad();
+            try
+            {
+                OnLoad();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                if(!string.IsNullOrEmpty(e.StackTrace)) Logger.Error($"[STACK TRACE] {e.StackTrace}");
+            }
 
             while (_gameLoopThread.IsAlive)
                 try

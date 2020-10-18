@@ -7,13 +7,18 @@ namespace NyxEngine.Objects
 {
     public class Sprite2D : Disposable
     {
-        public Sprite2D(Vector2 position, Vector2 scale, string fileName)
+        public Sprite2D(Vector2 position, Vector2 scale, string filePath)
         {
+            if (!IsFilePathValid(filePath))
+            {
+                Dispose();
+                throw new Exception("Sprite must be of type: \"png\", \"jpg\" or \"jpeg\"");
+            }
+
             Position = position;
             Scale = scale;
             Tag = Guid.NewGuid().ToString();
-            FileName = fileName;
-
+            FilePath = filePath;
             LoadAsset();
 
             Logger.Info($"Registering {nameof(Shape2D)} - ({Tag})");
@@ -23,7 +28,7 @@ namespace NyxEngine.Objects
         public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
         public string Tag { get; private set; }
-        public string FileName { get; set; }
+        public string FilePath { get; set; }
         public Bitmap Sprite { get; set; }
 
         ~Sprite2D()
@@ -35,8 +40,15 @@ namespace NyxEngine.Objects
         {
             // Triple parent is necessary as we are having assets folder outside .net project
             var baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.Parent!.FullName;
-            var path = Path.Combine(baseDir, $"Assets/Sprites/{FileName}.png");
+            var path = Path.Combine(baseDir, $"Assets/Sprites/{FilePath}");
             Sprite = new Bitmap(Image.FromFile(path), (int) Scale.X, (int) Scale.Y);
+        }
+
+        private static bool IsFilePathValid(string filePath)
+        {
+            var filePathParts = filePath.Split(".");
+            var fileType = filePathParts[filePathParts.Length - 1];
+            return fileType.Equals("png") || fileType.Equals("jpg") || fileType.Equals("jpeg");
         }
 
         public void DestroySelf()
@@ -46,7 +58,7 @@ namespace NyxEngine.Objects
             NyxEngine.UnregisterSprite(this);
         }
 
-        public override void Dispose()
+        public sealed override void Dispose()
         {
             try
             {
