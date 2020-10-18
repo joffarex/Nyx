@@ -21,14 +21,14 @@ namespace NyxEngine.Utils
         public static void Warning(string msg)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"[MSG]: {msg}");
+            Console.WriteLine($"[WARNING]: {msg}");
             NormalizeMessage();
         }
 
         public static void Error(string msg)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"[MSG]: {msg}");
+            Console.WriteLine($"[ERROR]: {msg}");
             NormalizeMessage();
         }
 

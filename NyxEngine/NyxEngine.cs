@@ -55,7 +55,7 @@ namespace NyxEngine
             catch (Exception e)
             {
                 Logger.Error(e.Message);
-                if(!string.IsNullOrEmpty(e.StackTrace)) Logger.Error($"[STACK TRACE] {e.StackTrace}");
+                if (!string.IsNullOrEmpty(e.StackTrace)) Logger.Error($"[STACK TRACE] {e.StackTrace}");
             }
 
             while (_gameLoopThread.IsAlive)
