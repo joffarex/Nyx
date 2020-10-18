@@ -31,6 +31,9 @@ namespace NyxEngine
 
             CreateWindow();
         }
+        
+        public Vector2 CameraPosition = Vector2.Zero();
+        public float CameraAngle = 0f;
 
         private void CreateWindow()
         {
@@ -79,12 +82,17 @@ namespace NyxEngine
             // Change background color
             g.Clear(BackgroundColor);
 
+            // Camera
+            g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
+            g.RotateTransform(CameraAngle);
+            
             foreach (var shape in Shapes)
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X,
                     shape.Scale.Y);
 
             foreach (var sprite in Sprites)
                 g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+            
         }
 
         protected abstract void OnLoad();

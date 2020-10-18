@@ -38,7 +38,7 @@ namespace NyxEngine.Demo
             for (var j = 0; j < Map.GetLength(1); j++)
                 if (Map[j, i] == "#")
                 {
-                    var sprite = new Sprite2D(new Vector2(i * scaleX, j * scaleY), new Vector2(scaleX, scaleY),
+                    var sprite = new Sprite2D(new Vector2(i * 40, j * 40), new Vector2(40, 40),
                         "Block.png");
                 }
         }
