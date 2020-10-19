@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using NyxEngine.Utils;
+using NyxEngine.Old.Utils;
 
-namespace NyxEngine.Objects
+namespace NyxEngine.Old.Objects
 {
     public class Sprite2D : Disposable
     {

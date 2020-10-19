@@ -1,4 +1,4 @@
-﻿namespace NyxEngine.Demo
+﻿namespace NyxEngine.Old.Demo
 {
     internal static class Demo
     {

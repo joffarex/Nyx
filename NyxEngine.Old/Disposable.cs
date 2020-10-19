@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NyxEngine
+namespace NyxEngine.Old
 {
     public abstract class Disposable : IDisposable
     {

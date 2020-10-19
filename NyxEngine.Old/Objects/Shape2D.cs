@@ -1,7 +1,7 @@
 ﻿using System;
-using NyxEngine.Utils;
+using NyxEngine.Old.Utils;
 
-namespace NyxEngine.Objects
+namespace NyxEngine.Old.Objects
 {
     public class Shape2D : Disposable
     {

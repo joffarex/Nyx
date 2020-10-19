@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NyxEngine.Utils
+namespace NyxEngine.Old.Utils
 {
     public static class Logger
     {

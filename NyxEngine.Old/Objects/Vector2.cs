@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NyxEngine.Objects
+namespace NyxEngine.Old.Objects
 {
     public class Vector2 : Disposable
     {

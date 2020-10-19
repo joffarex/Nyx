@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using NyxEngine.Objects;
+using NyxEngine.Old.Objects;
 
-namespace NyxEngine.Demo
+namespace NyxEngine.Old.Demo
 {
     public class Player : KinematicBody2D
     {

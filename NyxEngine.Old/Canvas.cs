@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace NyxEngine
+namespace NyxEngine.Old
 {
     public sealed class Canvas : Form
     {

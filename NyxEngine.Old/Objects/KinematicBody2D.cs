@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using NyxEngine.Utils;
+using NyxEngine.Old.Utils;
 
-namespace NyxEngine.Objects
+namespace NyxEngine.Old.Objects
 {
     public abstract class KinematicBody2D : Sprite2D
     {

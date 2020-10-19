@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using NyxEngine.Objects;
-using NyxEngine.Utils;
+using NyxEngine.Old.Objects;
+using NyxEngine.Old.Utils;
 
-namespace NyxEngine
+namespace NyxEngine.Old
 {
     public abstract class NyxEngine
     {

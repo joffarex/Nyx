@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using NyxEngine.Objects;
+using NyxEngine.Old.Objects;
 
-namespace NyxEngine.Demo
+namespace NyxEngine.Old.Demo
 {
     public class Game : NyxEngine
     {
