@@ -61,10 +61,14 @@ namespace NyxEngine.Old
             catch (Exception e)
             {
                 Logger.Error(e.Message);
-                if (!string.IsNullOrEmpty(e.StackTrace)) Logger.Error($"[STACK TRACE] {e.StackTrace}");
+                if (!string.IsNullOrEmpty(e.StackTrace))
+                {
+                    Logger.Error($"[STACK TRACE] {e.StackTrace}");
+                }
             }
 
             while (_gameLoopThread.IsAlive)
+            {
                 try
                 {
                     OnDraw();
@@ -76,11 +80,12 @@ namespace NyxEngine.Old
                 {
                     Logger.Error("Game has not been found...");
                 }
+            }
         }
 
         private void Renderer(object sender, PaintEventArgs e)
         {
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
 
             // Change background color
             g.Clear(BackgroundColor);
@@ -89,16 +94,22 @@ namespace NyxEngine.Old
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
 
-            foreach (var shape in Shapes)
+            foreach (Shape2D shape in Shapes)
+            {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X,
                     shape.Scale.Y);
+            }
 
-            foreach (var sprite in Sprites)
+            foreach (Sprite2D sprite in Sprites)
+            {
                 g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+            }
 
-            foreach (var kinematicBody in KinematicBodies)
+            foreach (KinematicBody2D kinematicBody in KinematicBodies)
+            {
                 g.DrawImage(kinematicBody.Sprite, kinematicBody.Position.X, kinematicBody.Position.Y,
                     kinematicBody.Scale.X, kinematicBody.Scale.Y);
+            }
         }
 
         public static void SubscribeKinematicBodyKeyEvents(KinematicBody2D kinematicBody)

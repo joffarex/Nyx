@@ -49,15 +49,15 @@ namespace NyxEngine.Old.Objects
         private void LoadAsset()
         {
             // Triple parent is necessary as we are having assets folder outside .net project
-            var baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.Parent!.FullName;
-            var path = Path.Combine(baseDir, $"Assets/Sprites/{FilePath}");
+            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.Parent!.FullName;
+            string path = Path.Combine(baseDir, $"Assets/Sprites/{FilePath}");
             Sprite = new Bitmap(Image.FromFile(path), (int) Scale.X, (int) Scale.Y);
         }
 
         private static bool IsFilePathValid(string filePath)
         {
-            var filePathParts = filePath.Split(".");
-            var fileType = filePathParts[filePathParts.Length - 1];
+            string[] filePathParts = filePath.Split(".");
+            string fileType = filePathParts[filePathParts.Length - 1];
             return fileType.Equals("png") || fileType.Equals("jpg") || fileType.Equals("jpeg");
         }
 
@@ -83,7 +83,10 @@ namespace NyxEngine.Old.Objects
 
         protected override void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {

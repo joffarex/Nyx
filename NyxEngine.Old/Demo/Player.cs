@@ -14,13 +14,25 @@ namespace NyxEngine.Old.Demo
 
         protected override void GetKeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) Direction.Y = -1;
+            if (e.KeyCode == Keys.W)
+            {
+                Direction.Y = -1;
+            }
 
-            if (e.KeyCode == Keys.S) Direction.Y = 1;
+            if (e.KeyCode == Keys.S)
+            {
+                Direction.Y = 1;
+            }
 
-            if (e.KeyCode == Keys.A) Direction.X = -1;
+            if (e.KeyCode == Keys.A)
+            {
+                Direction.X = -1;
+            }
 
-            if (e.KeyCode == Keys.D) Direction.X = 1;
+            if (e.KeyCode == Keys.D)
+            {
+                Direction.X = 1;
+            }
 
             Position.X += Direction.X * Speed;
             Position.Y += Direction.Y * Speed;
@@ -28,9 +40,15 @@ namespace NyxEngine.Old.Demo
 
         protected override void GetKeyUp(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W || e.KeyCode == Keys.S) Direction.Y = 0;
+            if ((e.KeyCode == Keys.W) || (e.KeyCode == Keys.S))
+            {
+                Direction.Y = 0;
+            }
 
-            if (e.KeyCode == Keys.A || e.KeyCode == Keys.D) Direction.X = 0;
+            if ((e.KeyCode == Keys.A) || (e.KeyCode == Keys.D))
+            {
+                Direction.X = 0;
+            }
         }
     }
 }

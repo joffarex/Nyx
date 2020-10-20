@@ -55,7 +55,10 @@ namespace NyxEngine.Old.Objects
 
         protected override void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {

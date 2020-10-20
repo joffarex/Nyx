@@ -14,7 +14,10 @@ namespace NyxEngine.Old
 
         protected virtual void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
