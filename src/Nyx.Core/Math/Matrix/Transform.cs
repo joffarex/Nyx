@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Nyx.Core
+namespace Nyx.Core.Math.Matrix
 {
     public class Transform
     {
