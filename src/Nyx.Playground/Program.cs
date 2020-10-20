@@ -15,9 +15,9 @@ namespace Nyx.Playground
         private static IWindow _window;
         private static GL _gl;
 
-        private static uint _vertexBufferObject;
-        private static uint _elementBufferObject;
-        private static uint _vertexArrayobject;
+        private static BufferObject<float> _vertexBufferObject;
+        private static BufferObject<uint> _elementBufferObject;
+        private static VertexArrayObject<float, uint> _vertexArrayobject;
         private static Shader _shader;
 
         //Vertex data, uploaded to the VBO.
@@ -63,34 +63,18 @@ namespace Nyx.Playground
             // Getting the opengl api for drawing to the screen.
             _gl = GL.GetApi(_window);
 
-            // Creating a vertex array
-            _vertexArrayobject = _gl.GenVertexArray();
-            _gl.BindVertexArray(_vertexArrayobject);
-
             // Initialize a vertex buffer that holds the vertex data
-            _vertexBufferObject = _gl.GenBuffer();
-            _gl.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexBufferObject);
-
-            fixed (void* v = &Vertices[0])
-            {
-                _gl.BufferData(BufferTargetARB.ArrayBuffer, (uint) (Vertices.Length * sizeof(uint)), v,
-                    BufferUsageARB.StaticDraw);
-            }
+            _vertexBufferObject = new BufferObject<float>(_gl, Vertices, BufferTargetARB.ArrayBuffer);
 
             // Initializing a element buffer that holds the index data.
-            _elementBufferObject = _gl.GenBuffer();
-            _gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, _elementBufferObject);
+            _elementBufferObject = new BufferObject<uint>(_gl, Indices, BufferTargetARB.ElementArrayBuffer);
 
-            fixed (void* i = &Indices[0])
-            {
-                _gl.BufferData(BufferTargetARB.ElementArrayBuffer, (uint) (Indices.Length * sizeof(uint)), i,
-                    BufferUsageARB.StaticDraw);
-            }
+            // Creating a vertex array
+            _vertexArrayobject = new VertexArrayObject<float, uint>(_gl, _vertexBufferObject, _elementBufferObject);
 
             // Create shader
-            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
-            string vertexShaderPath = Path.Combine(baseDir, "Shaders/shader.vert");
-            string fragmentShaderPath = Path.Combine(baseDir, "Shaders/shader.frag");
+            (string vertexShaderPath, string fragmentShaderPath) =
+                GetShaderFullPaths("Shaders/shader.vert", "Shaders/shader.frag");
             _shader = new Shader(_gl, vertexShaderPath, fragmentShaderPath);
 
             // Tell opengl how to give the data to the shaders.
@@ -104,8 +88,7 @@ namespace Nyx.Playground
             _gl.Clear((uint) ClearBufferMask.ColorBufferBit);
 
             //Bind the geometry and shader.
-            _gl.BindVertexArray(_vertexArrayobject);
-            _gl.UseProgram(_vertexArrayobject);
+            _vertexArrayobject.Bind();
             _shader.Use();
 
             //Draw the geometry.
@@ -120,9 +103,9 @@ namespace Nyx.Playground
         private static void OnClose()
         {
             //Remember to delete the buffers.
-            _gl.DeleteBuffer(_vertexBufferObject);
-            _gl.DeleteBuffer(_elementBufferObject);
-            _gl.DeleteVertexArray(_vertexArrayobject);
+            _vertexBufferObject.Dispose();
+            _elementBufferObject.Dispose();
+            _vertexArrayobject.Dispose();
             _shader.Dispose();
         }
 
@@ -132,6 +115,15 @@ namespace Nyx.Playground
             {
                 _window.Close();
             }
+        }
+
+        private static (string, string) GetShaderFullPaths(string vertexPath, string fragmentPath)
+        {
+            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
+            string vertexShaderPath = Path.Combine(baseDir, vertexPath);
+            string fragmentShaderPath = Path.Combine(baseDir, fragmentPath);
+
+            return (vertexShaderPath, fragmentShaderPath);
         }
     }
 }
