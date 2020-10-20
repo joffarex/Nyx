@@ -5,7 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace Nyx.Core
+namespace Nyx.Core.OpenGL
 {
     public class Texture : IDisposable
     {

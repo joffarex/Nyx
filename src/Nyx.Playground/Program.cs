@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using Nyx.Core;
+using Nyx.Core.OpenGL;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;

@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Core
+namespace Nyx.Core.OpenGL
 {
     public class Shader : IDisposable
     {

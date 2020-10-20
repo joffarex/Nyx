@@ -1,7 +1,7 @@
 ﻿using System;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Core
+namespace Nyx.Core.OpenGL
 {
     public class BufferObject<TDataType> : IDisposable
         where TDataType : unmanaged
