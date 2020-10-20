@@ -60,16 +60,6 @@ namespace Nyx.Core.Math.LinearAlgebra.Vector
             }
         }
 
-        /// <summary>
-        ///     Returns True if vector is 2-dimensional.
-        /// </summary>
-        public bool Is2DVector => Dimension == 2;
-
-        /// <summary>
-        ///     Returns True if vector is 3-dimensional.
-        /// </summary>
-        public bool Is3DVector => Dimension == 3;
-
         #endregion
     }
 }
