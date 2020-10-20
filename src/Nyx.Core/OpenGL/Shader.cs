@@ -11,6 +11,7 @@ namespace Nyx.Core.OpenGL
         private readonly uint _handle;
 
         // TODO: add uniform caching
+        // This is necessary as accessing shader for uniform locations is not performant
 
         public Shader(GL gl, string vertexPath, string fragmentPath)
         {

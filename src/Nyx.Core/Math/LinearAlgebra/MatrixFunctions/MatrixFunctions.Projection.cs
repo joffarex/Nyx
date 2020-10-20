@@ -2,7 +2,6 @@
 {
     internal static partial class MatrixFunctions
     {
-        // TODO: Test
         /// <summary>
         ///     Creates projection matrix for the specified subspace.
         /// </summary>
