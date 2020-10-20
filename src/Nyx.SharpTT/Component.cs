@@ -6,9 +6,8 @@
 
         public void Start()
         {
-            
         }
-        
+
         public abstract void Update(float dt); // Delta time
     }
 }

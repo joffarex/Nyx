@@ -5,14 +5,14 @@ namespace Nyx.SharpTT
 {
     public class GameObject
     {
-        public string Name { get; }
-
-        public List<Component> Components { get; } = new List<Component>();
-
         public GameObject(string name)
         {
             Name = name;
         }
+
+        public string Name { get; }
+
+        public List<Component> Components { get; } = new List<Component>();
 
         public T GetComponent<T>(T component) where T : Component
         {
@@ -37,7 +37,7 @@ namespace Nyx.SharpTT
 
         public void Start()
         {
-            foreach (var component in Components)
+            foreach (Component component in Components)
             {
                 component.Start();
             }
@@ -45,7 +45,7 @@ namespace Nyx.SharpTT
 
         public void Update(float dt)
         {
-            foreach (var component in Components)
+            foreach (Component component in Components)
             {
                 component.Update(dt);
             }
