@@ -2,10 +2,12 @@
 using System.Drawing;
 using System.IO;
 using Nyx.Core.Input;
+using Silk.NET.GLFW;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing.Common;
+using MouseButton = Silk.NET.Input.Common.MouseButton;
 
 namespace Nyx.Engine
 {
@@ -15,6 +17,11 @@ namespace Nyx.Engine
         protected static GL Gl;
         public static KeyListener KeyListener;
         public static MouseListener MouseListener;
+
+        protected float BeginTime = (float) Glfw.GetApi().GetTime();
+        protected float DeltaTime = -1.0f;
+        protected float EndTime;
+
 
         protected NyxEngine()
         {
@@ -59,19 +66,19 @@ namespace Nyx.Engine
         }
 
         /// <summary>
+        ///     Update geometry and listen to user events
+        /// </summary>
+        protected virtual void OnUpdate(double obj)
+        {
+        }
+
+        /// <summary>
         ///     Draw stuff to the screen
         /// </summary>
         protected virtual void OnRender(double obj)
         {
             //Clear the color channel.
             Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
-        }
-
-        /// <summary>
-        ///     Update geometry and listen to user events
-        /// </summary>
-        protected virtual void OnUpdate(double obj)
-        {
         }
 
         protected virtual void OnClose()

@@ -5,7 +5,7 @@
         public static void Main(string[] args)
         {
             // Open the game
-            var game = new Game();
+            Game game = Game.Get();
             game.Run();
         }
     }

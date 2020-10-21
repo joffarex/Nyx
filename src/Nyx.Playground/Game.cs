@@ -2,8 +2,10 @@
 using System.Drawing;
 using Nyx.Core.OpenGL;
 using Nyx.Engine;
+using Silk.NET.GLFW;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
+using MouseButton = Silk.NET.Input.Common.MouseButton;
 
 namespace Nyx.Playground
 {
@@ -31,13 +33,36 @@ namespace Nyx.Playground
             1, 2, 3,
         };
 
-        private float b = 1;
-        private bool fadingIn;
-        private bool fadingOut;
-        private float g = 1;
+        private static Scene _currentScene;
+        private static Game _instance;
+        public float b = 1;
+        public float g = 1;
+        public float r = 1;
 
-        // Temporary
-        private float r = 1;
+        private Game()
+        {
+        }
+
+        public static Game Get()
+        {
+            if (_instance == null)
+            {
+                _instance = new Game();
+            }
+
+            return _instance;
+        }
+
+
+        public static void ChangeScene(int newSceneIndex)
+        {
+            _currentScene = newSceneIndex switch
+            {
+                0 => new LevelEditorScene(),
+                1 => new LevelScene(),
+                _ => throw new Exception($"Scene idx: {newSceneIndex} does not exist"),
+            };
+        }
 
         protected override unsafe void OnLoad()
         {
@@ -62,6 +87,7 @@ namespace Nyx.Playground
             Gl.EnableVertexAttribArray(0);
 
             // Initial startup drawings
+            ChangeScene(0);
         }
 
         protected override unsafe void OnRender(double obj)
@@ -85,34 +111,21 @@ namespace Nyx.Playground
         {
             base.OnUpdate(obj);
 
-            if (fadingIn)
+            Console.WriteLine($"FPS: {GetFps(DeltaTime)}");
+
+            if (DeltaTime >= 0)
             {
-                r = Math.Max(r - 0.01f, 0);
-                g = Math.Max(g - 0.01f, 0);
-                b = Math.Max(b - 0.01f, 0);
+                _currentScene.Update(DeltaTime);
             }
 
-            if (fadingOut)
-            {
-                r = Math.Min(r + 0.01f, 1);
-                g = Math.Min(g + 0.01f, 1);
-                b = Math.Min(b + 0.01f, 1);
-            }
+            EndTime = (float) Glfw.GetApi().GetTime();
+            DeltaTime = EndTime - BeginTime;
+            BeginTime = EndTime;
+        }
 
-            if (KeyListener.IsKeyPressed(Key.B))
-            {
-                fadingIn = true;
-                fadingOut = false;
-            }
-
-            if (MouseListener.IsButtonPressed(MouseButton.Left))
-            {
-                fadingOut = true;
-                fadingIn = false;
-            }
-
-            // Do all the updating stuff
-            // Possibly call update method from game objects
+        public static float GetFps(float deltaTime)
+        {
+            return 1.0f / deltaTime;
         }
 
         protected override void OnClose()
@@ -152,7 +165,7 @@ namespace Nyx.Playground
         protected override void MouseMove(IMouse arg1, PointF arg2)
         {
             base.MouseMove(arg1, arg2);
-            Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
+            //Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
 
             // Call mouse move events from game objects here 
         }
