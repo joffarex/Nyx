@@ -42,6 +42,9 @@ namespace Nyx.Playground
             var options = WindowOptions.Default;
             options.Size = new Size(800, 600);
             options.Title = "Nyx Playground";
+            options.VSync = VSyncMode.On;
+            options.ShouldSwapAutomatically = true;
+            options.WindowBorder = WindowBorder.Fixed;
             _window = Window.Create(options);
 
             _window.Load += OnLoad;
