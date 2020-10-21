@@ -31,6 +31,14 @@ namespace Nyx.Playground
             1, 2, 3,
         };
 
+        private float b = 1;
+        private bool fadingIn;
+        private bool fadingOut;
+        private float g = 1;
+
+        // Temporary
+        private float r = 1;
+
         protected override unsafe void OnLoad()
         {
             base.OnLoad();
@@ -67,14 +75,44 @@ namespace Nyx.Playground
             //Draw the geometry.
             Gl.DrawElements(PrimitiveType.Triangles, (uint) Indices.Length, DrawElementsType.UnsignedInt, null);
 
+            Gl.ClearColor(r, g, b, 1);
+
             // Draw all game objects here
         }
+
 
         protected override void OnUpdate(double obj)
         {
             base.OnUpdate(obj);
 
+            if (fadingIn)
+            {
+                r = Math.Max(r - 0.01f, 0);
+                g = Math.Max(g - 0.01f, 0);
+                b = Math.Max(b - 0.01f, 0);
+            }
+
+            if (fadingOut)
+            {
+                r = Math.Min(r + 0.01f, 1);
+                g = Math.Min(g + 0.01f, 1);
+                b = Math.Min(b + 0.01f, 1);
+            }
+
+            if (KeyListener.IsKeyPressed(Key.B))
+            {
+                fadingIn = true;
+                fadingOut = false;
+            }
+
+            if (MouseListener.IsButtonPressed(MouseButton.Left))
+            {
+                fadingOut = true;
+                fadingIn = false;
+            }
+
             // Do all the updating stuff
+            // Possibly call update method from game objects
         }
 
         protected override void OnClose()
@@ -93,11 +131,6 @@ namespace Nyx.Playground
         {
             base.KeyDown(arg1, arg2, arg3);
 
-            if (arg2 == Key.Space)
-            {
-                Console.WriteLine("SPAAAAAAAAAAAAAAAAAAAAACCEEEE");
-            }
-
             // Call key down events from game objects here in order to subscribe
             // TODO: Implement functionality to automatically add game object events here
             //
@@ -112,16 +145,6 @@ namespace Nyx.Playground
         protected override void MouseClick(IMouse arg1, MouseButton arg2)
         {
             base.MouseClick(arg1, arg2);
-
-            if (arg2 == MouseButton.Left)
-            {
-                Console.WriteLine("CLICK FROM LEFT");
-            }
-
-            if (arg2 == MouseButton.Right)
-            {
-                Console.WriteLine("CLICK FROM RIGHT");
-            }
 
             // Call mouse click events from game objects here 
         }
