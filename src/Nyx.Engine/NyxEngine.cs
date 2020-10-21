@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using Nyx.Core.Input;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
@@ -12,6 +13,8 @@ namespace Nyx.Engine
     {
         protected static IWindow Window;
         protected static GL Gl;
+        public static KeyListener KeyListener;
+        public static MouseListener MouseListener;
 
         protected NyxEngine()
         {
@@ -32,14 +35,17 @@ namespace Nyx.Engine
         protected virtual void OnLoad()
         {
             IInputContext input = Window.CreateInput();
-            foreach (IKeyboard t in input.Keyboards)
+
+            foreach (IKeyboard k in input.Keyboards)
             {
-                t.KeyDown += KeyDown;
-                t.KeyUp += KeyUp;
+                KeyListener = KeyListener.Get(k);
+                k.KeyDown += KeyDown;
+                k.KeyUp += KeyUp;
             }
 
             foreach (IMouse m in input.Mice)
             {
+                MouseListener = MouseListener.Get(m);
                 m.Click += MouseClick;
                 m.MouseMove += MouseMove;
                 m.Scroll += MouseScroll;
@@ -52,14 +58,18 @@ namespace Nyx.Engine
             Gl = GL.GetApi(Window);
         }
 
-
+        /// <summary>
+        ///     Draw stuff to the screen
+        /// </summary>
         protected virtual void OnRender(double obj)
         {
             //Clear the color channel.
             Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
         }
 
-
+        /// <summary>
+        ///     Update geometry and listen to user events
+        /// </summary>
         protected virtual void OnUpdate(double obj)
         {
         }
