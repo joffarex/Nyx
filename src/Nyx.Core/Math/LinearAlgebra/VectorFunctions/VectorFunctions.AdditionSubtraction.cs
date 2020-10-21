@@ -19,7 +19,9 @@ namespace Nyx.Core.Math.LinearAlgebra.VectorFunctions
             int length = vector1.GetLength(0);
 
             if (length != vector2.Length)
+            {
                 throw new InvalidOperationException("Dimensions mismatch.");
+            }
 
             var output = new double[length];
 
