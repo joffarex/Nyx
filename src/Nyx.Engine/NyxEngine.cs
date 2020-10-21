@@ -35,11 +35,23 @@ namespace Nyx.Engine
             foreach (IKeyboard t in input.Keyboards)
             {
                 t.KeyDown += KeyDown;
+                t.KeyUp += KeyUp;
+            }
+
+            foreach (IMouse m in input.Mice)
+            {
+                m.Click += MouseClick;
+                m.MouseMove += MouseMove;
+                m.Scroll += MouseScroll;
+                m.DoubleClick += MouseDoubleClick;
+                m.MouseUp += MouseUp;
+                m.MouseDown += MouseDown;
             }
 
             // Getting the opengl api for drawing to the screen.
             Gl = GL.GetApi(Window);
         }
+
 
         protected virtual void OnRender(double obj)
         {
@@ -57,14 +69,6 @@ namespace Nyx.Engine
             //Remember to delete the buffers.
         }
 
-        protected virtual void KeyDown(IKeyboard arg1, Key arg2, int arg3)
-        {
-            if (arg2 == Key.Escape)
-            {
-                Window.Close();
-            }
-        }
-
         protected static (string, string) GetShaderFullPaths(string vertexPath, string fragmentPath)
         {
             string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
@@ -79,5 +83,46 @@ namespace Nyx.Engine
             Console.WriteLine("Running window");
             Window.Run();
         }
+
+        #region InputEvents
+
+        protected virtual void KeyDown(IKeyboard arg1, Key arg2, int arg3)
+        {
+            if (arg2 == Key.Escape)
+            {
+                Window.Close();
+            }
+        }
+
+        protected virtual void KeyUp(IKeyboard arg1, Key arg2, int arg3)
+        {
+        }
+
+
+        protected virtual void MouseMove(IMouse arg1, PointF arg2)
+        {
+        }
+
+        protected virtual void MouseClick(IMouse arg1, MouseButton arg2)
+        {
+        }
+
+        protected virtual void MouseDown(IMouse arg1, MouseButton arg2)
+        {
+        }
+
+        protected virtual void MouseUp(IMouse arg1, MouseButton arg2)
+        {
+        }
+
+        protected virtual void MouseDoubleClick(IMouse arg1, MouseButton arg2)
+        {
+        }
+
+        protected virtual void MouseScroll(IMouse arg1, ScrollWheel arg2)
+        {
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Nyx.Core.OpenGL;
 using Nyx.Engine;
 using Silk.NET.Input.Common;
@@ -98,6 +99,56 @@ namespace Nyx.Playground
             }
 
             // Call key down events from game objects here in order to subscribe
+        }
+
+        protected override void KeyUp(IKeyboard arg1, Key arg2, int arg3)
+        {
+            base.KeyUp(arg1, arg2, arg3);
+        }
+
+        protected override void MouseClick(IMouse arg1, MouseButton arg2)
+        {
+            base.MouseClick(arg1, arg2);
+
+            if (arg2 == MouseButton.Left)
+            {
+                Console.WriteLine("CLICK FROM LEFT");
+            }
+
+            if (arg2 == MouseButton.Right)
+            {
+                Console.WriteLine("CLICK FROM RIGHT");
+            }
+
+            // Call mouse click events from game objects here 
+        }
+
+        protected override void MouseMove(IMouse arg1, PointF arg2)
+        {
+            base.MouseMove(arg1, arg2);
+            Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
+
+            // Call mouse move events from game objects here 
+        }
+
+        protected override void MouseDown(IMouse arg1, MouseButton arg2)
+        {
+            base.MouseDown(arg1, arg2);
+        }
+
+        protected override void MouseUp(IMouse arg1, MouseButton arg2)
+        {
+            base.MouseUp(arg1, arg2);
+        }
+
+        protected override void MouseDoubleClick(IMouse arg1, MouseButton arg2)
+        {
+            base.MouseDoubleClick(arg1, arg2);
+        }
+
+        protected override void MouseScroll(IMouse arg1, ScrollWheel arg2)
+        {
+            base.MouseScroll(arg1, arg2);
         }
     }
 }
