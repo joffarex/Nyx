@@ -99,6 +99,9 @@ namespace Nyx.Playground
             }
 
             // Call key down events from game objects here in order to subscribe
+            // TODO: Implement functionality to automatically add game object events here
+            //
+            // There must be centralized object with abstract event methods, which will get called here with looping over them
         }
 
         protected override void KeyUp(IKeyboard arg1, Key arg2, int arg3)
