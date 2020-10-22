@@ -14,7 +14,7 @@ namespace Nyx.Engine
     public abstract class NyxEngine
     {
         protected static IWindow Window;
-        protected static GL Gl;
+        public static GL Gl;
         public static KeyListener KeyListener;
         public static MouseListener MouseListener;
 
@@ -88,11 +88,16 @@ namespace Nyx.Engine
 
         protected static (string, string) GetShaderFullPaths(string vertexPath, string fragmentPath)
         {
-            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
-            string vertexShaderPath = Path.Combine(baseDir, vertexPath);
-            string fragmentShaderPath = Path.Combine(baseDir, fragmentPath);
+            string vertexShaderPath = GetFullPath(vertexPath);
+            string fragmentShaderPath = GetFullPath(fragmentPath);
 
             return (vertexShaderPath, fragmentShaderPath);
+        }
+
+        public static string GetFullPath(string path)
+        {
+            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
+            return Path.Combine(baseDir, path);
         }
 
         public void Run()

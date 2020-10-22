@@ -10,14 +10,14 @@ namespace Nyx.Core.OpenGL
         private readonly GL _gl;
         private readonly uint _handle;
 
-        public VertexArrayObject(GL gl, BufferObject<TVertexType> verteBufferObject,
+        public VertexArrayObject(GL gl, BufferObject<TVertexType> vertexBufferObject,
             BufferObject<TIndexType> elementBufferObject)
         {
             _gl = gl;
 
             _handle = _gl.GenVertexArray();
             Bind();
-            verteBufferObject.Bind();
+            vertexBufferObject.Bind();
             elementBufferObject.Bind();
         }
 
