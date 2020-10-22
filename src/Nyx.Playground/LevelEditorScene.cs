@@ -1,8 +1,8 @@
 ﻿using System;
-using Nyx.Playground;
+using Nyx.Engine;
 using Silk.NET.Input.Common;
 
-namespace Nyx.Engine
+namespace Nyx.Playground
 {
     public class LevelEditorScene : Scene
     {

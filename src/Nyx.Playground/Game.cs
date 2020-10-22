@@ -111,8 +111,6 @@ namespace Nyx.Playground
         {
             base.OnUpdate(obj);
 
-            Console.WriteLine($"FPS: {GetFps(DeltaTime)}");
-
             if (DeltaTime >= 0)
             {
                 _currentScene.Update(DeltaTime);
