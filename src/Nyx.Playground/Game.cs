@@ -62,6 +62,8 @@ namespace Nyx.Playground
                 1 => new LevelScene(),
                 _ => throw new Exception($"Scene idx: {newSceneIndex} does not exist"),
             };
+
+            _currentScene.Init();
         }
 
         protected override unsafe void OnLoad()
@@ -96,7 +98,9 @@ namespace Nyx.Playground
 
             //Bind the geometry and shader.
             _vertexArrayobject.Bind();
-            _shader.Use();
+            // _shader.Use();
+
+            _currentScene.Render();
 
             //Draw the geometry.
             Gl.DrawElements(PrimitiveType.Triangles, (uint) Indices.Length, DrawElementsType.UnsignedInt, null);
@@ -134,6 +138,7 @@ namespace Nyx.Playground
             _elementBufferObject.Dispose();
             _vertexArrayobject.Dispose();
             _shader.Dispose();
+            _currentScene.Dispose();
 
             // Clear out every object here
         }

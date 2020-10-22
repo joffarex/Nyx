@@ -1,16 +1,14 @@
-﻿using System;
-using Nyx.Engine;
+﻿using Nyx.Engine;
 
 namespace Nyx.Playground
 {
     public class LevelScene : Scene
     {
-        public LevelScene()
+        public override void Update(float deltaTime)
         {
-            Console.WriteLine("LevelScene");
         }
 
-        public override void Update(float deltaTime)
+        public override void Render()
         {
         }
     }
