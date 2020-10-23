@@ -2,14 +2,14 @@
 {
     public static class Converters
     {
-        public static double DegreesToRadians(double degree)
+        public static float DegreesToRadians(float degree)
         {
-            return (degree * System.Math.PI) / 180;
+            return (float) (degree * System.Math.PI) / 180;
         }
 
-        public static double RadiansToDegrees(double radians)
+        public static float RadiansToDegrees(float radians)
         {
-            return (radians / System.Math.PI) * 180;
+            return (float) (radians / System.Math.PI) * 180;
         }
     }
 }
