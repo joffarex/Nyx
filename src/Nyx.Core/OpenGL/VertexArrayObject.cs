@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Silk.NET.OpenGL;
 
 namespace Nyx.Core.OpenGL
@@ -37,6 +38,33 @@ namespace Nyx.Core.OpenGL
         public void Bind()
         {
             _gl.BindVertexArray(_handle);
+        }
+
+        /// <summary>
+        ///     Make sure that vertex array is formatted in this way: 3 floats for position (x, y, z); 4 floats for color (r, g, b,
+        ///     a)
+        /// </summary>
+        public unsafe void SetVertexAttribPointers3Pos4Col()
+        {
+            _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), null);
+            _gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float),
+                (void*) (3 * sizeof(float)));
+        }
+
+        public void EnableVertexAttribPointers(IEnumerable<uint> locations)
+        {
+            foreach (uint l in locations)
+            {
+                _gl.EnableVertexAttribArray(l);
+            }
+        }
+
+        public void DisableVertexAttribPointers(IEnumerable<uint> locations)
+        {
+            foreach (uint l in locations)
+            {
+                _gl.DisableVertexAttribArray(l);
+            }
         }
     }
 }
