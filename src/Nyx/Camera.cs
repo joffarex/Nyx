@@ -2,7 +2,7 @@
 using System.Numerics;
 using Nyx.Core.Math;
 
-namespace Nyx.Engine
+namespace Nyx
 {
     public class Camera
     {

@@ -7,9 +7,8 @@ using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing.Common;
-using MouseButton = Silk.NET.Input.Common.MouseButton;
 
-namespace Nyx.Engine
+namespace Nyx
 {
     public abstract class NyxEngine
     {

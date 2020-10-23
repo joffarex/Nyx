@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using Nyx.Core.Utils;
-using Nyx.Engine;
 using Silk.NET.Input.Common;
 
 namespace Nyx.Playground

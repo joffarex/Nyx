@@ -1,11 +1,10 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using Nyx.Core.OpenGL;
-using Nyx.Engine;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using static Nyx.Playground.Game;
-using static Nyx.Engine.NyxEngine;
+using static Nyx.NyxEngine;
 
 namespace Nyx.Playground
 {

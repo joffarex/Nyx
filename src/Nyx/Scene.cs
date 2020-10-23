@@ -2,9 +2,9 @@
 using System.Drawing;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
-using static Nyx.Engine.NyxEngine;
+using static Nyx.NyxEngine;
 
-namespace Nyx.Engine
+namespace Nyx
 {
     public abstract class Scene : IDisposable
     {

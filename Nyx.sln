@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nyx.Playground", "src\Nyx.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nyx.Core", "src\Nyx.Core\Nyx.Core.csproj", "{3FF74FC1-6F58-4BF3-AC29-4C7058956CAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nyx.Engine", "src\Nyx.Engine\Nyx.Engine.csproj", "{9EF95465-F47A-4864-9649-55233ADC4FB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nyx", "src\Nyx\Nyx.csproj", "{9EF95465-F47A-4864-9649-55233ADC4FB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
