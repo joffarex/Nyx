@@ -12,9 +12,13 @@ namespace Nyx.Playground
         private static Scene _currentScene;
         private static Game _instance;
 
-        private Game()
+
+        private Game() : base(Width, Height)
         {
         }
+
+        public static int Width { get; } = 800;
+        public static int Height { get; } = 600;
 
         public static Game Get()
         {
@@ -80,9 +84,9 @@ namespace Nyx.Playground
             _currentScene.Dispose();
         }
 
-        protected override void KeyDown(IKeyboard arg1, Key arg2, int arg3)
+        protected override void KeyDown(IKeyboard keyboard, Key key, int keyCode)
         {
-            base.KeyDown(arg1, arg2, arg3);
+            base.KeyDown(keyboard, key, keyCode);
 
             // Call key down events from game objects here in order to subscribe
             // TODO: Implement functionality to automatically add game object events here
@@ -90,44 +94,46 @@ namespace Nyx.Playground
             // There must be centralized object with abstract event methods, which will get called here with looping over them
         }
 
-        protected override void KeyUp(IKeyboard arg1, Key arg2, int arg3)
+        protected override void KeyUp(IKeyboard keyboard, Key key, int keyCode)
         {
-            base.KeyUp(arg1, arg2, arg3);
+            base.KeyUp(keyboard, key, keyCode);
         }
 
-        protected override void MouseClick(IMouse arg1, MouseButton arg2)
+        protected override void MouseClick(IMouse mouse, MouseButton mouseButton)
         {
-            base.MouseClick(arg1, arg2);
+            base.MouseClick(mouse, mouseButton);
 
             // Call mouse click events from game objects here 
         }
 
-        protected override void MouseMove(IMouse arg1, PointF arg2)
+        protected override void MouseMove(IMouse mouse, PointF position)
         {
-            base.MouseMove(arg1, arg2);
+            base.MouseMove(mouse, position);
             //Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
 
-            // Call mouse move events from game objects here 
+            _currentScene.MouseMove(mouse, position);
         }
 
-        protected override void MouseDown(IMouse arg1, MouseButton arg2)
+        protected override void MouseDown(IMouse mouse, MouseButton mouseButton)
         {
-            base.MouseDown(arg1, arg2);
+            base.MouseDown(mouse, mouseButton);
         }
 
-        protected override void MouseUp(IMouse arg1, MouseButton arg2)
+        protected override void MouseUp(IMouse mouse, MouseButton mouseButton)
         {
-            base.MouseUp(arg1, arg2);
+            base.MouseUp(mouse, mouseButton);
         }
 
-        protected override void MouseDoubleClick(IMouse arg1, MouseButton arg2)
+        protected override void MouseDoubleClick(IMouse mouse, MouseButton mouseButton)
         {
-            base.MouseDoubleClick(arg1, arg2);
+            base.MouseDoubleClick(mouse, mouseButton);
         }
 
-        protected override void MouseScroll(IMouse arg1, ScrollWheel arg2)
+        protected override void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
         {
-            base.MouseScroll(arg1, arg2);
+            base.MouseScroll(mouse, scrollWheel);
+
+            _currentScene.MouseScroll(mouse, scrollWheel);
         }
     }
 }

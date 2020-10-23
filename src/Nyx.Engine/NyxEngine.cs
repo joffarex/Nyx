@@ -23,10 +23,10 @@ namespace Nyx.Engine
         protected float EndTime;
 
 
-        protected NyxEngine()
+        protected NyxEngine(int width, int height)
         {
             var options = WindowOptions.Default;
-            options.Size = new Size(800, 600);
+            options.Size = new Size(width, height);
             options.Title = "Nyx Playground";
             options.VSync = VSyncMode.On;
             options.ShouldSwapAutomatically = true;
@@ -108,40 +108,40 @@ namespace Nyx.Engine
 
         #region InputEvents
 
-        protected virtual void KeyDown(IKeyboard arg1, Key arg2, int arg3)
+        protected virtual void KeyDown(IKeyboard keyboard, Key key, int keyCode)
         {
-            if (arg2 == Key.Escape)
+            if (key == Key.Escape)
             {
                 Window.Close();
             }
         }
 
-        protected virtual void KeyUp(IKeyboard arg1, Key arg2, int arg3)
+        protected virtual void KeyUp(IKeyboard keyboard, Key key, int keyCode)
         {
         }
 
 
-        protected virtual void MouseMove(IMouse arg1, PointF arg2)
+        protected virtual void MouseMove(IMouse mouse, PointF position)
         {
         }
 
-        protected virtual void MouseClick(IMouse arg1, MouseButton arg2)
+        protected virtual void MouseClick(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseDown(IMouse arg1, MouseButton arg2)
+        protected virtual void MouseDown(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseUp(IMouse arg1, MouseButton arg2)
+        protected virtual void MouseUp(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseDoubleClick(IMouse arg1, MouseButton arg2)
+        protected virtual void MouseDoubleClick(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseScroll(IMouse arg1, ScrollWheel arg2)
+        protected virtual void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
         {
         }
 

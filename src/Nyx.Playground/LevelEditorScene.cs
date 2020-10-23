@@ -1,6 +1,10 @@
-﻿using Nyx.Core.OpenGL;
+﻿using System.Drawing;
+using System.Numerics;
+using Nyx.Core.OpenGL;
 using Nyx.Engine;
+using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
+using static Nyx.Playground.Game;
 
 namespace Nyx.Playground
 {
@@ -16,8 +20,6 @@ namespace Nyx.Playground
             0, 1, 3, // Bottom left triangle
         };
 
-        private Shader _shader;
-
         private readonly float[] _vertexArray =
         {
             // position        // color
@@ -27,8 +29,12 @@ namespace Nyx.Playground
             -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Bottom left 3
         };
 
+        private Shader _shader;
+
         public override void Init()
         {
+            Camera = new Camera(Vector3.UnitZ * 6, Vector3.UnitZ * -1, Vector3.UnitY, (float) Width / Height);
+
             string shaderPath = NyxEngine.GetFullPath("Shaders/square.glsl");
             _shader = new Shader(NyxEngine.Gl, shaderPath);
 
@@ -44,11 +50,61 @@ namespace Nyx.Playground
 
         public override void Update(float deltaTime)
         {
+            float moveSpeed = 2.5f * deltaTime;
+
+            if (NyxEngine.KeyListener.IsKeyPressed(Key.W))
+            {
+                //Move forwards
+                Camera.Position += moveSpeed * Camera.Front;
+            }
+
+            if (NyxEngine.KeyListener.IsKeyPressed(Key.S))
+            {
+                //Move backwards
+                Camera.Position -= moveSpeed * Camera.Front;
+            }
+
+            if (NyxEngine.KeyListener.IsKeyPressed(Key.A))
+            {
+                //Move left
+                Camera.Position -= Vector3.Normalize(Vector3.Cross(Camera.Front, Camera.Up)) * moveSpeed;
+            }
+
+            if (NyxEngine.KeyListener.IsKeyPressed(Key.D))
+            {
+                //Move right
+                Camera.Position += Vector3.Normalize(Vector3.Cross(Camera.Front, Camera.Up)) * moveSpeed;
+            }
+        }
+
+        public override void MouseMove(IMouse mouse, PointF position)
+        {
+            const float lookSensitivity = 0.1f;
+            if (LastMousePosition == default)
+            {
+                LastMousePosition = position;
+            }
+            else
+            {
+                float xOffset = (position.X - LastMousePosition.X) * lookSensitivity;
+                float yOffset = (position.Y - LastMousePosition.Y) * lookSensitivity;
+                LastMousePosition = position;
+
+                Camera.ModifyDirection(xOffset, yOffset);
+            }
+        }
+
+        public override void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
+        {
+            Camera.ModifyZoom(scrollWheel.Y);
         }
 
         public override unsafe void Render()
         {
             _shader.Use();
+            _shader.SetUniform("uModel", Matrix4x4.Identity);
+            _shader.SetUniform("uProjection", Camera.GetProjectionMatrix());
+            _shader.SetUniform("uView", Camera.GetViewMatrix());
             _vertexArrayobject.Bind();
 
             _vertexArrayobject.EnableVertexAttribPointers(new uint[] {0, 1});
