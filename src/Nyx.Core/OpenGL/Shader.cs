@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Silk.NET.OpenGL;
 
@@ -135,30 +134,53 @@ namespace Nyx.Core.OpenGL
 
         private static async Task<(string, string)> GetShaderParts(string fullShaderPath)
         {
-            List<string> lines = (await File.ReadAllLinesAsync(fullShaderPath)).ToList();
-
-            var vertexShaderIndicator = "#type vertex";
-
-            if (vertexShaderIndicator != lines[0])
-            {
-                throw new Exception("GLSL formatting is incorrect. file must start with vertx shader");
-            }
-
-            var fragmentShaderIndicator = "#type fragment";
-            int fragmentShaderIndicatorIndex = lines.IndexOf(fragmentShaderIndicator);
-
             var vertexShaderSource = "";
-
-            for (var i = 1; i < fragmentShaderIndicatorIndex; i++)
-            {
-                vertexShaderSource += $"{lines[i]}\n";
-            }
-
             var fragmentShaderSource = "";
 
-            for (int i = fragmentShaderIndicatorIndex + 1; i < lines.Count; i++)
+            try
             {
-                fragmentShaderSource += $"{lines[i]}\n";
+                string src = await File.ReadAllTextAsync(fullShaderPath);
+                string[] splitString = Regex.Split(src, @"(#type)( )+([a-zA-Z]+)", RegexOptions.ExplicitCapture);
+
+                int index = src.IndexOf("#type", StringComparison.Ordinal) + 6;
+                int eol = src.IndexOf("\r\n", index, StringComparison.Ordinal);
+
+                string firstPattern = src.Substring(index, eol - index).Trim();
+
+                index = src.IndexOf("#type", eol, StringComparison.Ordinal) + 6;
+                eol = src.IndexOf("\r\n", index, StringComparison.Ordinal);
+
+                string secondPattern = src.Substring(index, eol - index).Trim();
+
+                if (firstPattern.Equals("vertex"))
+                {
+                    vertexShaderSource = splitString[1];
+                }
+                else if (firstPattern.Equals("fragment"))
+                {
+                    fragmentShaderSource = splitString[1];
+                }
+                else
+                {
+                    throw new Exception("Incorrect shader");
+                }
+
+                if (secondPattern.Equals("vertex"))
+                {
+                    vertexShaderSource = splitString[2];
+                }
+                else if (secondPattern.Equals("fragment"))
+                {
+                    fragmentShaderSource = splitString[2];
+                }
+                else
+                {
+                    throw new Exception("Incorrect shader");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
             return (vertexShaderSource, fragmentShaderSource);
