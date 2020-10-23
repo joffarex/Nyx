@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using Nyx.Core.Utils;
 using Nyx.Engine;
-using Silk.NET.GLFW;
 using Silk.NET.Input.Common;
-using MouseButton = Silk.NET.Input.Common.MouseButton;
 
 namespace Nyx.Playground
 {
@@ -67,7 +66,7 @@ namespace Nyx.Playground
                 _currentScene.Update(DeltaTime);
             }
 
-            EndTime = (float) Glfw.GetApi().GetTime();
+            EndTime = Time.GetTimeFromAppicationStart();
             DeltaTime = EndTime - BeginTime;
             BeginTime = EndTime;
         }
@@ -87,11 +86,6 @@ namespace Nyx.Playground
         protected override void KeyDown(IKeyboard keyboard, Key key, int keyCode)
         {
             base.KeyDown(keyboard, key, keyCode);
-
-            // Call key down events from game objects here in order to subscribe
-            // TODO: Implement functionality to automatically add game object events here
-            //
-            // There must be centralized object with abstract event methods, which will get called here with looping over them
         }
 
         protected override void KeyUp(IKeyboard keyboard, Key key, int keyCode)
@@ -102,8 +96,6 @@ namespace Nyx.Playground
         protected override void MouseClick(IMouse mouse, MouseButton mouseButton)
         {
             base.MouseClick(mouse, mouseButton);
-
-            // Call mouse click events from game objects here 
         }
 
         protected override void MouseMove(IMouse mouse, PointF position)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using Silk.NET.Input.Common;
+using Silk.NET.OpenGL;
+using static Nyx.Engine.NyxEngine;
 
 namespace Nyx.Engine
 {
@@ -25,6 +27,18 @@ namespace Nyx.Engine
 
         public virtual void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
         {
+        }
+
+        protected static unsafe void DrawElements(uint[] shapes)
+        {
+            Gl.DrawElements(PrimitiveType.Triangles, (uint) shapes.Length,
+                DrawElementsType.UnsignedInt, null);
+        }
+
+        protected static void CleanupScreen()
+        {
+            Gl.BindVertexArray(0);
+            Gl.UseProgram(0);
         }
 
         public abstract void Render();

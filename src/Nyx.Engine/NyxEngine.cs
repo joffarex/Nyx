@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using Nyx.Core.Input;
-using Silk.NET.GLFW;
+using Nyx.Core.Utils;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
@@ -15,10 +15,10 @@ namespace Nyx.Engine
     {
         protected static IWindow Window;
         public static GL Gl;
-        public static KeyListener KeyListener;
-        public static MouseListener MouseListener;
+        public static KeyListener Input;
+        public static MouseListener Mouse;
 
-        protected float BeginTime = (float) Glfw.GetApi().GetTime();
+        protected float BeginTime = Time.GetTimeFromAppicationStart();
         protected float DeltaTime = -1.0f;
         protected float EndTime;
 
@@ -45,14 +45,14 @@ namespace Nyx.Engine
 
             foreach (IKeyboard k in input.Keyboards)
             {
-                KeyListener = KeyListener.Get(k);
+                Input = KeyListener.Get(k);
                 k.KeyDown += KeyDown;
                 k.KeyUp += KeyUp;
             }
 
             foreach (IMouse m in input.Mice)
             {
-                MouseListener = MouseListener.Get(m);
+                Mouse = MouseListener.Get(m);
                 m.Click += MouseClick;
                 m.MouseMove += MouseMove;
                 m.Scroll += MouseScroll;

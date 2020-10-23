@@ -5,6 +5,7 @@ using Nyx.Engine;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using static Nyx.Playground.Game;
+using static Nyx.Engine.NyxEngine;
 
 namespace Nyx.Playground
 {
@@ -35,14 +36,14 @@ namespace Nyx.Playground
         {
             Camera = new Camera(Vector3.UnitZ * 6, Vector3.UnitZ * -1, Vector3.UnitY, (float) Width / Height);
 
-            string shaderPath = NyxEngine.GetFullPath("Shaders/square.glsl");
-            _shader = new Shader(NyxEngine.Gl, shaderPath);
+            string shaderPath = GetFullPath("Shaders/square.glsl");
+            _shader = new Shader(Gl, shaderPath);
 
-            _vertexBufferObject = new BufferObject<float>(NyxEngine.Gl, _vertexArray, BufferTargetARB.ArrayBuffer);
+            _vertexBufferObject = new BufferObject<float>(Gl, _vertexArray, BufferTargetARB.ArrayBuffer);
             _elementBufferObject =
-                new BufferObject<uint>(NyxEngine.Gl, _elementArray, BufferTargetARB.ElementArrayBuffer);
+                new BufferObject<uint>(Gl, _elementArray, BufferTargetARB.ElementArrayBuffer);
             _vertexArrayobject =
-                new VertexArrayObject<float, uint>(NyxEngine.Gl, _vertexBufferObject, _elementBufferObject);
+                new VertexArrayObject<float, uint>(Gl, _vertexBufferObject, _elementBufferObject);
 
             _vertexArrayobject.SetVertexAttribPointers3Pos4Col();
             _vertexArrayobject.EnableVertexAttribPointers(new uint[] {0, 1});
@@ -52,27 +53,23 @@ namespace Nyx.Playground
         {
             float moveSpeed = 2.5f * deltaTime;
 
-            if (NyxEngine.KeyListener.IsKeyPressed(Key.W))
+            if (Input.IsKeyPressed(Key.W))
             {
-                //Move forwards
                 Camera.Position += moveSpeed * Camera.Front;
             }
 
-            if (NyxEngine.KeyListener.IsKeyPressed(Key.S))
+            if (Input.IsKeyPressed(Key.S))
             {
-                //Move backwards
                 Camera.Position -= moveSpeed * Camera.Front;
             }
 
-            if (NyxEngine.KeyListener.IsKeyPressed(Key.A))
+            if (Input.IsKeyPressed(Key.A))
             {
-                //Move left
                 Camera.Position -= Vector3.Normalize(Vector3.Cross(Camera.Front, Camera.Up)) * moveSpeed;
             }
 
-            if (NyxEngine.KeyListener.IsKeyPressed(Key.D))
+            if (Input.IsKeyPressed(Key.D))
             {
-                //Move right
                 Camera.Position += Vector3.Normalize(Vector3.Cross(Camera.Front, Camera.Up)) * moveSpeed;
             }
         }
@@ -99,7 +96,7 @@ namespace Nyx.Playground
             Camera.ModifyZoom(scrollWheel.Y);
         }
 
-        public override unsafe void Render()
+        public override void Render()
         {
             _shader.Use();
             _shader.SetUniform("uModel", Matrix4x4.Identity);
@@ -109,13 +106,11 @@ namespace Nyx.Playground
 
             _vertexArrayobject.EnableVertexAttribPointers(new uint[] {0, 1});
 
-            NyxEngine.Gl.DrawElements(PrimitiveType.Triangles, (uint) _elementArray.Length,
-                DrawElementsType.UnsignedInt, null);
+            DrawElements(_elementArray);
 
             _vertexArrayobject.DisableVertexAttribPointers(new uint[] {0, 1});
 
-            NyxEngine.Gl.BindVertexArray(0);
-            NyxEngine.Gl.UseProgram(0);
+            CleanupScreen();
         }
 
         public override void Dispose()
