@@ -8,7 +8,7 @@ using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing.Common;
 
-namespace Nyx
+namespace Nyx.Core
 {
     public abstract class NyxEngine
     {

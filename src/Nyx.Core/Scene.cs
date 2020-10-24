@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Nyx.Core.OpenGL;
 using Nyx.SharpTT;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
-using static Nyx.NyxEngine;
+using static Nyx.Core.NyxEngine;
 
-namespace Nyx
+namespace Nyx.Core
 {
     public abstract class Scene : IDisposable
     {
         protected static PointF LastMousePosition;
         protected readonly List<GameObject> GameObjects = new List<GameObject>();
         private bool _isRunning;
+        protected Renderer Renderer = new Renderer();
         public Camera Camera { get; protected set; }
 
         public virtual void Dispose()
         {
+            Renderer.Dispose();
+
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Dispose();
@@ -32,6 +36,7 @@ namespace Nyx
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Start();
+                Renderer.Add(gameObject);
             }
 
             _isRunning = true;
@@ -47,6 +52,7 @@ namespace Nyx
             {
                 GameObjects.Add(gameObject);
                 gameObject.Start();
+                Renderer.Add(gameObject);
             }
         }
 
@@ -66,7 +72,7 @@ namespace Nyx
         {
         }
 
-        protected static unsafe void DrawElements(uint[] shapes)
+        public static unsafe void DrawElements(uint[] shapes)
         {
             Gl.DrawElements(PrimitiveType.Triangles, (uint) shapes.Length,
                 DrawElementsType.UnsignedInt, null);

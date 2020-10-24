@@ -11,6 +11,8 @@ namespace Nyx.Core.OpenGL
         private readonly GL _gl;
         private readonly uint _handle;
 
+        private readonly List<uint> _locations = new List<uint>();
+
         public VertexArrayObject(GL gl, BufferObject<TVertexType> vertexBufferObject,
             BufferObject<TIndexType> elementBufferObject)
         {
@@ -27,13 +29,22 @@ namespace Nyx.Core.OpenGL
             _gl.DeleteVertexArray(_handle);
         }
 
-        public unsafe void VertexAttributePointer(uint index, int size, VertexAttribPointerType type,
+        public unsafe void VertexAttributePointer(uint location, int size, VertexAttribPointerType type,
             uint vertexSizeBytes,
             int offset)
         {
-            _gl.VertexAttribPointer(index, size, type, false, vertexSizeBytes * (uint) sizeof(TVertexType),
+            _gl.VertexAttribPointer(location, size, type, false, vertexSizeBytes * (uint) sizeof(TVertexType),
                 (void*) (offset * sizeof(TVertexType)));
-            _gl.EnableVertexAttribArray(index);
+            _gl.EnableVertexAttribArray(location);
+            _locations.Add(location);
+        }
+
+        public void EnableVertexAttribPointers()
+        {
+            foreach (uint location in _locations)
+            {
+                _gl.EnableVertexAttribArray(location);
+            }
         }
 
         public void Bind()
@@ -46,19 +57,11 @@ namespace Nyx.Core.OpenGL
             _gl.BindVertexArray(0);
         }
 
-        public void EnableVertexAttribPointers(IEnumerable<uint> locations)
+        public void DisableVertexAttribPointers()
         {
-            foreach (uint l in locations)
+            foreach (uint location in _locations)
             {
-                _gl.EnableVertexAttribArray(l);
-            }
-        }
-
-        public void DisableVertexAttribPointers(IEnumerable<uint> locations)
-        {
-            foreach (uint l in locations)
-            {
-                _gl.DisableVertexAttribArray(l);
+                _gl.DisableVertexAttribArray(location);
             }
         }
     }

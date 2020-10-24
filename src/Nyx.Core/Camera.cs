@@ -2,7 +2,7 @@
 using System.Numerics;
 using Nyx.Core.Math;
 
-namespace Nyx
+namespace Nyx.Core
 {
     public class Camera
     {
@@ -28,7 +28,7 @@ namespace Nyx
         public void ModifyZoom(float zoomAmount)
         {
             //We don't want to be able to zoom in too close or too far away so clamp to these values
-            _zoom = Math.Clamp(_zoom - zoomAmount, 1.0f, 45f);
+            _zoom = System.Math.Clamp(_zoom - zoomAmount, 1.0f, 45f);
         }
 
         public void ModifyDirection(float xOffset, float yOffset)
@@ -37,7 +37,7 @@ namespace Nyx
             Pitch -= yOffset;
 
             //We don't want to be able to look behind us by going over our head or under our feet so make sure it stays within these bounds
-            Pitch = Math.Clamp(Pitch, -89f, 89f);
+            Pitch = System.Math.Clamp(Pitch, -89f, 89f);
 
             Vector3 cameraDirection = Vector3.Zero;
             cameraDirection.X = MathF.Cos(Converters.DegreesToRadians(Yaw)) *

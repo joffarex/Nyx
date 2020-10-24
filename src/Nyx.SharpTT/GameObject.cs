@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Nyx.Core.OpenGL;
 
 namespace Nyx.SharpTT
 {
@@ -8,12 +8,19 @@ namespace Nyx.SharpTT
     {
         public GameObject(string name)
         {
-            Name = name;
+            Init(name, new Transform());
         }
 
-        public string Name { get; }
+        public GameObject(string name, Transform transform)
+        {
+            Init(name, transform);
+        }
 
-        public List<Component> Components { get; } = new List<Component>();
+
+        public Transform Transform { get; private set; }
+        private string Name { get; set; }
+
+        private List<Component> Components { get; set; }
 
         public void Dispose()
         {
@@ -23,11 +30,24 @@ namespace Nyx.SharpTT
             }
         }
 
-        public T GetComponent<T>(T component) where T : Component
+        public void Init(string name, Transform transform)
         {
-            return Components.Any(c => component.GetType().IsAssignableFrom(c.GetType()))
-                ? component
-                : null;
+            Name = name;
+            Components = new List<Component>();
+            Transform = transform;
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            foreach (Component component in Components)
+            {
+                if (typeof(T) == component.GetType())
+                {
+                    return (T) component;
+                }
+            }
+
+            return null;
         }
 
         public void AddComponent(Component component)
@@ -36,11 +56,14 @@ namespace Nyx.SharpTT
             component.GameObject = this;
         }
 
-        public void RemoveComponent<T>(T component) where T : Component
+        public void RemoveComponent<T>() where T : Component
         {
-            if (Components.Any(c => component.GetType().IsAssignableFrom(c.GetType())))
+            foreach (Component component in Components)
             {
-                Components.Remove(component);
+                if (typeof(T) == component.GetType())
+                {
+                    Components.Remove(component);
+                }
             }
         }
 

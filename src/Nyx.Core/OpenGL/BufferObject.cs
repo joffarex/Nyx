@@ -10,7 +10,7 @@ namespace Nyx.Core.OpenGL
         private readonly GL _gl;
         private readonly uint _handle;
 
-        public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType)
+        public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType, BufferUsageARB bufferUsage)
         {
             _gl = gl;
             _bufferType = bufferType;
@@ -19,7 +19,7 @@ namespace Nyx.Core.OpenGL
             Bind();
             fixed (void* d = data)
             {
-                _gl.BufferData(bufferType, (UIntPtr) (data.Length * sizeof(TDataType)), d, BufferUsageARB.StaticDraw);
+                _gl.BufferData(bufferType, (UIntPtr) (data.Length * sizeof(TDataType)), d, bufferUsage);
             }
         }
 

@@ -13,10 +13,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Silk.NET" Version="1.7.0" />
       <PackageReference Include="Silk.NET.GLFW" Version="1.7.0" />
       <PackageReference Include="Silk.NET.Input.Common" Version="1.7.0" />
       <PackageReference Include="Silk.NET.OpenGL" Version="1.7.0" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nyx.SharpTT\Nyx.SharpTT.csproj" />
     </ItemGroup>
 
 </Project>

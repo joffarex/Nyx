@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Nyx.Core.Utils;
 using Silk.NET.Input.Common;
 
-namespace Nyx.Playground
+namespace Nyx.Core
 {
     public class Game : NyxEngine
     {
-        private static Scene _currentScene;
+        public static Scene CurrentScene;
         private static Game _instance;
+
+        private readonly Dictionary<int, Scene> _scenes = new Dictionary<int, Scene>();
 
 
         private Game() : base(Width, Height)
@@ -17,6 +20,7 @@ namespace Nyx.Playground
 
         public static int Width { get; } = 800;
         public static int Height { get; } = 600;
+
 
         public static Game Get()
         {
@@ -28,18 +32,22 @@ namespace Nyx.Playground
             return _instance;
         }
 
-
-        public static void ChangeScene(int newSceneIndex)
+        public void AddScene(int index, Scene scene)
         {
-            _currentScene = newSceneIndex switch
-            {
-                0 => new LevelEditorScene(),
-                1 => new LevelScene(),
-                _ => throw new Exception($"Scene idx: {newSceneIndex} does not exist"),
-            };
+            _scenes.Add(index, scene);
+        }
 
-            _currentScene.Init();
-            _currentScene.Start();
+
+        public void ChangeScene(int newSceneIndex)
+        {
+            bool result = _scenes.TryGetValue(newSceneIndex, out CurrentScene);
+            if (!result)
+            {
+                throw new Exception($"Scene idx: {newSceneIndex} does not exist");
+            }
+
+            CurrentScene.Init();
+            CurrentScene.Start();
         }
 
         protected override void OnLoad()
@@ -53,7 +61,7 @@ namespace Nyx.Playground
         {
             base.OnRender(obj);
 
-            _currentScene.Render();
+            CurrentScene.Render();
         }
 
 
@@ -61,9 +69,11 @@ namespace Nyx.Playground
         {
             base.OnUpdate(obj);
 
+            PrintFps(DeltaTime);
+
             if (DeltaTime >= 0)
             {
-                _currentScene.Update(DeltaTime);
+                CurrentScene.Update(DeltaTime);
             }
 
             EndTime = Time.GetTimeFromAppicationStart();
@@ -76,11 +86,16 @@ namespace Nyx.Playground
             return 1.0f / deltaTime;
         }
 
+        public static void PrintFps(float deltaTime)
+        {
+            Console.WriteLine($"{GetFps(deltaTime)}");
+        }
+
         protected override void OnClose()
         {
             base.OnClose();
 
-            _currentScene.Dispose();
+            CurrentScene.Dispose();
         }
 
         protected override void KeyDown(IKeyboard keyboard, Key key, int keyCode)
@@ -103,7 +118,7 @@ namespace Nyx.Playground
             base.MouseMove(mouse, position);
             //Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
 
-            _currentScene.MouseMove(mouse, position);
+            CurrentScene.MouseMove(mouse, position);
         }
 
         protected override void MouseDown(IMouse mouse, MouseButton mouseButton)
@@ -125,7 +140,7 @@ namespace Nyx.Playground
         {
             base.MouseScroll(mouse, scrollWheel);
 
-            _currentScene.MouseScroll(mouse, scrollWheel);
+            CurrentScene.MouseScroll(mouse, scrollWheel);
         }
     }
 }

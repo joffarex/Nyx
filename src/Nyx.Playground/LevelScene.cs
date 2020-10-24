@@ -1,4 +1,6 @@
-﻿namespace Nyx.Playground
+﻿using Nyx.Core;
+
+namespace Nyx.Playground
 {
     public class LevelScene : Scene
     {

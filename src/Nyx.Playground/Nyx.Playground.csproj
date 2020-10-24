@@ -23,8 +23,4 @@
       <ProjectReference Include="..\Nyx\Nyx.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="assets\textures" />
-    </ItemGroup>
-
 </Project>
