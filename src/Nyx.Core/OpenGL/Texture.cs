@@ -12,24 +12,24 @@ namespace Nyx.Core.OpenGL
         private GL _gl;
         private uint _handle;
 
-        public unsafe Texture(GL gl, string path)
+        public unsafe Texture(GL gl, TextureType type, string path)
         {
             var img = (Image<Rgba32>) Image.Load(path);
             img.Mutate(x => x.Flip(FlipMode.Vertical));
 
             fixed (void* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
             {
-                Load(gl, data, (uint) img.Width, (uint) img.Height);
+                Load(gl, type, data, (uint) img.Width, (uint) img.Height);
             }
 
             img.Dispose();
         }
 
-        public unsafe Texture(GL gl, Span<byte> data, uint width, uint height)
+        public unsafe Texture(GL gl, TextureType type, Span<byte> data, uint width, uint height)
         {
             fixed (void* d = &data[0])
             {
-                Load(gl, d, width, height);
+                Load(gl, type, d, width, height);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Nyx.Core.OpenGL
             _gl.DeleteTexture(_handle);
         }
 
-        private unsafe void Load(GL gl, void* data, uint width, uint height)
+        private unsafe void Load(GL gl, TextureType type, void* data, uint width, uint height)
         {
             _gl = gl;
 
@@ -47,17 +47,53 @@ namespace Nyx.Core.OpenGL
 
             _gl.TexImage2D(TextureTarget.Texture2D, 0, (int) InternalFormat.Rgba, width, height, 0, PixelFormat.Rgba,
                 PixelType.UnsignedByte, data);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) GLEnum.ClampToEdge);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) GLEnum.ClampToEdge);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) GLEnum.Linear);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) GLEnum.Linear);
+
+            SetupTextureParameters(type);
+
             _gl.GenerateMipmap(TextureTarget.Texture2D);
         }
 
-        public void Bind(TextureUnit textureSlot = TextureUnit.Texture0)
+
+        public void Bind()
+        {
+            _gl.BindTexture(TextureTarget.Texture2D, _handle);
+        }
+
+        public void Activate(TextureUnit textureSlot = TextureUnit.Texture0)
         {
             _gl.ActiveTexture(textureSlot);
-            _gl.BindTexture(TextureTarget.Texture2D, _handle);
+        }
+
+        public void Detach()
+        {
+            _gl.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        private void SetupTextureParameters(TextureType type)
+        {
+            switch (type)
+            {
+                case TextureType.NormalSprite:
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,
+                        (int) GLEnum.ClampToEdge);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT,
+                        (int) GLEnum.ClampToEdge);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                        (int) GLEnum.Linear);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                        (int) GLEnum.Linear);
+                    break;
+                case TextureType.PixelSprite:
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) GLEnum.Repeat);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) GLEnum.Repeat);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                        (int) GLEnum.Nearest);
+                    _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                        (int) GLEnum.Nearest);
+                    break;
+                default:
+                    throw new Exception($"{type} is unknown");
+            }
         }
     }
 }

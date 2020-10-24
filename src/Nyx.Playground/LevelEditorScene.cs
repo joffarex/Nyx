@@ -22,21 +22,26 @@ namespace Nyx.Playground
 
         private readonly float[] _vertexArray =
         {
-            // position        // color
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
-            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left 1
-            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top right 2
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Bottom left 3
+            // position        // color                // UV coordinates
+            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, // Bottom right 0
+            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left 1
+            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Top right 2
+            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left 3
         };
 
+        private readonly uint[] _vertexLocations = {0, 1, 2};
+
         private Shader _shader;
+        private Texture _texture;
 
         public override void Init()
         {
             Camera = new Camera(Vector3.UnitZ * 6, Vector3.UnitZ * -1, Vector3.UnitY, (float) Width / Height);
 
-            string shaderPath = GetFullPath("Shaders/square.glsl");
+            string shaderPath = GetFullPath("assets/shaders/square.glsl");
             _shader = new Shader(Gl, shaderPath);
+            string texturePath = GetFullPath("assets/textures/mario.png");
+            _texture = new Texture(Gl, TextureType.PixelSprite, texturePath);
 
             _vertexBufferObject = new BufferObject<float>(Gl, _vertexArray, BufferTargetARB.ArrayBuffer);
             _elementBufferObject =
@@ -44,8 +49,19 @@ namespace Nyx.Playground
             _vertexArrayobject =
                 new VertexArrayObject<float, uint>(Gl, _vertexBufferObject, _elementBufferObject);
 
-            _vertexArrayobject.SetVertexAttribPointers3Pos4Col();
-            _vertexArrayobject.EnableVertexAttribPointers(new uint[] {0, 1});
+            const int positionSize = 3;
+            const int colorSize = 4;
+            const int uVSize = 2;
+            const uint vertexSizeBytes = (uint) (positionSize + colorSize + uVSize);
+
+            _vertexArrayobject.VertexAttributePointer(0, positionSize, VertexAttribPointerType.Float, vertexSizeBytes,
+                0);
+            _vertexArrayobject.VertexAttributePointer(1, colorSize, VertexAttribPointerType.Float, vertexSizeBytes,
+                positionSize);
+            _vertexArrayobject.VertexAttributePointer(2, uVSize, VertexAttribPointerType.Float, vertexSizeBytes,
+                positionSize + colorSize);
+
+            _vertexArrayobject.EnableVertexAttribPointers(_vertexLocations);
         }
 
         public override void Update(float deltaTime)
@@ -98,18 +114,24 @@ namespace Nyx.Playground
         public override void Render()
         {
             _shader.Use();
+
+            _shader.SetUniform("TEX_SAMPLER", 0);
+            _texture.Activate();
+            _texture.Bind();
+
             _shader.SetUniform("uModel", Matrix4x4.Identity);
             _shader.SetUniform("uProjection", Camera.GetProjectionMatrix());
             _shader.SetUniform("uView", Camera.GetViewMatrix());
             _vertexArrayobject.Bind();
 
-            _vertexArrayobject.EnableVertexAttribPointers(new uint[] {0, 1});
+            _vertexArrayobject.EnableVertexAttribPointers(_vertexLocations);
 
             DrawElements(_elementArray);
 
-            _vertexArrayobject.DisableVertexAttribPointers(new uint[] {0, 1});
+            _vertexArrayobject.DisableVertexAttribPointers(_vertexLocations);
 
             _shader.Detach();
+            _texture.Detach();
             _vertexArrayobject.Detach();
         }
 
@@ -119,6 +141,7 @@ namespace Nyx.Playground
             _elementBufferObject.Dispose();
             _vertexArrayobject.Dispose();
             _shader.Dispose();
+            _texture.Dispose();
         }
     }
 }

@@ -27,11 +27,12 @@ namespace Nyx.Core.OpenGL
             _gl.DeleteVertexArray(_handle);
         }
 
-        public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, uint vertexSize,
-            int offSet)
+        public unsafe void VertexAttributePointer(uint index, int size, VertexAttribPointerType type,
+            uint vertexSizeBytes,
+            int offset)
         {
-            _gl.VertexAttribPointer(index, count, type, false, vertexSize * (uint) sizeof(TVertexType),
-                (void*) (offSet * sizeof(TVertexType)));
+            _gl.VertexAttribPointer(index, size, type, false, vertexSizeBytes * (uint) sizeof(TVertexType),
+                (void*) (offset * sizeof(TVertexType)));
             _gl.EnableVertexAttribArray(index);
         }
 
@@ -43,17 +44,6 @@ namespace Nyx.Core.OpenGL
         public void Detach()
         {
             _gl.BindVertexArray(0);
-        }
-
-        /// <summary>
-        ///     Make sure that vertex array is formatted in this way: 3 floats for position (x, y, z); 4 floats for color (r, g, b,
-        ///     a)
-        /// </summary>
-        public unsafe void SetVertexAttribPointers3Pos4Col()
-        {
-            _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), null);
-            _gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float),
-                (void*) (3 * sizeof(float)));
         }
 
         public void EnableVertexAttribPointers(IEnumerable<uint> locations)
