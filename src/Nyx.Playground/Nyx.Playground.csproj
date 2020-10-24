@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nyx.Core\Nyx.Core.csproj" />
-      <ProjectReference Include="..\Nyx\Nyx.csproj" />
     </ItemGroup>
 
 </Project>
