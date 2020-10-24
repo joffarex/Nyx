@@ -11,6 +11,7 @@ namespace Nyx.Core.OpenGL
     {
         private readonly GL _gl;
         private uint _handle;
+        private bool _isBeingUsed;
 
         // TODO: add uniform caching
         // This is necessary as accessing shader for uniform locations is not performant
@@ -59,7 +60,17 @@ namespace Nyx.Core.OpenGL
 
         public void Use()
         {
-            _gl.UseProgram(_handle);
+            if (!_isBeingUsed)
+            {
+                _gl.UseProgram(_handle);
+                _isBeingUsed = true;
+            }
+        }
+
+        public void Detach()
+        {
+            _gl.UseProgram(0);
+            _isBeingUsed = false;
         }
 
         public void SetUniform(string name, int value)
@@ -74,9 +85,8 @@ namespace Nyx.Core.OpenGL
             _gl.Uniform1(location, value);
         }
 
-        public unsafe void SetUniform(string name, Matrix4x4 value)
+        public unsafe void SetUniform(string name, Matrix4x4 matrix)
         {
-            //A new overload has been created for setting a uniform so we can use the transform in our shader.
             int location = _gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
@@ -84,7 +94,43 @@ namespace Nyx.Core.OpenGL
             }
 
             Use();
-            _gl.UniformMatrix4(location, 1, false, (float*) &value);
+            _gl.UniformMatrix4(location, 1, false, (float*) &matrix);
+        }
+
+        public void SetUniform(string name, Vector4 vector)
+        {
+            int location = _gl.GetUniformLocation(_handle, name);
+            if (location == -1)
+            {
+                throw new Exception($"{name} uniform not found on shader.");
+            }
+
+            Use();
+            _gl.Uniform4(location, vector);
+        }
+
+        public void SetUniform(string name, Vector3 vector)
+        {
+            int location = _gl.GetUniformLocation(_handle, name);
+            if (location == -1)
+            {
+                throw new Exception($"{name} uniform not found on shader.");
+            }
+
+            Use();
+            _gl.Uniform3(location, vector);
+        }
+
+        public void SetUniform(string name, Vector2 vector)
+        {
+            int location = _gl.GetUniformLocation(_handle, name);
+            if (location == -1)
+            {
+                throw new Exception($"{name} uniform not found on shader.");
+            }
+
+            Use();
+            _gl.Uniform2(location, vector);
         }
 
         public void SetUniform(string name, float value)

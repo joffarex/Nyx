@@ -109,7 +109,8 @@ namespace Nyx.Playground
 
             _vertexArrayobject.DisableVertexAttribPointers(new uint[] {0, 1});
 
-            CleanupScreen();
+            _shader.Detach();
+            _vertexArrayobject.Detach();
         }
 
         public override void Dispose()

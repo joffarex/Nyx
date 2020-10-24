@@ -40,6 +40,11 @@ namespace Nyx.Core.OpenGL
             _gl.BindVertexArray(_handle);
         }
 
+        public void Detach()
+        {
+            _gl.BindVertexArray(0);
+        }
+
         /// <summary>
         ///     Make sure that vertex array is formatted in this way: 3 floats for position (x, y, z); 4 floats for color (r, g, b,
         ///     a)

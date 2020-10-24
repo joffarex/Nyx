@@ -35,12 +35,6 @@ namespace Nyx
                 DrawElementsType.UnsignedInt, null);
         }
 
-        protected static void CleanupScreen()
-        {
-            Gl.BindVertexArray(0);
-            Gl.UseProgram(0);
-        }
-
         public abstract void Render();
     }
 }
