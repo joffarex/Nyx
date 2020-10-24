@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nyx.SharpTT
 {
-    public class GameObject
+    public class GameObject : IDisposable
     {
         public GameObject(string name)
         {
@@ -13,6 +14,14 @@ namespace Nyx.SharpTT
         public string Name { get; }
 
         public List<Component> Components { get; } = new List<Component>();
+
+        public void Dispose()
+        {
+            foreach (Component component in Components)
+            {
+                component.Dispose();
+            }
+        }
 
         public T GetComponent<T>(T component) where T : Component
         {
@@ -48,6 +57,14 @@ namespace Nyx.SharpTT
             foreach (Component component in Components)
             {
                 component.Update(dt);
+            }
+        }
+
+        public void Render()
+        {
+            foreach (Component component in Components)
+            {
+                component.Render();
             }
         }
     }

@@ -1,13 +1,20 @@
-﻿namespace Nyx.SharpTT
+﻿using System;
+
+namespace Nyx.SharpTT
 {
-    public abstract class Component
+    public abstract class Component : IDisposable
     {
         public GameObject GameObject { get; set; }
 
-        public void Start()
+        public virtual void Dispose()
         {
         }
 
-        public abstract void Update(float dt); // Delta time
+        public virtual void Start()
+        {
+        }
+
+        public abstract void Update(float deltaTime);
+        public abstract void Render();
     }
 }

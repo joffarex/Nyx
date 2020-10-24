@@ -87,6 +87,8 @@ namespace Nyx.Playground
             {
                 Camera.Position += Vector3.Normalize(Vector3.Cross(Camera.Front, Camera.Up)) * moveSpeed;
             }
+
+            base.Update(deltaTime);
         }
 
         public override void MouseMove(IMouse mouse, PointF position)
@@ -133,6 +135,8 @@ namespace Nyx.Playground
             _shader.Detach();
             _texture.Detach();
             _vertexArrayobject.Detach();
+
+            base.Render();
         }
 
         public override void Dispose()
@@ -142,6 +146,8 @@ namespace Nyx.Playground
             _vertexArrayobject.Dispose();
             _shader.Dispose();
             _texture.Dispose();
+
+            base.Dispose();
         }
     }
 }

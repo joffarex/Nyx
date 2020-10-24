@@ -39,6 +39,7 @@ namespace Nyx.Playground
             };
 
             _currentScene.Init();
+            _currentScene.Start();
         }
 
         protected override void OnLoad()
