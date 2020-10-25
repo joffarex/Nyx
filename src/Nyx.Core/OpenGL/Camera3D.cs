@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using Nyx.Core.Math;
+using Silk.NET.Input.Common;
 
-namespace Nyx.Core
+namespace Nyx.Core.OpenGL
 {
-    public class Camera
+    public class Camera3D
     {
         private float _zoom = 45f;
 
-        public Camera(Vector3 position, Vector3 front, Vector3 up, float aspectRatio)
+        public Camera3D(Vector3 position, Vector3 front, Vector3 up, float aspectRatio)
         {
             Position = position;
             AspectRatio = aspectRatio;
@@ -58,6 +60,48 @@ namespace Nyx.Core
         {
             return Matrix4x4.CreatePerspectiveFieldOfView(Converters.DegreesToRadians(_zoom), AspectRatio, 0.1f,
                 100.0f);
+        }
+
+        public void Update(float deltaTime)
+        {
+            float moveSpeed = 2.5f * deltaTime;
+
+            if (NyxEngine.Input.IsKeyPressed(Key.W))
+            {
+                Position += moveSpeed * Front;
+            }
+
+            if (NyxEngine.Input.IsKeyPressed(Key.S))
+            {
+                Position -= moveSpeed * Front;
+            }
+
+            if (NyxEngine.Input.IsKeyPressed(Key.A))
+            {
+                Position -= Vector3.Normalize(Vector3.Cross(Front, Up)) * moveSpeed;
+            }
+
+            if (NyxEngine.Input.IsKeyPressed(Key.D))
+            {
+                Position += Vector3.Normalize(Vector3.Cross(Front, Up)) * moveSpeed;
+            }
+        }
+
+        public void MouseMove(PointF lastMousePosition, PointF position)
+        {
+            const float lookSensitivity = 0.1f;
+            if (lastMousePosition == default)
+            {
+                lastMousePosition = position;
+            }
+            else
+            {
+                float xOffset = (position.X - lastMousePosition.X) * lookSensitivity;
+                float yOffset = (position.Y - lastMousePosition.Y) * lookSensitivity;
+                lastMousePosition = position;
+
+                ModifyDirection(xOffset, yOffset);
+            }
         }
     }
 }
