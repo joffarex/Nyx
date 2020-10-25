@@ -15,6 +15,8 @@ namespace Nyx.Core.Renderer
         {
             var img = (Image<Rgba32>) Image.Load(path);
             img.Mutate(x => x.Flip(FlipMode.Vertical));
+            Width = img.Width;
+            Height = img.Height;
 
             fixed (void* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
             {
@@ -31,6 +33,9 @@ namespace Nyx.Core.Renderer
                 Load(type, d, width, height);
             }
         }
+
+        public int Width { get; }
+        public int Height { get; }
 
         public void Dispose()
         {

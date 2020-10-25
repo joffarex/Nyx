@@ -10,16 +10,26 @@ namespace Nyx.Playground
 {
     public class LevelEditorScene : Scene
     {
+        private const string SpriteSheetPath = "assets/sprites/spritesheet.png";
+
         public override void Init()
         {
+            LoadResources();
+
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f));
 
-            var gameObject = new GameObject("Object 1",
-                new Transform(new Vector2(100.0f, 100.0f), new Vector2(256.0f, 256.0f)));
-            gameObject.AddComponent(new SpriteRenderer(AssetManager.GetTexture("assets/sprites/mario.png")));
-            AddGameObjectToScene(gameObject);
+            SpriteSheet spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
 
-            LoadResources();
+            var gameObject1 = new GameObject("Object 1",
+                new Transform(new Vector2(100.0f, 100.0f), new Vector2(256.0f, 256.0f)));
+            gameObject1.AddComponent(
+                new SpriteRenderer(spriteSheet.Sprites[0]));
+            AddGameObjectToScene(gameObject1);
+            var gameObject2 = new GameObject("Object 2",
+                new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)));
+            gameObject2.AddComponent(
+                new SpriteRenderer(spriteSheet.Sprites[10]));
+            AddGameObjectToScene(gameObject2);
         }
 
         private void GenerateGradientQuad()
@@ -49,9 +59,14 @@ namespace Nyx.Playground
             }
         }
 
-        private void LoadResources()
+        private static void LoadResources()
         {
             AssetManager.GetShader("assets/shaders/default.glsl");
+
+            Texture texture = AssetManager.GetTexture(SpriteSheetPath);
+            AssetManager.AddSpriteSheet(SpriteSheetPath,
+                new SpriteSheet(texture, 16, 16, 26, 0)
+            );
         }
 
         public override void Update(float deltaTime)

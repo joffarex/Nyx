@@ -9,33 +9,22 @@ namespace Nyx.Core.Components
         public SpriteRenderer(Vector4 color)
         {
             Color = color;
-            Texture = null;
+            Sprite = new Sprite(null);
         }
 
-        public SpriteRenderer(Texture texture)
+        public SpriteRenderer(Sprite sprite)
         {
-            Texture = texture;
+            Sprite = sprite;
             Color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         public Vector4 Color { get; }
 
-        public Vector2[] TextureCoordinates
-        {
-            get
-            {
-                return new[]
-                {
-                    new Vector2(1.0f, 1.0f),
-                    new Vector2(1.0f, 0.0f),
-                    new Vector2(0.0f, 0.0f),
-                    new Vector2(0.0f, 1.0f),
-                };
-            }
-            private set => TextureCoordinates = value;
-        }
+        public Vector2[] TextureCoordinates => Sprite.TextureCoordinates;
 
-        public Texture Texture { get; }
+        public Sprite Sprite { get; set; }
+
+        public Texture Texture => Sprite.Texture;
 
         public override void Start()
         {

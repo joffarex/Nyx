@@ -49,6 +49,7 @@ namespace Nyx.Core.Renderer
         }
 
         public bool HasRoom { get; private set; }
+        public bool HasTextureRoom => _textures.Count < 8;
 
         public void Dispose()
         {
@@ -61,6 +62,11 @@ namespace Nyx.Core.Renderer
             {
                 texture.Dispose();
             }
+        }
+
+        public bool HasTexture(Texture texture)
+        {
+            return _textures.Contains(texture);
         }
 
         public void Start()

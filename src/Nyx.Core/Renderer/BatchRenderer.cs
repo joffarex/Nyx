@@ -39,9 +39,13 @@ namespace Nyx.Core.Renderer
             var added = false;
             foreach (Batch batch in _batches.Where(batch => batch.HasRoom))
             {
-                batch.AddSprite(sprite);
-                added = true;
-                break;
+                Texture texture = sprite.Texture;
+                if (batch.HasTexture(texture) || batch.HasTextureRoom || (texture == null))
+                {
+                    batch.AddSprite(sprite);
+                    added = true;
+                    break;
+                }
             }
 
             if (!added)
