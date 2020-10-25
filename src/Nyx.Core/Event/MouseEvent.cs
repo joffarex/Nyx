@@ -1,19 +1,19 @@
 ﻿using Silk.NET.Input.Common;
 
-namespace Nyx.Core.Input
+namespace Nyx.Core.Event
 {
-    public class MouseListener
+    public class MouseEvent
     {
-        private static MouseListener _instance;
+        private static MouseEvent _instance;
         private static readonly object _mutex = new object();
         private readonly IMouse _mouse;
 
-        private MouseListener(IMouse mouse)
+        private MouseEvent(IMouse mouse)
         {
             _mouse = mouse;
         }
 
-        public static MouseListener Get(IMouse mouse)
+        public static MouseEvent Get(IMouse mouse)
         {
             if (_instance == null)
             {
@@ -21,7 +21,7 @@ namespace Nyx.Core.Input
                 {
                     if (_instance == null)
                     {
-                        _instance = new MouseListener(mouse);
+                        _instance = new MouseEvent(mouse);
                     }
                 }
             }

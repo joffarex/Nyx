@@ -1,19 +1,19 @@
 ﻿using Silk.NET.Input.Common;
 
-namespace Nyx.Core.Input
+namespace Nyx.Core.Event
 {
-    public class KeyListener
+    public class KeyEvent
     {
-        private static KeyListener _instance;
+        private static KeyEvent _instance;
         private static readonly object _mutex = new object();
         private readonly IKeyboard _keyboard;
 
-        private KeyListener(IKeyboard keyboard)
+        private KeyEvent(IKeyboard keyboard)
         {
             _keyboard = keyboard;
         }
 
-        public static KeyListener Get(IKeyboard keyboard)
+        public static KeyEvent Get(IKeyboard keyboard)
         {
             if (_instance == null)
             {
@@ -21,7 +21,7 @@ namespace Nyx.Core.Input
                 {
                     if (_instance == null)
                     {
-                        _instance = new KeyListener(keyboard);
+                        _instance = new KeyEvent(keyboard);
                     }
                 }
             }

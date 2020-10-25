@@ -1,4 +1,4 @@
-﻿namespace Nyx.Core.OpenGL
+﻿namespace Nyx.Core.Renderer
 {
     public enum TextureType
     {

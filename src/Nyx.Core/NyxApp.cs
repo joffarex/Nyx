@@ -1,57 +1,76 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using Nyx.Core.Input;
+using Nyx.Core.Event;
+using Nyx.Core.Renderer;
+using Nyx.Core.Scene;
 using Nyx.Core.Utils;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using Silk.NET.Windowing.Common;
 
 namespace Nyx.Core
 {
-    public abstract class NyxEngine
+    public class NyxApp
     {
-        protected static IWindow Window;
-        public static GL Gl;
-        public static KeyListener Input;
-        public static MouseListener Mouse;
+        private static IWindow _window;
+
+        // public static Scene.Scene CurrentScene;
+        private static NyxApp _instance;
+
+        // private readonly Dictionary<int, Scene.Scene> _scenes = new Dictionary<int, Scene.Scene>();
 
         protected float BeginTime = Time.GetTimeFromAppicationStart();
         protected float DeltaTime = -1.0f;
         protected float EndTime;
 
-
-        protected NyxEngine(int width, int height)
+        private NyxApp(int width, int height, string title)
         {
             var options = WindowOptions.Default;
             options.Size = new Size(width, height);
-            options.Title = "Nyx Playground";
+            options.Title = title;
             options.VSync = VSyncMode.On;
             options.ShouldSwapAutomatically = true;
             options.WindowBorder = WindowBorder.Fixed;
-            Window = Silk.NET.Windowing.Window.Create(options);
+            _window = Window.Create(options);
 
-            Window.Load += OnLoad;
-            Window.Render += OnRender;
-            Window.Update += OnUpdate;
-            Window.Closing += OnClose;
+            _window.Load += OnLoad;
+            _window.Render += OnRender;
+            _window.Update += OnUpdate;
+            _window.Closing += OnClose;
+        }
+
+        public static NyxApp Get(int width, int height, string title)
+        {
+            if (_instance == null)
+            {
+                _instance = new NyxApp(width, height, title);
+            }
+
+            return _instance;
+        }
+
+        public void AddScene(int index, Scene.Scene scene)
+        {
+            SceneContext.AddScene(index, scene);
         }
 
         protected virtual void OnLoad()
         {
-            IInputContext input = Window.CreateInput();
+            IInputContext input = _window.CreateInput();
 
             foreach (IKeyboard k in input.Keyboards)
             {
-                Input = KeyListener.Get(k);
+                EventContext.KeyEvent = KeyEvent.Get(k);
                 k.KeyDown += KeyDown;
                 k.KeyUp += KeyUp;
             }
 
             foreach (IMouse m in input.Mice)
             {
-                Mouse = MouseListener.Get(m);
+                EventContext.MouseEvent = MouseEvent.Get(m);
                 m.Click += MouseClick;
                 m.MouseMove += MouseMove;
                 m.Scroll += MouseScroll;
@@ -60,8 +79,9 @@ namespace Nyx.Core
                 m.MouseDown += MouseDown;
             }
 
-            // Getting the opengl api for drawing to the screen.
-            Gl = GL.GetApi(Window);
+            GraphicsContext.Create(_window);
+
+            SceneContext.ChangeScene(0);
         }
 
         /// <summary>
@@ -69,6 +89,14 @@ namespace Nyx.Core
         /// </summary>
         protected virtual void OnUpdate(double obj)
         {
+            if (DeltaTime >= 0)
+            {
+                SceneContext.CurrentScene.Update(DeltaTime);
+            }
+
+            EndTime = Time.GetTimeFromAppicationStart();
+            DeltaTime = EndTime - BeginTime;
+            BeginTime = EndTime;
         }
 
         /// <summary>
@@ -77,12 +105,14 @@ namespace Nyx.Core
         protected virtual void OnRender(double obj)
         {
             //Clear the color channel.
-            Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
+            GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
+
+            SceneContext.CurrentScene.Render();
         }
 
         protected virtual void OnClose()
         {
-            //Remember to delete the buffers.
+            SceneContext.CurrentScene.Dispose();
         }
 
         protected static (string, string) GetShaderFullPaths(string vertexPath, string fragmentPath)
@@ -102,7 +132,7 @@ namespace Nyx.Core
         public void Run()
         {
             Console.WriteLine("Running window");
-            Window.Run();
+            _window.Run();
         }
 
         #region InputEvents
@@ -111,7 +141,7 @@ namespace Nyx.Core
         {
             if (key == Key.Escape)
             {
-                Window.Close();
+                _window.Close();
             }
         }
 
@@ -122,6 +152,7 @@ namespace Nyx.Core
 
         protected virtual void MouseMove(IMouse mouse, PointF position)
         {
+            SceneContext.CurrentScene.MouseMove(mouse, position);
         }
 
         protected virtual void MouseClick(IMouse mouse, MouseButton mouseButton)

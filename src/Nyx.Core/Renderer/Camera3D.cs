@@ -3,31 +3,42 @@ using System.Drawing;
 using System.Numerics;
 using Nyx.Core.Math;
 using Silk.NET.Input.Common;
+using static Nyx.Core.Event.EventContext;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
     public class Camera3D
     {
         private float _zoom = 45f;
 
+        public Camera3D(float aspectRatio)
+        {
+            Init(Vector3.UnitZ * 6, Vector3.UnitZ * -1, Vector3.UnitY, aspectRatio);
+        }
+
         public Camera3D(Vector3 position, Vector3 front, Vector3 up, float aspectRatio)
         {
-            Position = position;
-            AspectRatio = aspectRatio;
-            Front = front;
-            Up = up;
+            Init(position, front, up, aspectRatio);
         }
 
         public Vector3 Position { get; set; }
         public Vector3 Front { get; set; }
 
-        public Vector3 Up { get; }
+        public Vector3 Up { get; private set; }
         public float AspectRatio { get; set; }
 
         public float Yaw { get; set; } = -90f;
         public float Pitch { get; set; }
 
-        public void ModifyZoom(float zoomAmount)
+        private void Init(Vector3 position, Vector3 front, Vector3 up, float aspectRatio)
+        {
+            Position = position;
+            Front = front;
+            Up = up;
+            AspectRatio = aspectRatio;
+        }
+
+        public void MouseScroll(float zoomAmount)
         {
             //We don't want to be able to zoom in too close or too far away so clamp to these values
             _zoom = System.Math.Clamp(_zoom - zoomAmount, 1.0f, 45f);
@@ -66,22 +77,22 @@ namespace Nyx.Core.OpenGL
         {
             float moveSpeed = 2.5f * deltaTime;
 
-            if (NyxEngine.Input.IsKeyPressed(Key.W))
+            if (KeyEvent.IsKeyPressed(Key.W))
             {
                 Position += moveSpeed * Front;
             }
 
-            if (NyxEngine.Input.IsKeyPressed(Key.S))
+            if (KeyEvent.IsKeyPressed(Key.S))
             {
                 Position -= moveSpeed * Front;
             }
 
-            if (NyxEngine.Input.IsKeyPressed(Key.A))
+            if (KeyEvent.IsKeyPressed(Key.A))
             {
                 Position -= Vector3.Normalize(Vector3.Cross(Front, Up)) * moveSpeed;
             }
 
-            if (NyxEngine.Input.IsKeyPressed(Key.D))
+            if (KeyEvent.IsKeyPressed(Key.D))
             {
                 Position += Vector3.Normalize(Vector3.Cross(Front, Up)) * moveSpeed;
             }

@@ -6,12 +6,11 @@ namespace Nyx.Playground
     {
         public static void Main(string[] args)
         {
-            // Open the game
-            Game game = Game.Get();
-            game.AddScene(0, new LevelEditorScene());
-            game.AddScene(1, new LevelScene());
+            NyxApp app = NyxApp.Get(1280, 720, "Nyx Playground");
+            app.AddScene(0, new LevelEditorScene());
+            app.AddScene(1, new LevelScene());
 
-            game.Run();
+            app.Run();
         }
     }
 }

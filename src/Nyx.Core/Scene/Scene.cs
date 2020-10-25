@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Nyx.Core.OpenGL;
+using Nyx.Core.Renderer;
 using Nyx.SharpTT;
 using Silk.NET.Input.Common;
 
-namespace Nyx.Core
+namespace Nyx.Core.Scene
 {
     public abstract class Scene : IDisposable
     {
-        protected static PointF LastMousePosition;
+        protected readonly BatchRenderer BatchRenderer = new BatchRenderer();
+
+        // protected static PointF LastMousePosition;
         protected readonly List<GameObject> GameObjects = new List<GameObject>();
         private bool _isRunning;
-
-        protected Renderer Renderer = new Renderer();
 
         // public Camera3D Camera3D { get; protected set; }
         public Camera2D Camera2D { get; protected set; }
 
         public virtual void Dispose()
         {
-            Renderer.Dispose();
+            BatchRenderer.Dispose();
 
             foreach (GameObject gameObject in GameObjects)
             {
@@ -28,16 +28,14 @@ namespace Nyx.Core
             }
         }
 
-        public virtual void Init()
-        {
-        }
+        public abstract void Init();
 
         public void Start()
         {
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Start();
-                Renderer.Add(gameObject);
+                BatchRenderer.Add(gameObject);
             }
 
             _isRunning = true;
@@ -53,7 +51,7 @@ namespace Nyx.Core
             {
                 GameObjects.Add(gameObject);
                 gameObject.Start();
-                Renderer.Add(gameObject);
+                BatchRenderer.Add(gameObject);
             }
         }
 

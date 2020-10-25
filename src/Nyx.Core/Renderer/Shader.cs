@@ -5,21 +5,18 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
     public class Shader : IDisposable
     {
-        private readonly GL _gl;
         private uint _handle;
         private bool _isBeingUsed;
 
         // TODO: add uniform caching
         // This is necessary as accessing shader for uniform locations is not performant
 
-        public Shader(GL gl, string shaderPath)
+        public Shader(string shaderPath)
         {
-            _gl = gl;
-
             (string vertexSource, string fragmentSource) = GetShaderParts(shaderPath).GetAwaiter().GetResult();
             uint vertex = CompileShaderFromSource(ShaderType.VertexShader, vertexSource);
             uint fragment = CompileShaderFromSource(ShaderType.FragmentShader, fragmentSource);
@@ -27,10 +24,8 @@ namespace Nyx.Core.OpenGL
             Init(vertex, fragment);
         }
 
-        public Shader(GL gl, string vertexPath, string fragmentPath)
+        public Shader(string vertexPath, string fragmentPath)
         {
-            _gl = gl;
-
             uint vertex = LoadShader(ShaderType.VertexShader, vertexPath);
             uint fragment = LoadShader(ShaderType.FragmentShader, fragmentPath);
 
@@ -39,120 +34,121 @@ namespace Nyx.Core.OpenGL
 
         public void Dispose()
         {
-            _gl.DeleteProgram(_handle);
+            GraphicsContext.Gl.DeleteProgram(_handle);
         }
 
 
         private void Init(uint vertex, uint fragment)
         {
             // Combine shaders under one shader program
-            _handle = _gl.CreateProgram();
-            _gl.AttachShader(_handle, vertex);
-            _gl.AttachShader(_handle, fragment);
+            _handle = GraphicsContext.Gl.CreateProgram();
+            GraphicsContext.Gl.AttachShader(_handle, vertex);
+            GraphicsContext.Gl.AttachShader(_handle, fragment);
             LinkProgram(_handle);
 
             // Delete the no longer useful individual shaders;
-            _gl.DetachShader(_handle, vertex);
-            _gl.DetachShader(_handle, fragment);
-            _gl.DeleteShader(vertex);
-            _gl.DeleteShader(fragment);
+            GraphicsContext.Gl.DetachShader(_handle, vertex);
+            GraphicsContext.Gl.DetachShader(_handle, fragment);
+            GraphicsContext.Gl.DeleteShader(vertex);
+            GraphicsContext.Gl.DeleteShader(fragment);
         }
 
         public void Use()
         {
             if (!_isBeingUsed)
             {
-                _gl.UseProgram(_handle);
+                GraphicsContext.Gl.UseProgram(_handle);
                 _isBeingUsed = true;
             }
         }
 
         public void Detach()
         {
-            _gl.UseProgram(0);
+            GraphicsContext.Gl.UseProgram(0);
             _isBeingUsed = false;
         }
 
         public void SetUniform(string name, int value)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.Uniform1(location, value);
+            GraphicsContext.Gl.Uniform1(location, value);
         }
 
         public unsafe void SetUniform(string name, Matrix4x4 matrix)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.UniformMatrix4(location, 1, false, (float*) &matrix);
+            GraphicsContext.Gl.UniformMatrix4(location, 1, false, (float*) &matrix);
         }
 
         public void SetUniform(string name, Vector4 vector)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.Uniform4(location, vector);
+            GraphicsContext.Gl.Uniform4(location, vector);
         }
 
         public void SetUniform(string name, Vector3 vector)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.Uniform3(location, vector);
+            GraphicsContext.Gl.Uniform3(location, vector);
         }
 
         public void SetUniform(string name, Vector2 vector)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.Uniform2(location, vector);
+            GraphicsContext.Gl.Uniform2(location, vector);
         }
 
         public void SetUniform(string name, float value)
         {
-            int location = _gl.GetUniformLocation(_handle, name);
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
             Use();
-            _gl.Uniform1(location, value);
+            GraphicsContext.Gl.Uniform1(location, value);
         }
 
         private void LinkProgram(uint program)
         {
-            _gl.LinkProgram(program);
+            GraphicsContext.Gl.LinkProgram(program);
 
-            _gl.GetProgram(program, GLEnum.LinkStatus, out int status);
+            GraphicsContext.Gl.GetProgram(program, GLEnum.LinkStatus, out int status);
             if (status == 0)
             {
-                throw new Exception($"Program failed to link with error: {_gl.GetProgramInfoLog(program)}");
+                throw new Exception(
+                    $"Program failed to link with error: {GraphicsContext.Gl.GetProgramInfoLog(program)}");
             }
         }
 
@@ -165,11 +161,11 @@ namespace Nyx.Core.OpenGL
 
         private uint CompileShaderFromSource(ShaderType type, string src)
         {
-            uint handle = _gl.CreateShader(type);
-            _gl.ShaderSource(handle, src);
-            _gl.CompileShader(handle);
+            uint handle = GraphicsContext.Gl.CreateShader(type);
+            GraphicsContext.Gl.ShaderSource(handle, src);
+            GraphicsContext.Gl.CompileShader(handle);
 
-            string infoLog = _gl.GetShaderInfoLog(handle);
+            string infoLog = GraphicsContext.Gl.GetShaderInfoLog(handle);
             if (!string.IsNullOrWhiteSpace(infoLog))
             {
                 throw new Exception($"Error compiling shader of type {type}, failed with error {infoLog}");

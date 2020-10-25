@@ -1,11 +1,9 @@
 ﻿using System.Numerics;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
     public class Camera2D
     {
-        public Vector2 Position;
-
         public Camera2D(Vector2 position)
         {
             Position = position;
@@ -15,6 +13,8 @@ namespace Nyx.Core.OpenGL
             Up = new Vector3(0.0f, 1.0f, 0.0f);
             AdjustProjection();
         }
+
+        public Vector2 Position { get; }
 
         public Matrix4x4 ProjectionMatrix { get; private set; }
 

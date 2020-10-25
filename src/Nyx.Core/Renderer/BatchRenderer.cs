@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nyx.Core.Components;
 using Nyx.SharpTT;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
-    public class Renderer : IDisposable
+    public class BatchRenderer : IDisposable
     {
         private const int MaxBatchSize = 1000;
-        private readonly List<RenderBatch> _renderBatches;
+        private readonly List<Batch> _batches;
 
-        public Renderer()
+        public BatchRenderer()
         {
-            _renderBatches = new List<RenderBatch>();
+            _batches = new List<Batch>();
         }
 
         public void Dispose()
         {
-            foreach (RenderBatch renderBatch in _renderBatches)
+            foreach (Batch batch in _batches)
             {
-                renderBatch.Dispose();
+                batch.Dispose();
             }
         }
 
@@ -36,30 +37,27 @@ namespace Nyx.Core.OpenGL
         private void Add(SpriteRenderer sprite)
         {
             var added = false;
-            foreach (RenderBatch renderBatch in _renderBatches)
+            foreach (Batch batch in _batches.Where(batch => batch.HasRoom))
             {
-                if (renderBatch.HasRoom)
-                {
-                    renderBatch.AddSprite(sprite);
-                    added = true;
-                    break;
-                }
+                batch.AddSprite(sprite);
+                added = true;
+                break;
             }
 
             if (!added)
             {
-                var newRenderBatch = new RenderBatch(MaxBatchSize);
+                var newRenderBatch = new Batch(MaxBatchSize);
                 newRenderBatch.Start();
-                _renderBatches.Add(newRenderBatch);
+                _batches.Add(newRenderBatch);
                 newRenderBatch.AddSprite(sprite);
             }
         }
 
         public void Render()
         {
-            foreach (RenderBatch renderBatch in _renderBatches)
+            foreach (Batch batch in _batches)
             {
-                renderBatch.Render();
+                batch.Render();
             }
         }
     }

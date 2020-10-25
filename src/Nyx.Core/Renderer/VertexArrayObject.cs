@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
     public class VertexArrayObject<TVertexType, TIndexType> : IDisposable
         where TVertexType : unmanaged
         where TIndexType : unmanaged
     {
-        private readonly GL _gl;
         private readonly uint _handle;
 
         private readonly List<uint> _locations = new List<uint>();
 
-        public VertexArrayObject(GL gl, BufferObject<TVertexType> vertexBufferObject,
+        public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject,
             BufferObject<TIndexType> elementBufferObject)
         {
-            _gl = gl;
-
-            _handle = _gl.GenVertexArray();
+            _handle = GraphicsContext.Gl.GenVertexArray();
             Bind();
             vertexBufferObject.Bind();
             elementBufferObject.Bind();
@@ -26,16 +23,17 @@ namespace Nyx.Core.OpenGL
 
         public void Dispose()
         {
-            _gl.DeleteVertexArray(_handle);
+            GraphicsContext.Gl.DeleteVertexArray(_handle);
         }
 
         public unsafe void VertexAttributePointer(uint location, int size, VertexAttribPointerType type,
             uint vertexSize,
             int offset)
         {
-            _gl.VertexAttribPointer(location, size, type, false, (uint) (vertexSize * sizeof(TVertexType)),
+            GraphicsContext.Gl.VertexAttribPointer(location, size, type, false,
+                (uint) (vertexSize * sizeof(TVertexType)),
                 (void*) (offset * sizeof(TVertexType)));
-            _gl.EnableVertexAttribArray(location);
+            GraphicsContext.Gl.EnableVertexAttribArray(location);
             _locations.Add(location);
         }
 
@@ -43,25 +41,25 @@ namespace Nyx.Core.OpenGL
         {
             foreach (uint location in _locations)
             {
-                _gl.EnableVertexAttribArray(location);
+                GraphicsContext.Gl.EnableVertexAttribArray(location);
             }
         }
 
         public void Bind()
         {
-            _gl.BindVertexArray(_handle);
+            GraphicsContext.Gl.BindVertexArray(_handle);
         }
 
         public void Detach()
         {
-            _gl.BindVertexArray(0);
+            GraphicsContext.Gl.BindVertexArray(0);
         }
 
         public void DisableVertexAttribPointers()
         {
             foreach (uint location in _locations)
             {
-                _gl.DisableVertexAttribArray(location);
+                GraphicsContext.Gl.DisableVertexAttribArray(location);
             }
         }
     }

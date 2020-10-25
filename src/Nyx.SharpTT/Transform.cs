@@ -19,12 +19,12 @@ namespace Nyx.Core.OpenGL
             Init(position, scale);
         }
 
-        public Vector2 Poistion { get; set; }
+        public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
 
         public void Init(Vector2 position, Vector2 scale)
         {
-            Poistion = position;
+            Position = position;
             Scale = scale;
         }
     }

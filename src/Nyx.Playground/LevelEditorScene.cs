@@ -1,10 +1,10 @@
-﻿using System.Drawing;
-using System.Numerics;
-using Nyx.Core;
+﻿using System.Numerics;
 using Nyx.Core.Components;
 using Nyx.Core.OpenGL;
+using Nyx.Core.Renderer;
+using Nyx.Core.Scene;
+using Nyx.Core.Utils;
 using Nyx.SharpTT;
-using Silk.NET.Input.Common;
 
 namespace Nyx.Playground
 {
@@ -12,17 +12,16 @@ namespace Nyx.Playground
     {
         public override void Init()
         {
-            // Camera3D = new Camera3D(Vector3.UnitZ * 6, Vector3.UnitZ * -1, Vector3.UnitY, (float) Width / Height);
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f));
 
-            var xOffset = 10;
-            var yOffset = 10;
+            const int xOffset = 10;
+            const int yOffset = 10;
 
-            float totalWidth = (float) 600 - (xOffset * 2);
-            float totalHeight = (float) 300 - (yOffset * 2);
-            float sizeX = totalWidth / 100.0f;
-            float sizeY = totalHeight / 100.0f;
-            const float padding = 0;
+            const float totalWidth = (float) 600 - (xOffset * 2);
+            const float totalHeight = (float) 300 - (yOffset * 2);
+            const float sizeX = totalWidth / 100.0f;
+            const float sizeY = totalHeight / 100.0f;
+            const float padding = 3;
 
             for (var x = 0; x < 100; x++)
             {
@@ -31,10 +30,10 @@ namespace Nyx.Playground
                     float xPos = xOffset + (x * sizeX) + (padding * x);
                     float yPos = yOffset + (y * sizeY) + (padding * y);
 
-                    var gameObject = new GameObject($"Obj ${x} ${y}",
+                    var gameObject = new GameObject($"GameObject(${x}:${y})",
                         new Transform(new Vector2(xPos, yPos), new Vector2(sizeX, sizeY)));
                     gameObject.AddComponent(
-                        new SpriteRenderer(new Vector4(xPos / totalWidth, yPos / totalHeight, 1, 1)));
+                        new SpriteRenderer(new Vector4(xPos / totalWidth, yPos / totalHeight, 0.5f, 0.1f)));
                     AddGameObjectToScene(gameObject);
                 }
             }
@@ -42,30 +41,22 @@ namespace Nyx.Playground
 
         public override void Update(float deltaTime)
         {
-            // Camera3D.MoveCamera(deltaTime);
+            Fps.Print(deltaTime);
 
             base.Update(deltaTime);
         }
 
-        public override void MouseMove(IMouse mouse, PointF position)
-        {
-            // Camera3D.MouseMove(LastMousePosition, position);
-        }
-
-        public override void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
-        {
-            // Camera3D.ModifyZoom(scrollWheel.Y);
-        }
-
         public override void Render()
         {
-            Renderer.Render();
+            BatchRenderer.Render();
 
             base.Render();
         }
 
         public override void Dispose()
         {
+            BatchRenderer.Dispose();
+
             base.Dispose();
         }
     }

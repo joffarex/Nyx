@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Nyx.Core.Components;
+using Nyx.Core.Scene;
 using Nyx.Core.Utils;
 using Silk.NET.OpenGL;
-using static Nyx.Core.NyxEngine;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Core.Renderer
 {
-    public class RenderBatch : IDisposable
+    public class Batch : IDisposable
     {
         private const int PosSize = 2;
         private const int ColorSize = 4;
@@ -27,11 +27,10 @@ namespace Nyx.Core.OpenGL
         private readonly float[] _vertices;
         private int _numSprites;
 
-
-        public RenderBatch(int maxBatchSize)
+        public Batch(int maxBatchSize)
         {
             string shaderPath = PathUtils.GetFullPath("assets/shaders/default.glsl");
-            _shader = new Shader(Gl, shaderPath);
+            _shader = new Shader(shaderPath);
 
             _sprites = new SpriteRenderer[maxBatchSize];
             _maxBatchSize = maxBatchSize;
@@ -56,17 +55,38 @@ namespace Nyx.Core.OpenGL
         public void Start()
         {
             _vertexBufferObject =
-                new BufferObject<float>(Gl, _vertices, BufferTargetARB.ArrayBuffer, BufferUsageARB.DynamicDraw);
+                new BufferObject<float>(_vertices, BufferTargetARB.ArrayBuffer, BufferUsageARB.DynamicDraw);
             _elementBufferObject =
-                new BufferObject<uint>(Gl, GenerateIndices(), BufferTargetARB.ElementArrayBuffer,
+                new BufferObject<uint>(GenerateIndices(), BufferTargetARB.ElementArrayBuffer,
                     BufferUsageARB.StaticDraw);
             _vertexArrayobject =
-                new VertexArrayObject<float, uint>(Gl, _vertexBufferObject, _elementBufferObject);
+                new VertexArrayObject<float, uint>(_vertexBufferObject, _elementBufferObject);
 
             _vertexArrayobject.VertexAttributePointer(0, PosSize, VertexAttribPointerType.Float, VertexSize,
                 PosOffset);
             _vertexArrayobject.VertexAttributePointer(1, ColorSize, VertexAttribPointerType.Float, VertexSize,
                 ColorOffset);
+        }
+
+        public void Render()
+        {
+            _vertexBufferObject.Bind();
+            _vertexBufferObject.ReBufferData(_vertices);
+
+            _shader.Use();
+
+            _shader.SetUniform("uProjection", SceneContext.CurrentScene.Camera2D.ProjectionMatrix);
+            _shader.SetUniform("uView", SceneContext.CurrentScene.Camera2D.GetViewMatrix());
+
+            _vertexArrayobject.Bind();
+            _vertexArrayobject.EnableVertexAttribPointers();
+
+            GraphicsContext.DrawElements(PrimitiveType.Triangles, (uint) _numSprites * VertexSize);
+
+            _vertexArrayobject.DisableVertexAttribPointers();
+            _vertexArrayobject.Detach();
+
+            _shader.Detach();
         }
 
         public void AddSprite(SpriteRenderer sprite)
@@ -95,7 +115,7 @@ namespace Nyx.Core.OpenGL
             return elements;
         }
 
-        private void LoadElementIndices(IList<uint> elements, int index)
+        private static void LoadElementIndices(IList<uint> elements, int index)
         {
             int offsetArrayIndex = 6 * index;
             var offset = (uint) (4 * index);
@@ -111,28 +131,6 @@ namespace Nyx.Core.OpenGL
             elements[offsetArrayIndex + 3] = offset + 0;
             elements[offsetArrayIndex + 4] = offset + 2;
             elements[offsetArrayIndex + 5] = offset + 1;
-        }
-
-        public unsafe void Render()
-        {
-            _vertexBufferObject.Bind();
-            _vertexBufferObject.ReBufferData(_vertices);
-
-            _shader.Use();
-
-            _shader.SetUniform("uProjection", Game.CurrentScene.Camera2D.ProjectionMatrix);
-            _shader.SetUniform("uView", Game.CurrentScene.Camera2D.GetViewMatrix());
-
-            _vertexArrayobject.Bind();
-            _vertexArrayobject.EnableVertexAttribPointers();
-
-            Gl.DrawElements(PrimitiveType.Triangles, (uint) _numSprites * VertexSize, DrawElementsType.UnsignedInt,
-                null);
-
-            _vertexArrayobject.DisableVertexAttribPointers();
-            _vertexArrayobject.Detach();
-
-            _shader.Detach();
         }
 
         private void LoadVertexProperties(int index)
@@ -170,9 +168,9 @@ namespace Nyx.Core.OpenGL
                 }
 
                 // Load position
-                _vertices[offset] = sprite.GameObject.Transform.Poistion.X +
+                _vertices[offset] = sprite.GameObject.Transform.Position.X +
                                     (xAdd * sprite.GameObject.Transform.Scale.X); // X
-                _vertices[offset + 1] = sprite.GameObject.Transform.Poistion.Y +
+                _vertices[offset + 1] = sprite.GameObject.Transform.Position.Y +
                                         (yAdd * sprite.GameObject.Transform.Scale.Y); // Y
 
                 // Load color
