@@ -28,6 +28,14 @@ namespace Nyx.Core.OpenGL
             _gl.DeleteBuffer(_handle);
         }
 
+        public unsafe void ReBufferData(Span<TDataType> data)
+        {
+            fixed (void* d = data)
+            {
+                _gl.BufferSubData(_bufferType, 0, (uint) (data.Length * sizeof(TDataType)), d);
+            }
+        }
+
         public void Bind()
         {
             _gl.BindBuffer(_bufferType, _handle);

@@ -30,10 +30,10 @@ namespace Nyx.Core.OpenGL
         }
 
         public unsafe void VertexAttributePointer(uint location, int size, VertexAttribPointerType type,
-            uint vertexSizeBytes,
+            uint vertexSize,
             int offset)
         {
-            _gl.VertexAttribPointer(location, size, type, false, vertexSizeBytes * (uint) sizeof(TVertexType),
+            _gl.VertexAttribPointer(location, size, type, false, (uint) (vertexSize * sizeof(TVertexType)),
                 (void*) (offset * sizeof(TVertexType)));
             _gl.EnableVertexAttribArray(location);
             _locations.Add(location);

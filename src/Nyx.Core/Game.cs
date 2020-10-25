@@ -18,8 +18,8 @@ namespace Nyx.Core
         {
         }
 
-        public static int Width { get; } = 800;
-        public static int Height { get; } = 600;
+        public static int Width { get; } = 1280;
+        public static int Height { get; } = 720;
 
 
         public static Game Get()
@@ -116,7 +116,6 @@ namespace Nyx.Core
         protected override void MouseMove(IMouse mouse, PointF position)
         {
             base.MouseMove(mouse, position);
-            //Console.WriteLine($"X:{arg2.X} Y:{arg2.Y}");
 
             CurrentScene.MouseMove(mouse, position);
         }

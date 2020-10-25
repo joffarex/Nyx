@@ -20,36 +20,18 @@ namespace Nyx.Core.OpenGL
         private static BufferObject<uint> _elementBufferObject;
         private static VertexArrayObject<float, uint> _vertexArrayobject;
 
-        private readonly uint[] _elementArray =
-        {
-            2, 1, 0, // Top right triangle,
-            0, 1, 3, // Bottom left triangle
-        };
-
-        private readonly float[] _vertexArray =
-        {
-            // position        // color                // UV coordinates
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, // Bottom right 0
-            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left 1
-            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Top right 2
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left 3
-        };
-
         private readonly int _maxBatchSize;
-        private int _numSprites;
         private readonly Shader _shader;
 
         private readonly SpriteRenderer[] _sprites;
-        private readonly Texture _texture;
         private readonly float[] _vertices;
+        private int _numSprites;
 
 
         public RenderBatch(int maxBatchSize)
         {
-            string shaderPath = PathUtils.GetFullPath("assets/shaders/sprite-with-camera.glsl");
+            string shaderPath = PathUtils.GetFullPath("assets/shaders/default.glsl");
             _shader = new Shader(Gl, shaderPath);
-            string texturePath = PathUtils.GetFullPath("assets/sprites/mario.png");
-            _texture = new Texture(Gl, TextureType.PixelSprite, texturePath);
 
             _sprites = new SpriteRenderer[maxBatchSize];
             _maxBatchSize = maxBatchSize;
@@ -69,30 +51,22 @@ namespace Nyx.Core.OpenGL
             _elementBufferObject.Dispose();
             _vertexArrayobject.Dispose();
             _shader.Dispose();
-            _texture.Dispose();
         }
 
         public void Start()
         {
             _vertexBufferObject =
-                new BufferObject<float>(Gl, _vertexArray, BufferTargetARB.ArrayBuffer, BufferUsageARB.DynamicDraw);
+                new BufferObject<float>(Gl, _vertices, BufferTargetARB.ArrayBuffer, BufferUsageARB.DynamicDraw);
             _elementBufferObject =
-                new BufferObject<uint>(Gl, _elementArray, BufferTargetARB.ElementArrayBuffer,
+                new BufferObject<uint>(Gl, GenerateIndices(), BufferTargetARB.ElementArrayBuffer,
                     BufferUsageARB.StaticDraw);
             _vertexArrayobject =
                 new VertexArrayObject<float, uint>(Gl, _vertexBufferObject, _elementBufferObject);
 
-            const int positionSize = 3;
-            const int colorSize = 4;
-            const int uVSize = 2;
-            const uint vertexSizeBytes = (uint) (positionSize + colorSize + uVSize);
-
-            _vertexArrayobject.VertexAttributePointer(0, positionSize, VertexAttribPointerType.Float, vertexSizeBytes,
-                0);
-            _vertexArrayobject.VertexAttributePointer(1, colorSize, VertexAttribPointerType.Float, vertexSizeBytes,
-                positionSize);
-            _vertexArrayobject.VertexAttributePointer(2, uVSize, VertexAttribPointerType.Float, vertexSizeBytes,
-                positionSize + colorSize);
+            _vertexArrayobject.VertexAttributePointer(0, PosSize, VertexAttribPointerType.Float, VertexSize,
+                PosOffset);
+            _vertexArrayobject.VertexAttributePointer(1, ColorSize, VertexAttribPointerType.Float, VertexSize,
+                ColorOffset);
         }
 
         public void AddSprite(SpriteRenderer sprite)
@@ -141,25 +115,24 @@ namespace Nyx.Core.OpenGL
 
         public unsafe void Render()
         {
-            _shader.Use();
-            _shader.SetUniform("TEX_SAMPLER", 0);
-            _texture.Activate();
-            _texture.Bind();
+            _vertexBufferObject.Bind();
+            _vertexBufferObject.ReBufferData(_vertices);
 
-            _shader.SetUniform("uModel", Matrix4x4.Identity);
-            _shader.SetUniform("uProjection", Game.CurrentScene.Camera.GetProjectionMatrix());
-            _shader.SetUniform("uView", Game.CurrentScene.Camera.GetViewMatrix());
+            _shader.Use();
+
+            _shader.SetUniform("uProjection", Game.CurrentScene.Camera2D.ProjectionMatrix);
+            _shader.SetUniform("uView", Game.CurrentScene.Camera2D.GetViewMatrix());
 
             _vertexArrayobject.Bind();
             _vertexArrayobject.EnableVertexAttribPointers();
 
-            Gl.DrawElements(PrimitiveType.Triangles, (uint) _elementArray.Length, DrawElementsType.UnsignedInt, null);
+            Gl.DrawElements(PrimitiveType.Triangles, (uint) _numSprites * VertexSize, DrawElementsType.UnsignedInt,
+                null);
 
             _vertexArrayobject.DisableVertexAttribPointers();
+            _vertexArrayobject.Detach();
 
             _shader.Detach();
-            _texture.Detach();
-            _vertexArrayobject.Detach();
         }
 
         private void LoadVertexProperties(int index)
