@@ -14,6 +14,16 @@ namespace Nyx.Playground
         {
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f));
 
+            var gameObject = new GameObject("Object 1",
+                new Transform(new Vector2(100.0f, 100.0f), new Vector2(256.0f, 256.0f)));
+            gameObject.AddComponent(new SpriteRenderer(AssetManager.GetTexture("assets/sprites/mario.png")));
+            AddGameObjectToScene(gameObject);
+
+            LoadResources();
+        }
+
+        private void GenerateGradientQuad()
+        {
             const int xOffset = 10;
             const int yOffset = 10;
 
@@ -21,7 +31,7 @@ namespace Nyx.Playground
             const float totalHeight = (float) 300 - (yOffset * 2);
             const float sizeX = totalWidth / 100.0f;
             const float sizeY = totalHeight / 100.0f;
-            const float padding = 3;
+            const float padding = 0;
 
             for (var x = 0; x < 100; x++)
             {
@@ -37,8 +47,6 @@ namespace Nyx.Playground
                     AddGameObjectToScene(gameObject);
                 }
             }
-
-            LoadResources();
         }
 
         private void LoadResources()

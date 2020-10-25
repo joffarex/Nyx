@@ -94,6 +94,8 @@ namespace Nyx.Core.Renderer
                 default:
                     throw new Exception($"{type} is unknown");
             }
+
+            GraphicsContext.Gl.GenerateMipmap(TextureTarget.Texture2D);
         }
     }
 }

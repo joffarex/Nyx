@@ -10,11 +10,15 @@ namespace Nyx.Core.Renderer
 {
     public class Batch : IDisposable
     {
-        private const int PosSize = 2;
+        private const int PositionSize = 2;
         private const int ColorSize = 4;
-        private const int PosOffset = 0;
-        private const int ColorOffset = PosOffset + PosSize;
-        private const int VertexSize = PosSize + ColorSize;
+        private const int TextureCoordinatesSize = 2;
+        private const int TextureIdSize = 1;
+        private const int PositionOffset = 0;
+        private const int ColorOffset = PositionOffset + PositionSize;
+        private const int TextureCoordinatesOffset = ColorOffset + ColorSize;
+        private const int TextureIdOffset = TextureCoordinatesOffset + TextureCoordinatesSize;
+        private const int VertexSize = PositionSize + ColorSize + TextureCoordinatesSize + TextureIdSize;
 
         private static BufferObject<float> _vertexBufferObject;
         private static BufferObject<uint> _elementBufferObject;
@@ -24,6 +28,8 @@ namespace Nyx.Core.Renderer
         private readonly Shader _shader;
 
         private readonly SpriteRenderer[] _sprites;
+        private readonly List<Texture> _textures;
+        private readonly int[] _textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
         private readonly float[] _vertices;
         private int _numSprites;
 
@@ -39,6 +45,7 @@ namespace Nyx.Core.Renderer
 
             _numSprites = 0;
             HasRoom = true;
+            _textures = new List<Texture>();
         }
 
         public bool HasRoom { get; private set; }
@@ -49,6 +56,11 @@ namespace Nyx.Core.Renderer
             _elementBufferObject.Dispose();
             _vertexArrayobject.Dispose();
             _shader.Dispose();
+
+            foreach (Texture texture in _textures)
+            {
+                texture.Dispose();
+            }
         }
 
         public void Start()
@@ -61,10 +73,15 @@ namespace Nyx.Core.Renderer
             _vertexArrayobject =
                 new VertexArrayObject<float, uint>(_vertexBufferObject, _elementBufferObject);
 
-            _vertexArrayobject.VertexAttributePointer(0, PosSize, VertexAttribPointerType.Float, VertexSize,
-                PosOffset);
+            _vertexArrayobject.VertexAttributePointer(0, PositionSize, VertexAttribPointerType.Float, VertexSize,
+                PositionOffset);
             _vertexArrayobject.VertexAttributePointer(1, ColorSize, VertexAttribPointerType.Float, VertexSize,
                 ColorOffset);
+            _vertexArrayobject.VertexAttributePointer(2, TextureCoordinatesSize, VertexAttribPointerType.Float,
+                VertexSize,
+                TextureCoordinatesOffset);
+            _vertexArrayobject.VertexAttributePointer(3, TextureIdSize, VertexAttribPointerType.Float, VertexSize,
+                TextureIdOffset);
         }
 
         public void Render()
@@ -77,6 +94,15 @@ namespace Nyx.Core.Renderer
             _shader.SetUniform("uProjection", SceneContext.CurrentScene.Camera2D.ProjectionMatrix);
             _shader.SetUniform("uView", SceneContext.CurrentScene.Camera2D.GetViewMatrix());
 
+            for (var i = 0; i < _textures.Count; i++)
+            {
+                Texture texture = _textures[i];
+                texture.Activate(TextureUnit.Texture0 + i + 1);
+                texture.Bind();
+            }
+
+            _shader.SetUniform("uTextures", _textureSlots);
+
             _vertexArrayobject.Bind();
             _vertexArrayobject.EnableVertexAttribPointers();
 
@@ -84,6 +110,11 @@ namespace Nyx.Core.Renderer
 
             _vertexArrayobject.DisableVertexAttribPointers();
             _vertexArrayobject.Detach();
+
+            foreach (Texture texture in _textures)
+            {
+                texture.Detach();
+            }
 
             _shader.Detach();
         }
@@ -93,6 +124,14 @@ namespace Nyx.Core.Renderer
             int index = _numSprites; // At the end of sprites;
             _sprites[index] = sprite;
             _numSprites++;
+
+            if (sprite.Texture != null)
+            {
+                if (!_textures.Contains(sprite.Texture))
+                {
+                    _textures.Add(sprite.Texture);
+                }
+            }
 
             LoadVertexProperties(index);
 
@@ -139,15 +178,27 @@ namespace Nyx.Core.Renderer
             // Find offset within array (4 vertices per sprite)
             int offset = index * 4 * VertexSize;
 
-            // Pos    Color
-            // f f    f f f f 
-
             Vector4 color = sprite.Color;
+            Vector2[] textureCoordinates = sprite.TextureCoordinates;
+
+            var textureId = 0;
+
+            if (sprite.Texture != null)
+            {
+                for (var i = 0; i < _textures.Count; i++)
+                {
+                    Texture texture = _textures[i];
+                    if (texture == sprite.Texture)
+                    {
+                        textureId = i + 1;
+                        break;
+                    }
+                }
+            }
 
             // *      *
             // [*]    *
             // Where [*] -> is a starting vertex position, from what point we start drawing
-
             var xAdd = 1.0f;
             var yAdd = 1.0f;
 
@@ -177,6 +228,13 @@ namespace Nyx.Core.Renderer
                 _vertices[offset + 3] = color.Y; // G
                 _vertices[offset + 4] = color.Z; // B
                 _vertices[offset + 5] = color.W; // A
+
+                // Load texture coordinates
+                _vertices[offset + 6] = textureCoordinates[i].X;
+                _vertices[offset + 7] = textureCoordinates[i].Y;
+
+                // Load texture id
+                _vertices[offset + 8] = textureId;
 
                 offset += VertexSize;
             }

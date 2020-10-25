@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nyx.Core.Renderer;
 
 namespace Nyx.Core.Utils
 {
-    public class AssetManager
+    public static class AssetManager
     {
         private static readonly Dictionary<string, Shader> Shaders = new Dictionary<string, Shader>();
         private static readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
@@ -26,21 +25,15 @@ namespace Nyx.Core.Utils
         public static Texture GetTexture(string resourceName)
         {
             string filePath = PathUtils.GetFullPath(resourceName);
-            if (Textures.ContainsKey(filePath))
-            {
-                if (Textures.TryGetValue(filePath, out Texture texture))
-                {
-                    return texture;
-                }
 
-                throw new Exception($"FilePath: ${filePath} not found");
-            }
-            else
+            if (Textures.TryGetValue(filePath, out Texture texture))
             {
-                var texture = new Texture(TextureType.PixelSprite, filePath);
-                Textures.Add(filePath, texture);
                 return texture;
             }
+
+            texture = new Texture(TextureType.PixelSprite, filePath);
+            Textures.Add(filePath, texture);
+            return texture;
         }
     }
 }

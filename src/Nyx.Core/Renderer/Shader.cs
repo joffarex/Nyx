@@ -80,6 +80,18 @@ namespace Nyx.Core.Renderer
             GraphicsContext.Gl.Uniform1(location, value);
         }
 
+        public void SetUniform(string name, Span<int> value)
+        {
+            int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
+            // if (location == -1)
+            // {
+            // throw new Exception($"{name} uniform not found on shader.");
+            // }
+
+            Use();
+            GraphicsContext.Gl.Uniform1(location, (uint) value.Length, value);
+        }
+
         public unsafe void SetUniform(string name, Matrix4x4 matrix)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
