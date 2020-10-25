@@ -37,6 +37,13 @@ namespace Nyx.Playground
                     AddGameObjectToScene(gameObject);
                 }
             }
+
+            LoadResources();
+        }
+
+        private void LoadResources()
+        {
+            AssetManager.GetShader("assets/shaders/default.glsl");
         }
 
         public override void Update(float deltaTime)

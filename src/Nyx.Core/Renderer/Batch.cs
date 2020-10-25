@@ -29,8 +29,7 @@ namespace Nyx.Core.Renderer
 
         public Batch(int maxBatchSize)
         {
-            string shaderPath = PathUtils.GetFullPath("assets/shaders/default.glsl");
-            _shader = new Shader(shaderPath);
+            _shader = AssetManager.GetShader("assets/shaders/default.glsl");
 
             _sprites = new SpriteRenderer[maxBatchSize];
             _maxBatchSize = maxBatchSize;
