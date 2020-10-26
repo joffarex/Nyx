@@ -37,7 +37,9 @@ namespace Nyx.Core.Renderer
         private void Add(SpriteRenderer sprite)
         {
             var added = false;
-            foreach (Batch batch in _batches.Where(batch => batch.HasRoom))
+            foreach (Batch batch in _batches
+                    .Where(batch => batch.HasRoom && (batch.Z_Index == sprite.GameObject.Z_Index)))
+                // Make sure to only add same Z_Index sprites to the same batch
             {
                 Texture texture = sprite.Texture;
                 if (batch.HasTexture(texture) || batch.HasTextureRoom || (texture == null))
@@ -50,10 +52,11 @@ namespace Nyx.Core.Renderer
 
             if (!added)
             {
-                var newRenderBatch = new Batch(MaxBatchSize);
+                var newRenderBatch = new Batch(MaxBatchSize, sprite.GameObject.Z_Index);
                 newRenderBatch.Start();
                 _batches.Add(newRenderBatch);
                 newRenderBatch.AddSprite(sprite);
+                _batches.Sort();
             }
         }
 

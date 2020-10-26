@@ -80,6 +80,8 @@ namespace Nyx.Core
             }
 
             GraphicsContext.Create(_window);
+            GraphicsContext.Gl.Enable(EnableCap.Blend);
+            GraphicsContext.Gl.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 
             SceneContext.ChangeScene(0);
         }
@@ -106,6 +108,7 @@ namespace Nyx.Core
         {
             //Clear the color channel.
             GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
+            GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
 
             SceneContext.CurrentScene.Render();
         }

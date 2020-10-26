@@ -8,16 +8,17 @@ namespace Nyx.SharpTT
     {
         public GameObject(string name)
         {
-            Init(name, new Transform());
+            Init(name, new Transform(), 0);
         }
 
-        public GameObject(string name, Transform transform)
+        public GameObject(string name, Transform transform, int zIndex)
         {
-            Init(name, transform);
+            Init(name, transform, zIndex);
         }
 
 
         public Transform Transform { get; set; }
+        public int Z_Index { get; private set; }
         private string Name { get; set; }
 
         private List<Component> Components { get; set; }
@@ -30,11 +31,12 @@ namespace Nyx.SharpTT
             }
         }
 
-        public void Init(string name, Transform transform)
+        public void Init(string name, Transform transform, int zIndex)
         {
             Name = name;
             Components = new List<Component>();
             Transform = transform;
+            Z_Index = zIndex;
         }
 
         public T GetComponent<T>() where T : Component

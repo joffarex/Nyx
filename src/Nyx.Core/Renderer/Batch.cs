@@ -8,7 +8,7 @@ using Silk.NET.OpenGL;
 
 namespace Nyx.Core.Renderer
 {
-    public class Batch : IDisposable
+    public class Batch : IComparable<Batch>, IDisposable
     {
         private const int PositionSize = 2;
         private const int ColorSize = 4;
@@ -35,7 +35,7 @@ namespace Nyx.Core.Renderer
 
         private bool _rebufferData;
 
-        public Batch(int maxBatchSize)
+        public Batch(int maxBatchSize, int zIndex)
         {
             _shader = AssetManager.GetShader("assets/shaders/default.glsl");
 
@@ -48,10 +48,19 @@ namespace Nyx.Core.Renderer
             _numSprites = 0;
             HasRoom = true;
             _textures = new List<Texture>();
+            Z_Index = zIndex;
         }
 
         public bool HasRoom { get; private set; }
         public bool HasTextureRoom => _textures.Count < 8;
+        public int Z_Index { get; }
+
+        // We need this method in order to sort batches in renderer
+        public int CompareTo(Batch other)
+        {
+            return Z_Index.CompareTo(other.Z_Index);
+        }
+
 
         public void Dispose()
         {

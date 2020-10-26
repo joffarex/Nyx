@@ -13,10 +13,6 @@ namespace Nyx.Playground
         private const string SpriteSheetPath = "assets/sprites/spritesheet.png";
 
         private GameObject _gameObject1;
-        private readonly float _spriteFlipTime = 0.2f;
-
-        private float _spriteFlipTimeLeft;
-        private int _spriteIndex;
         private SpriteSheet _spriteSheet;
 
         public override void Init()
@@ -28,14 +24,14 @@ namespace Nyx.Playground
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
 
             _gameObject1 = new GameObject("Object 1",
-                new Transform(new Vector2(100.0f, 100.0f), new Vector2(256.0f, 256.0f)));
+                new Transform(new Vector2(200.0f, 100.0f), new Vector2(256.0f, 256.0f)), 2);
             _gameObject1.AddComponent(
-                new SpriteRenderer(_spriteSheet.Sprites[0]));
+                new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage1.png"))));
             AddGameObjectToScene(_gameObject1);
             var gameObject2 = new GameObject("Object 2",
-                new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)));
+                new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)), 4);
             gameObject2.AddComponent(
-                new SpriteRenderer(_spriteSheet.Sprites[10]));
+                new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage2.png"))));
             AddGameObjectToScene(gameObject2);
         }
 
@@ -58,7 +54,7 @@ namespace Nyx.Playground
                     float yPos = yOffset + (y * sizeY) + (padding * y);
 
                     var gameObject = new GameObject($"GameObject(${x}:${y})",
-                        new Transform(new Vector2(xPos, yPos), new Vector2(sizeX, sizeY)));
+                        new Transform(new Vector2(xPos, yPos), new Vector2(sizeX, sizeY)), 1);
                     gameObject.AddComponent(
                         new SpriteRenderer(new Vector4(xPos / totalWidth, yPos / totalHeight, 0.5f, 0.1f)));
                     AddGameObjectToScene(gameObject);
@@ -79,20 +75,6 @@ namespace Nyx.Playground
         public override void Update(float deltaTime)
         {
             Fps.Print(deltaTime);
-
-            _spriteFlipTimeLeft -= deltaTime;
-            if (_spriteFlipTimeLeft <= 0)
-            {
-                _spriteFlipTimeLeft = _spriteFlipTime;
-                _spriteIndex++;
-                if (_spriteIndex > 6)
-                {
-                    _spriteIndex = 0;
-                }
-
-                _gameObject1.GetComponent<SpriteRenderer>().Sprite = _spriteSheet.Sprites[_spriteIndex];
-            }
-
 
             base.Update(deltaTime);
         }
