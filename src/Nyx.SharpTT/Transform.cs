@@ -20,12 +20,39 @@ namespace Nyx.Core.OpenGL
         }
 
         public Vector2 Position { get; set; }
-        public Vector2 Scale { get; set; }
+        public Vector2 Scale { get; private set; }
 
         public void Init(Vector2 position, Vector2 scale)
         {
             Position = position;
             Scale = scale;
+        }
+
+        public Transform Copy()
+        {
+            return new Transform(new Vector2(Position.X, Position.Y), new Vector2(Scale.X, Scale.Y));
+        }
+
+        public void Copy(Transform to)
+        {
+            to.Position = Position;
+            to.Scale = Scale;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (!(obj is Transform))
+            {
+                return false;
+            }
+
+            var t = (Transform) obj;
+            return (t.Position == Position) && (t.Scale == Scale);
         }
     }
 }

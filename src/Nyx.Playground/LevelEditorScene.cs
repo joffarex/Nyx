@@ -12,23 +12,30 @@ namespace Nyx.Playground
     {
         private const string SpriteSheetPath = "assets/sprites/spritesheet.png";
 
+        private GameObject _gameObject1;
+        private readonly float _spriteFlipTime = 0.2f;
+
+        private float _spriteFlipTimeLeft;
+        private int _spriteIndex;
+        private SpriteSheet _spriteSheet;
+
         public override void Init()
         {
             LoadResources();
 
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f));
 
-            SpriteSheet spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
+            _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
 
-            var gameObject1 = new GameObject("Object 1",
+            _gameObject1 = new GameObject("Object 1",
                 new Transform(new Vector2(100.0f, 100.0f), new Vector2(256.0f, 256.0f)));
-            gameObject1.AddComponent(
-                new SpriteRenderer(spriteSheet.Sprites[0]));
-            AddGameObjectToScene(gameObject1);
+            _gameObject1.AddComponent(
+                new SpriteRenderer(_spriteSheet.Sprites[0]));
+            AddGameObjectToScene(_gameObject1);
             var gameObject2 = new GameObject("Object 2",
                 new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)));
             gameObject2.AddComponent(
-                new SpriteRenderer(spriteSheet.Sprites[10]));
+                new SpriteRenderer(_spriteSheet.Sprites[10]));
             AddGameObjectToScene(gameObject2);
         }
 
@@ -72,6 +79,20 @@ namespace Nyx.Playground
         public override void Update(float deltaTime)
         {
             Fps.Print(deltaTime);
+
+            _spriteFlipTimeLeft -= deltaTime;
+            if (_spriteFlipTimeLeft <= 0)
+            {
+                _spriteFlipTimeLeft = _spriteFlipTime;
+                _spriteIndex++;
+                if (_spriteIndex > 6)
+                {
+                    _spriteIndex = 0;
+                }
+
+                _gameObject1.GetComponent<SpriteRenderer>().Sprite = _spriteSheet.Sprites[_spriteIndex];
+            }
+
 
             base.Update(deltaTime);
         }

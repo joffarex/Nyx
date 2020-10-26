@@ -61,6 +61,8 @@ namespace Nyx.Core.Scene
             {
                 gameObject.Update(deltaTime);
             }
+
+            BatchRenderer.Update(deltaTime);
         }
 
         public virtual void MouseMove(IMouse mouse, PointF position)

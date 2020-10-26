@@ -57,6 +57,14 @@ namespace Nyx.Core.Renderer
             }
         }
 
+        public void Update(float deltaTime)
+        {
+            foreach (Batch batch in _batches)
+            {
+                batch.Update(deltaTime);
+            }
+        }
+
         public void Render()
         {
             foreach (Batch batch in _batches)

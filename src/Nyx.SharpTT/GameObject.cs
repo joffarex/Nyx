@@ -17,7 +17,7 @@ namespace Nyx.SharpTT
         }
 
 
-        public Transform Transform { get; private set; }
+        public Transform Transform { get; set; }
         private string Name { get; set; }
 
         private List<Component> Components { get; set; }

@@ -33,6 +33,8 @@ namespace Nyx.Core.Renderer
         private readonly float[] _vertices;
         private int _numSprites;
 
+        private bool _rebufferData;
+
         public Batch(int maxBatchSize)
         {
             _shader = AssetManager.GetShader("assets/shaders/default.glsl");
@@ -90,10 +92,28 @@ namespace Nyx.Core.Renderer
                 TextureIdOffset);
         }
 
+        public void Update(float deltaTime)
+        {
+            for (var i = 0; i < _numSprites; i++)
+            {
+                SpriteRenderer sprite = _sprites[i];
+
+                if (sprite.IsDirty)
+                {
+                    LoadVertexProperties(i);
+                    sprite.IsDirty = false;
+                    _rebufferData = true;
+                }
+            }
+        }
+
         public void Render()
         {
-            _vertexBufferObject.Bind();
-            _vertexBufferObject.ReBufferData(_vertices);
+            if (_rebufferData)
+            {
+                _vertexBufferObject.Bind();
+                _vertexBufferObject.ReBufferData(_vertices);
+            }
 
             _shader.Use();
 
