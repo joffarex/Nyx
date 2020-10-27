@@ -1,10 +1,11 @@
 ﻿using System.Numerics;
+using Nyx.Core;
 using Nyx.Core.Components;
 using Nyx.Core.OpenGL;
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
-using Nyx.Core.Utils;
 using Nyx.SharpTT;
+using Nyx.Utils;
 
 namespace Nyx.Playground
 {

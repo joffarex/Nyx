@@ -4,12 +4,12 @@ using ImGuiNET;
 using Nyx.Core.Event;
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
+using Nyx.Gui;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using Silk.NET.Windowing.Common;
-using Ultz.SilkExtensions.ImGui;
 
 namespace Nyx.Core
 {
@@ -22,7 +22,7 @@ namespace Nyx.Core
         private static NyxApp _instance;
 
         // ImGui
-        private static ImGuiController _imGuiController;
+        private static ImGuiWrapper _imGuiWrapper;
 
         private NyxApp(int width, int height, string title)
         {
@@ -31,14 +31,16 @@ namespace Nyx.Core
             options.Title = title;
             options.VSync = VSyncMode.On;
             options.ShouldSwapAutomatically = true;
-            options.WindowBorder = WindowBorder.Fixed;
+            options.WindowBorder = WindowBorder.Resizable;
             _window = Window.Create(options);
 
             _window.Load += OnLoad;
+            _window.Resize += OnResize;
             _window.Render += OnRender;
             _window.Update += OnUpdate;
             _window.Closing += OnClose;
         }
+
 
         public static NyxApp Get(int width, int height, string title)
         {
@@ -79,13 +81,18 @@ namespace Nyx.Core
 
             GraphicsContext.CreateOpenGl(_window);
             EnableAlphaBlending();
-            
+
             GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
             GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
 
-            _imGuiController = new ImGuiController(GraphicsContext.Gl, _window, _inputContext);
+            _imGuiWrapper = new ImGuiWrapper(GraphicsContext.Gl, _window, _inputContext);
 
             SceneContext.ChangeScene(0);
+        }
+
+        private void OnResize(Size size)
+        {
+            GraphicsContext.Gl.Viewport(size);
         }
 
         private static void EnableAlphaBlending()
@@ -101,7 +108,7 @@ namespace Nyx.Core
         {
             SceneContext.CurrentScene.Update((float) deltaTime);
 
-            _imGuiController.Update((float) deltaTime);
+            _imGuiWrapper.Update((float) deltaTime);
         }
 
         /// <summary>
@@ -117,7 +124,7 @@ namespace Nyx.Core
 
             ImGui.ShowDemoWindow();
 
-            _imGuiController.Render();
+            _imGuiWrapper.Render();
 
             // We need to enable blending again because of internal imgui implementation
             EnableAlphaBlending();
@@ -126,7 +133,7 @@ namespace Nyx.Core
         private void OnClose()
         {
             SceneContext.CurrentScene.Dispose();
-            _imGuiController?.Dispose();
+            _imGuiWrapper?.Dispose();
         }
 
         public void Run()

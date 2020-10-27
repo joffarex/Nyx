@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using Nyx.Core.Components;
 using Nyx.Core.Scene;
-using Nyx.Core.Utils;
 using Silk.NET.OpenGL;
 
 namespace Nyx.Core.Renderer

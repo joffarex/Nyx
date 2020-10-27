@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Nyx.Core.Components;
 using Nyx.Core.Renderer;
+using Nyx.Utils;
 
-namespace Nyx.Core.Utils
+namespace Nyx.Core
 {
     public static class AssetManager
     {
