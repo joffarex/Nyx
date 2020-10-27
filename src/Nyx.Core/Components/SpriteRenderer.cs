@@ -75,5 +75,13 @@ namespace Nyx.Core.Components
         public override void Render()
         {
         }
+
+        public override void ImGui()
+        {
+            if (ImGuiNET.ImGui.ColorPicker4("Color Picker: ", ref _color))
+            {
+                IsDirty = true;
+            }
+        }
     }
 }

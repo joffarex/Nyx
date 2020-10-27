@@ -16,5 +16,9 @@ namespace Nyx.SharpTT
 
         public abstract void Update(float deltaTime);
         public abstract void Render();
+
+        public virtual void ImGui()
+        {
+        }
     }
 }

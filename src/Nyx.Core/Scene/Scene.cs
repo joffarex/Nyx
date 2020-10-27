@@ -13,7 +13,10 @@ namespace Nyx.Core.Scene
 
         // protected static PointF LastMousePosition;
         protected readonly List<GameObject> GameObjects = new List<GameObject>();
+
         private bool _isRunning;
+
+        protected GameObject ActiveGameObject;
 
         // public Camera3D Camera3D { get; protected set; }
         public Camera2D Camera2D { get; protected set; }
@@ -79,6 +82,22 @@ namespace Nyx.Core.Scene
             {
                 gameObject.Render();
             }
+        }
+
+        public void SceneImGui()
+        {
+            if (ActiveGameObject != null)
+            {
+                ImGuiNET.ImGui.Begin("Inspector");
+                ActiveGameObject.ImGui();
+                ImGuiNET.ImGui.End();
+            }
+
+            ImGui();
+        }
+
+        public virtual void ImGui()
+        {
         }
     }
 }

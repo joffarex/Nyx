@@ -27,40 +27,15 @@ namespace Nyx.Playground
             _gameObject1 = new GameObject("Object 1",
                 new Transform(new Vector2(200.0f, 100.0f), new Vector2(256.0f, 256.0f)), 2);
             _gameObject1.AddComponent(
-                new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage1.png"))));
+                new SpriteRenderer(new Vector4(1, 0, 0, 1)));
             AddGameObjectToScene(_gameObject1);
             var gameObject2 = new GameObject("Object 2",
                 new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)), 4);
             gameObject2.AddComponent(
                 new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage2.png"))));
             AddGameObjectToScene(gameObject2);
-        }
 
-        private void GenerateGradientQuad()
-        {
-            const int xOffset = 10;
-            const int yOffset = 10;
-
-            const float totalWidth = (float) 600 - (xOffset * 2);
-            const float totalHeight = (float) 300 - (yOffset * 2);
-            const float sizeX = totalWidth / 100.0f;
-            const float sizeY = totalHeight / 100.0f;
-            const float padding = 0;
-
-            for (var x = 0; x < 100; x++)
-            {
-                for (var y = 0; y < 100; y++)
-                {
-                    float xPos = xOffset + (x * sizeX) + (padding * x);
-                    float yPos = yOffset + (y * sizeY) + (padding * y);
-
-                    var gameObject = new GameObject($"GameObject(${x}:${y})",
-                        new Transform(new Vector2(xPos, yPos), new Vector2(sizeX, sizeY)), 1);
-                    gameObject.AddComponent(
-                        new SpriteRenderer(new Vector4(xPos / totalWidth, yPos / totalHeight, 0.5f, 0.1f)));
-                    AddGameObjectToScene(gameObject);
-                }
-            }
+            ActiveGameObject = _gameObject1;
         }
 
         private static void LoadResources()
@@ -92,6 +67,10 @@ namespace Nyx.Playground
             BatchRenderer.Dispose();
 
             base.Dispose();
+        }
+
+        public override void ImGui()
+        {
         }
     }
 }

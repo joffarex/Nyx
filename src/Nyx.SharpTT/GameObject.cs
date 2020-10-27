@@ -92,5 +92,13 @@ namespace Nyx.SharpTT
                 component.Render();
             }
         }
+
+        public void ImGui()
+        {
+            foreach (Component component in Components)
+            {
+                component.ImGui();
+            }
+        }
     }
 }

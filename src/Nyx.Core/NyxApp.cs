@@ -122,6 +122,7 @@ namespace Nyx.Core
 
             SceneContext.CurrentScene.Render();
 
+            SceneContext.CurrentScene.SceneImGui();
             ImGui.ShowDemoWindow();
 
             _imGuiWrapper.Render();

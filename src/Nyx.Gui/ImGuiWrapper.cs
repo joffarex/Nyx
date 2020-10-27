@@ -55,6 +55,8 @@ namespace Nyx.Gui
             ImGui.SetCurrentContext(context);
             ImGuiIOPtr io = ImGui.GetIO();
 
+            io.WantSaveIniSettings = true;
+
             var fontConfig = new ImFontConfigPtr();
             // fontConfig.GlyphRanges = io.Fonts.GetGlyphRangesDefault();
             // fontConfig.PixelSnapH = true;
