@@ -18,6 +18,7 @@
       <PackageReference Include="Silk.NET.Input.Common" Version="1.7.0" />
       <PackageReference Include="Silk.NET.OpenGL" Version="1.7.0" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+      <PackageReference Include="Ultz.SilkExtensions.ImGui" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>

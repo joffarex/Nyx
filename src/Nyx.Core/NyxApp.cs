@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
+using ImGuiNET;
 using Nyx.Core.Event;
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
-using Nyx.Core.Utils;
 using Silk.NET.Input;
 using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using Silk.NET.Windowing.Common;
+using Ultz.SilkExtensions.ImGui;
 
 namespace Nyx.Core
 {
     public class NyxApp
     {
         private static IWindow _window;
+        private static IInputContext _inputContext;
 
         // public static Scene.Scene CurrentScene;
         private static NyxApp _instance;
 
-        // private readonly Dictionary<int, Scene.Scene> _scenes = new Dictionary<int, Scene.Scene>();
-
-        protected float BeginTime = Time.GetTimeFromAppicationStart();
-        protected float DeltaTime = -1.0f;
-        protected float EndTime;
+        // ImGui
+        private static ImGuiController _imGuiController;
 
         private NyxApp(int width, int height, string title)
         {
@@ -57,18 +55,18 @@ namespace Nyx.Core
             SceneContext.AddScene(index, scene);
         }
 
-        protected virtual void OnLoad()
+        private void OnLoad()
         {
-            IInputContext input = _window.CreateInput();
+            _inputContext = _window.CreateInput();
 
-            foreach (IKeyboard k in input.Keyboards)
+            foreach (IKeyboard k in _inputContext.Keyboards)
             {
                 EventContext.KeyEvent = KeyEvent.Get(k);
                 k.KeyDown += KeyDown;
                 k.KeyUp += KeyUp;
             }
 
-            foreach (IMouse m in input.Mice)
+            foreach (IMouse m in _inputContext.Mice)
             {
                 EventContext.MouseEvent = MouseEvent.Get(m);
                 m.Click += MouseClick;
@@ -79,57 +77,56 @@ namespace Nyx.Core
                 m.MouseDown += MouseDown;
             }
 
-            GraphicsContext.Create(_window);
-            GraphicsContext.Gl.Enable(EnableCap.Blend);
-            GraphicsContext.Gl.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+            GraphicsContext.CreateOpenGl(_window);
+            EnableAlphaBlending();
+            
+            GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
+            GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
+
+            _imGuiController = new ImGuiController(GraphicsContext.Gl, _window, _inputContext);
 
             SceneContext.ChangeScene(0);
+        }
+
+        private static void EnableAlphaBlending()
+        {
+            GraphicsContext.Gl.Enable(EnableCap.Blend);
+            GraphicsContext.Gl.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
         }
 
         /// <summary>
         ///     Update geometry and listen to user events
         /// </summary>
-        protected virtual void OnUpdate(double obj)
+        private void OnUpdate(double deltaTime)
         {
-            if (DeltaTime >= 0)
-            {
-                SceneContext.CurrentScene.Update(DeltaTime);
-            }
+            SceneContext.CurrentScene.Update((float) deltaTime);
 
-            EndTime = Time.GetTimeFromAppicationStart();
-            DeltaTime = EndTime - BeginTime;
-            BeginTime = EndTime;
+            _imGuiController.Update((float) deltaTime);
         }
 
         /// <summary>
         ///     Draw stuff to the screen
         /// </summary>
-        protected virtual void OnRender(double obj)
+        private void OnRender(double deltaTime)
         {
             //Clear the color channel.
             GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
             GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
 
             SceneContext.CurrentScene.Render();
+
+            ImGui.ShowDemoWindow();
+
+            _imGuiController.Render();
+
+            // We need to enable blending again because of internal imgui implementation
+            EnableAlphaBlending();
         }
 
-        protected virtual void OnClose()
+        private void OnClose()
         {
             SceneContext.CurrentScene.Dispose();
-        }
-
-        protected static (string, string) GetShaderFullPaths(string vertexPath, string fragmentPath)
-        {
-            string vertexShaderPath = GetFullPath(vertexPath);
-            string fragmentShaderPath = GetFullPath(fragmentPath);
-
-            return (vertexShaderPath, fragmentShaderPath);
-        }
-
-        public static string GetFullPath(string path)
-        {
-            string baseDir = Directory.GetParent(Environment.CurrentDirectory).Parent!.Parent!.FullName;
-            return Path.Combine(baseDir, path);
+            _imGuiController?.Dispose();
         }
 
         public void Run()
@@ -140,7 +137,7 @@ namespace Nyx.Core
 
         #region InputEvents
 
-        protected virtual void KeyDown(IKeyboard keyboard, Key key, int keyCode)
+        private void KeyDown(IKeyboard keyboard, Key key, int keyCode)
         {
             if (key == Key.Escape)
             {
@@ -148,33 +145,33 @@ namespace Nyx.Core
             }
         }
 
-        protected virtual void KeyUp(IKeyboard keyboard, Key key, int keyCode)
+        private void KeyUp(IKeyboard keyboard, Key key, int keyCode)
         {
         }
 
 
-        protected virtual void MouseMove(IMouse mouse, PointF position)
+        private void MouseMove(IMouse mouse, PointF position)
         {
             SceneContext.CurrentScene.MouseMove(mouse, position);
         }
 
-        protected virtual void MouseClick(IMouse mouse, MouseButton mouseButton)
+        private void MouseClick(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseDown(IMouse mouse, MouseButton mouseButton)
+        private void MouseDown(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseUp(IMouse mouse, MouseButton mouseButton)
+        private void MouseUp(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseDoubleClick(IMouse mouse, MouseButton mouseButton)
+        private void MouseDoubleClick(IMouse mouse, MouseButton mouseButton)
         {
         }
 
-        protected virtual void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
+        private void MouseScroll(IMouse mouse, ScrollWheel scrollWheel)
         {
         }
 

@@ -7,7 +7,7 @@ namespace Nyx.Core.Renderer
     {
         public static GL Gl;
 
-        public static void Create(IWindow window)
+        public static void CreateOpenGl(IWindow window)
         {
             Gl = GL.GetApi(window);
         }
