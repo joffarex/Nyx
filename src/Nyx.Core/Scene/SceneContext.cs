@@ -21,6 +21,8 @@ namespace Nyx.Core.Scene
                 throw new Exception($"Scene idx: {newSceneIndex} does not exist");
             }
 
+            CurrentScene.LoadResources();
+            CurrentScene.Load();
             CurrentScene.Init();
             CurrentScene.Start();
         }

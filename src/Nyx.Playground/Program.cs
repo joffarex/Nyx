@@ -6,7 +6,7 @@ namespace Nyx.Playground
     {
         public static void Main(string[] args)
         {
-            NyxApp app = NyxApp.Get(1280, 720, "Nyx Playground");
+            NyxApp app = NyxApp.Get(1600, 900, "Nyx Playground");
             app.AddScene(0, new LevelEditorScene());
             app.AddScene(1, new LevelScene());
 

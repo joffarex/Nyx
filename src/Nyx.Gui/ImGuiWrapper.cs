@@ -62,7 +62,7 @@ namespace Nyx.Gui
             // fontConfig.PixelSnapH = true;
 
             string fontPath = PathUtils.GetFullPath("assets/fonts/segoeui.ttf");
-            io.Fonts.AddFontFromFileTTF(fontPath, 32, fontConfig);
+            io.Fonts.AddFontFromFileTTF(fontPath, 20, fontConfig);
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
