@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nyx.Core.OpenGL;
+using Newtonsoft.Json;
 
-namespace Nyx.SharpTT
+namespace Nyx.Ecs
 {
     public class GameObject : IDisposable
     {
+        public GameObject()
+        {
+        }
+
         public GameObject(string name)
         {
             Init(name, new Transform(), 0);
@@ -18,10 +22,10 @@ namespace Nyx.SharpTT
 
 
         public Transform Transform { get; set; }
-        public int Z_Index { get; private set; }
-        private string Name { get; set; }
+        public int ZIndex { get; set; }
+        public string Name { get; set; }
 
-        private List<Component> Components { get; set; }
+        [JsonRequired] private List<Component> Components { get; set; }
 
         public void Dispose()
         {
@@ -36,7 +40,7 @@ namespace Nyx.SharpTT
             Name = name;
             Components = new List<Component>();
             Transform = transform;
-            Z_Index = zIndex;
+            ZIndex = zIndex;
         }
 
         public T GetComponent<T>() where T : Component

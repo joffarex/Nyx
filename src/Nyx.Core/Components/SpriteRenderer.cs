@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
-using Nyx.Core.OpenGL;
+using Newtonsoft.Json;
 using Nyx.Core.Renderer;
-using Nyx.SharpTT;
+using Nyx.Ecs;
 
 namespace Nyx.Core.Components
 {
@@ -12,11 +12,17 @@ namespace Nyx.Core.Components
 
         private Sprite _sprite;
 
+        public SpriteRenderer()
+        {
+        }
+
         public SpriteRenderer(Vector4 color)
         {
             Color = color;
             Sprite = new Sprite(null);
             IsDirty = true;
+            Texture = Sprite.Texture;
+            TextureCoordinates = Sprite.TextureCoordinates;
         }
 
         public SpriteRenderer(Sprite sprite)
@@ -24,6 +30,8 @@ namespace Nyx.Core.Components
             Sprite = sprite;
             Color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             IsDirty = true;
+            Texture = Sprite.Texture;
+            TextureCoordinates = Sprite.TextureCoordinates;
         }
 
         public Vector4 Color
@@ -39,7 +47,7 @@ namespace Nyx.Core.Components
             }
         }
 
-        public Vector2[] TextureCoordinates => Sprite.TextureCoordinates;
+        public Vector2[] TextureCoordinates { get; set; }
 
         public Sprite Sprite
         {
@@ -51,11 +59,11 @@ namespace Nyx.Core.Components
             }
         }
 
-        public Transform LastTransform { get; set; }
+        [JsonIgnore] public Transform LastTransform { get; set; }
 
-        public bool IsDirty { get; set; }
+        [JsonIgnore] public bool IsDirty { get; set; } = true;
 
-        public Texture Texture => Sprite.Texture;
+        public Texture Texture { get; set; }
 
         public override void Start()
         {

@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.78.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
       <PackageReference Include="Silk.NET" Version="1.7.0" />
       <PackageReference Include="Silk.NET.GLFW" Version="1.7.0" />
       <PackageReference Include="Silk.NET.Input.Common" Version="1.7.0" />
@@ -23,14 +24,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Nyx.Ecs\Nyx.Ecs.csproj" />
       <ProjectReference Include="..\Nyx.Gui\Nyx.Gui.csproj" />
-      <ProjectReference Include="..\Nyx.SharpTT\Nyx.SharpTT.csproj" />
       <ProjectReference Include="..\Nyx.Utils\Nyx.Utils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Gui" />
-      <Folder Include="Utils" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using Nyx.SharpTT;
+﻿using Nyx.Ecs;
 
 namespace Nyx.Core.Components
 {

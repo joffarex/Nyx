@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using Newtonsoft.Json;
 using Nyx.Core.Renderer;
-using Nyx.SharpTT;
+using Nyx.Core.Serializers;
+using Nyx.Ecs;
+using Nyx.Utils;
 using Silk.NET.Input.Common;
 
 namespace Nyx.Core.Scene
@@ -17,6 +21,8 @@ namespace Nyx.Core.Scene
         private bool _isRunning;
 
         protected GameObject ActiveGameObject;
+
+        protected bool LevelLoaded;
 
         // public Camera3D Camera3D { get; protected set; }
         public Camera2D Camera2D { get; protected set; }
@@ -98,6 +104,57 @@ namespace Nyx.Core.Scene
 
         public virtual void ImGui()
         {
+        }
+
+        public virtual void LoadResources()
+        {
+        }
+
+        public void SaveExit()
+        {
+            string json = JsonConvert.SerializeObject(GameObjects, Formatting.Indented, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                NullValueHandling = NullValueHandling.Include,
+
+                Converters = new List<JsonConverter> {new ComponentConverter()},
+            });
+
+            using (var writer = new StreamWriter(PathUtils.GetFullPath("levels/levelEditor.json")))
+            {
+                writer.Write(json);
+            }
+        }
+
+        public void Load()
+        {
+            var src = "";
+
+            try
+            {
+                src = File.ReadAllText(PathUtils.GetFullPath("levels/levelEditor.json"));
+            }
+            catch (FileNotFoundException)
+            {
+            }
+
+            if (string.IsNullOrEmpty(src))
+            {
+                return;
+            }
+
+            var gameObjects = JsonConvert.DeserializeObject<List<GameObject>>(src, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                NullValueHandling = NullValueHandling.Include,
+
+                Converters = new List<JsonConverter> {new GameObjectConverter()},
+            });
+            foreach (GameObject gameObject in gameObjects)
+            {
+                AddGameObjectToScene(gameObject);
+                LevelLoaded = true;
+            }
         }
     }
 }

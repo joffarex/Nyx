@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Nyx.Core.OpenGL
+namespace Nyx.Ecs
 {
     public class Transform
     {
@@ -20,7 +20,7 @@ namespace Nyx.Core.OpenGL
         }
 
         public Vector2 Position { get; set; }
-        public Vector2 Scale { get; private set; }
+        public Vector2 Scale { get; set; }
 
         public void Init(Vector2 position, Vector2 scale)
         {
@@ -53,6 +53,18 @@ namespace Nyx.Core.OpenGL
 
             var t = (Transform) obj;
             return (t.Position == Position) && (t.Scale == Scale);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+
+                hash = (hash * 23) + Position.GetHashCode();
+                hash = (hash * 23) + Scale.GetHashCode();
+                return hash;
+            }
         }
     }
 }
