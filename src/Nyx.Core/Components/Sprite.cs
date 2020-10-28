@@ -5,6 +5,10 @@ namespace Nyx.Core.Components
 {
     public class Sprite
     {
+        public Sprite()
+        {
+        }
+
         public Sprite(Texture texture)
         {
             Texture = texture;
@@ -23,7 +27,8 @@ namespace Nyx.Core.Components
             TextureCoordinates = textureCoordinates;
         }
 
-        public Texture Texture { get; }
-        public Vector2[] TextureCoordinates { get; }
+        public Texture Texture { get; set; }
+
+        public Vector2[] TextureCoordinates { get; set; }
     }
 }

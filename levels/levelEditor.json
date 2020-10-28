@@ -1,0 +1,158 @@
+[
+  {
+    "Transform": {
+      "Position": {
+        "X": 200.0,
+        "Y": 100.0
+      },
+      "Scale": {
+        "X": 256.0,
+        "Y": 256.0
+      }
+    },
+    "ZIndex": 2,
+    "Name": "Object 1",
+    "Components": [
+      {
+  "Type": "Nyx.Core.Components.SpriteRenderer",
+  "Properties": {
+    "Color": {
+      "X": 0.6470585,
+      "Y": 0.0,
+      "Z": 1.0,
+      "W": 1.0
+    },
+    "TextureCoordinates": [
+      {
+        "X": 1.0,
+        "Y": 1.0
+      },
+      {
+        "X": 1.0,
+        "Y": 0.0
+      },
+      {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      {
+        "X": 0.0,
+        "Y": 1.0
+      }
+    ],
+    "Sprite": {
+      "Texture": null,
+      "TextureCoordinates": [
+        {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        {
+          "X": 1.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 1.0
+        }
+      ]
+    },
+    "Texture": null
+  }
+},
+      {
+  "Type": "Nyx.Core.Components.RigidBody",
+  "Properties": {
+    "_colliderType": 45,
+    "_friction": -37.2,
+    "Velocity": {
+      "X": 26.0,
+      "Y": 32.5,
+      "Z": -24.0
+    }
+  }
+}
+    ]
+  },
+  {
+    "Transform": {
+      "Position": {
+        "X": 400.0,
+        "Y": 100.0
+      },
+      "Scale": {
+        "X": 256.0,
+        "Y": 256.0
+      }
+    },
+    "ZIndex": 4,
+    "Name": "Object 2",
+    "Components": [
+      {
+  "Type": "Nyx.Core.Components.SpriteRenderer",
+  "Properties": {
+    "Color": {
+      "X": 1.0,
+      "Y": 1.0,
+      "Z": 1.0,
+      "W": 1.0
+    },
+    "TextureCoordinates": [
+      {
+        "X": 1.0,
+        "Y": 1.0
+      },
+      {
+        "X": 1.0,
+        "Y": 0.0
+      },
+      {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      {
+        "X": 0.0,
+        "Y": 1.0
+      }
+    ],
+    "Sprite": {
+      "Texture": {
+        "_handle": 2,
+        "FilePath": "E:\\Projects\\Nyx\\assets/sprites/blendImage2.png",
+        "Width": 256,
+        "Height": 256
+      },
+      "TextureCoordinates": [
+        {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        {
+          "X": 1.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 1.0
+        }
+      ]
+    },
+    "Texture": {
+      "_handle": 2,
+      "FilePath": "E:\\Projects\\Nyx\\assets/sprites/blendImage2.png",
+      "Width": 256,
+      "Height": 256
+    }
+  }
+}
+    ]
+  }
+]

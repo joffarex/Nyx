@@ -133,6 +133,7 @@ namespace Nyx.Core
 
         private void OnClose()
         {
+            SceneContext.CurrentScene.SaveExit();
             SceneContext.CurrentScene.Dispose();
             _imGuiWrapper?.Dispose();
         }

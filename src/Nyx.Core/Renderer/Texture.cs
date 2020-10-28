@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -9,11 +10,44 @@ namespace Nyx.Core.Renderer
 {
     public class Texture : IDisposable
     {
-        private uint _handle;
+        [JsonRequired] private uint _handle;
 
-        public unsafe Texture(TextureType type, string path)
+        public Texture()
         {
-            var img = (Image<Rgba32>) Image.Load(path);
+        }
+
+        public Texture(TextureType type, string path)
+        {
+            InitWithPath(type, path);
+        }
+
+        public Texture(TextureType type, Span<byte> data, uint width, uint height)
+        {
+            InitWithData(type, data, width, height);
+        }
+
+        public string FilePath { get; set; }
+
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public void Dispose()
+        {
+            GraphicsContext.Gl.DeleteTexture(_handle);
+        }
+
+        public unsafe void InitWithData(TextureType type, Span<byte> data, uint width, uint height)
+        {
+            fixed (void* d = &data[0])
+            {
+                Load(type, d, width, height);
+            }
+        }
+
+        public unsafe void InitWithPath(TextureType type, string path)
+        {
+            FilePath = path;
+            var img = (Image<Rgba32>) Image.Load(FilePath);
             img.Mutate(x => x.Flip(FlipMode.Vertical));
             Width = img.Width;
             Height = img.Height;
@@ -24,22 +58,6 @@ namespace Nyx.Core.Renderer
             }
 
             img.Dispose();
-        }
-
-        public unsafe Texture(TextureType type, Span<byte> data, uint width, uint height)
-        {
-            fixed (void* d = &data[0])
-            {
-                Load(type, d, width, height);
-            }
-        }
-
-        public int Width { get; }
-        public int Height { get; }
-
-        public void Dispose()
-        {
-            GraphicsContext.Gl.DeleteTexture(_handle);
         }
 
         private unsafe void Load(TextureType type, void* data, uint width, uint height)
