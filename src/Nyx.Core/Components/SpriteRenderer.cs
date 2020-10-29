@@ -16,10 +16,10 @@ namespace Nyx.Core.Components
         {
         }
 
-        public SpriteRenderer(Vector4 color)
+        public SpriteRenderer(Vector4 color, int width, int height)
         {
             Color = color;
-            Sprite = new Sprite(null);
+            Sprite = new Sprite(width, height);
             IsDirty = true;
             Texture = Sprite.Texture;
             TextureCoordinates = Sprite.TextureCoordinates;

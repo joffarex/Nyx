@@ -32,7 +32,7 @@ namespace Nyx.Core.Components
                     new Vector2(leftX, topY),
                 };
 
-                var sprite = new Sprite(texture, textureCoordinates);
+                var sprite = new Sprite(texture, textureCoordinates, spriteWidth, spriteHeight);
                 Sprites.Add(sprite);
 
                 currentX += spriteWidth + spacing;
@@ -46,5 +46,10 @@ namespace Nyx.Core.Components
 
         public Texture Texture { get; set; }
         public List<Sprite> Sprites { get; }
+
+        public int Count()
+        {
+            return Sprites.Count;
+        }
     }
 }

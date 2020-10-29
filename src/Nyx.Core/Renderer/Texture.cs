@@ -10,8 +10,6 @@ namespace Nyx.Core.Renderer
 {
     public class Texture : IDisposable
     {
-        [JsonRequired] private uint _handle;
-
         public Texture()
         {
         }
@@ -21,10 +19,7 @@ namespace Nyx.Core.Renderer
             InitWithPath(type, path);
         }
 
-        public Texture(TextureType type, Span<byte> data, uint width, uint height)
-        {
-            InitWithData(type, data, width, height);
-        }
+        [JsonRequired] public uint Handle { get; private set; }
 
         public string FilePath { get; set; }
 
@@ -33,15 +28,7 @@ namespace Nyx.Core.Renderer
 
         public void Dispose()
         {
-            GraphicsContext.Gl.DeleteTexture(_handle);
-        }
-
-        public unsafe void InitWithData(TextureType type, Span<byte> data, uint width, uint height)
-        {
-            fixed (void* d = &data[0])
-            {
-                Load(type, d, width, height);
-            }
+            GraphicsContext.Gl.DeleteTexture(Handle);
         }
 
         public unsafe void InitWithPath(TextureType type, string path)
@@ -62,7 +49,7 @@ namespace Nyx.Core.Renderer
 
         private unsafe void Load(TextureType type, void* data, uint width, uint height)
         {
-            _handle = GraphicsContext.Gl.GenTexture();
+            Handle = GraphicsContext.Gl.GenTexture();
             Bind();
 
             GraphicsContext.Gl.TexImage2D(TextureTarget.Texture2D, 0, (int) InternalFormat.Rgba, width, height, 0,
@@ -77,7 +64,7 @@ namespace Nyx.Core.Renderer
 
         public void Bind()
         {
-            GraphicsContext.Gl.BindTexture(TextureTarget.Texture2D, _handle);
+            GraphicsContext.Gl.BindTexture(TextureTarget.Texture2D, Handle);
         }
 
         public void Activate(TextureUnit textureSlot = TextureUnit.Texture0)
