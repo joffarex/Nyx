@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using Nyx.Core.Components;
-using Nyx.Core.Event;
 using Nyx.Core.Renderer;
 using Nyx.Ecs;
 
@@ -12,6 +11,8 @@ namespace Nyx.Core.Scene
         private const string SpriteSheetPath = "assets/sprites/spritesheets/decorationsAndBlocks.png";
 
         private GameObject _gameObject1;
+
+        private readonly MouseControl _mouseControl = new MouseControl();
 
         private SpriteSheet _spriteSheet;
 
@@ -53,10 +54,7 @@ namespace Nyx.Core.Scene
         {
             // Fps.Print(deltaTime);
 
-            float orthoX = EventContext.MouseEvent.GetOrthoX();
-            float orthoY = EventContext.MouseEvent.GetOrthoY();
-
-            Console.WriteLine($"X: {orthoX}, Y: {orthoY}");
+            _mouseControl.Update(deltaTime);
 
             base.Update(deltaTime);
         }
@@ -95,7 +93,8 @@ namespace Nyx.Core.Scene
                 ImGuiNET.ImGui.PushID(i);
                 if (ImGuiNET.ImGui.ImageButton((IntPtr) id, spriteSize, textureCoordinates[0], textureCoordinates[2]))
                 {
-                    Console.WriteLine($"Button {i} clicked");
+                    GameObject gameObject = Prefab.GenerateSpriteObject(sprite, spriteWidth, spriteHeight);
+                    _mouseControl.PickUpObject(gameObject);
                 }
 
                 ImGuiNET.ImGui.PopID();

@@ -36,7 +36,9 @@ namespace Nyx.Core.Event
         {
             // We need to normalize current values with * 2 - 1;
             // this way we get coordinates between -1; 1, which we need to openGL;
-            float currentY = _mouse.Position.Y;
+
+            // Y is flipped so we need to subtract mouse y position from height
+            float currentY = NyxApp.GetWindowHeight() - _mouse.Position.Y;
             currentY = ((currentY / NyxApp.GetWindowHeight()) * 2) - 1;
 
             // Convert to world coordinates
