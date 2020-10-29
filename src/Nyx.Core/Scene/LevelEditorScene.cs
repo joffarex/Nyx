@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Numerics;
-using Nyx.Core;
 using Nyx.Core.Components;
 using Nyx.Core.Event;
 using Nyx.Core.Renderer;
-using Nyx.Core.Scene;
 using Nyx.Ecs;
 
-namespace Nyx.Playground
+namespace Nyx.Core.Scene
 {
     public class LevelEditorScene : Scene
     {
@@ -19,7 +17,7 @@ namespace Nyx.Playground
 
         public override void Init()
         {
-            Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f));
+            Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
             if (LevelLoaded)
             {
@@ -88,8 +86,8 @@ namespace Nyx.Playground
             for (var i = 0; i < _spriteSheet.Count(); i++)
             {
                 Sprite sprite = _spriteSheet.Sprites[i];
-                float spriteWidth = sprite.Width * 4;
-                float spriteHeight = sprite.Height * 4;
+                float spriteWidth = sprite.Width * 2;
+                float spriteHeight = sprite.Height * 2;
                 var spriteSize = new Vector2(spriteWidth, spriteHeight);
                 uint id = sprite.GetTextureHandle();
                 Vector2[] textureCoordinates = sprite.TextureCoordinates;

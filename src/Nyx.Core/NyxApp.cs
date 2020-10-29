@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 using ImGuiNET;
 using Nyx.Core.Event;
 using Nyx.Core.Renderer;
@@ -64,6 +65,11 @@ namespace Nyx.Core
         public void AddScene(int index, Scene.Scene scene)
         {
             SceneContext.AddScene(index, scene);
+        }
+
+        public void SetBaseSize(Vector2 baseSize)
+        {
+            SceneContext.BaseSize = baseSize;
         }
 
         private void OnLoad()

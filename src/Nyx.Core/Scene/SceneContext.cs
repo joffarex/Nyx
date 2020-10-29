@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Nyx.Core.Scene
 {
@@ -7,6 +8,8 @@ namespace Nyx.Core.Scene
     {
         public static Scene CurrentScene;
         private static readonly Dictionary<int, Scene> Scenes = new Dictionary<int, Scene>();
+
+        public static Vector2 BaseSize { get; set; }
 
         public static void AddScene(int index, Scene scene)
         {

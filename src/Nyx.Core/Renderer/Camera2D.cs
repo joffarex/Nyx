@@ -4,9 +4,10 @@ namespace Nyx.Core.Renderer
 {
     public class Camera2D
     {
-        public Camera2D(Vector2 position)
+        public Camera2D(Vector2 position, Vector2 baseSize)
         {
             Position = position;
+            BaseSize = baseSize;
             ProjectionMatrix = Matrix4x4.Identity;
             InverseProjection = new Matrix4x4();
             ViewMatrix = Matrix4x4.Identity;
@@ -29,9 +30,11 @@ namespace Nyx.Core.Renderer
 
         public Vector3 Up { get; }
 
+        public Vector2 BaseSize { get; set; }
+
         public void AdjustProjection()
         {
-            var ortho = Matrix4x4.CreateOrthographicOffCenter(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f);
+            var ortho = Matrix4x4.CreateOrthographicOffCenter(0.0f, BaseSize.X, 0.0f, BaseSize.Y, 0.0f, 100.0f);
             ProjectionMatrix = ortho;
 
             Matrix4x4 inverseProjection;
