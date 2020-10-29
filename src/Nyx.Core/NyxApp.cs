@@ -18,7 +18,6 @@ namespace Nyx.Core
         private static IWindow _window;
         private static IInputContext _inputContext;
 
-        // public static Scene.Scene CurrentScene;
         private static NyxApp _instance;
 
         // ImGui
@@ -39,6 +38,16 @@ namespace Nyx.Core
             _window.Render += OnRender;
             _window.Update += OnUpdate;
             _window.Closing += OnClose;
+        }
+
+        public static float GetWindowWidth()
+        {
+            return _window.Size.Width;
+        }
+
+        public static float GetWindowHeight()
+        {
+            return _window.Size.Height;
         }
 
 

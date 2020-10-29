@@ -2,6 +2,7 @@
 using System.Numerics;
 using Nyx.Core;
 using Nyx.Core.Components;
+using Nyx.Core.Event;
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
 using Nyx.Ecs;
@@ -53,6 +54,11 @@ namespace Nyx.Playground
         public override void Update(float deltaTime)
         {
             // Fps.Print(deltaTime);
+
+            float orthoX = EventContext.MouseEvent.GetOrthoX();
+            float orthoY = EventContext.MouseEvent.GetOrthoY();
+
+            Console.WriteLine($"X: {orthoX}, Y: {orthoY}");
 
             base.Update(deltaTime);
         }
