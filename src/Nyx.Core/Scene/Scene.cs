@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Nyx.Core.Renderer;
 using Nyx.Core.Serializers;
@@ -143,6 +144,9 @@ namespace Nyx.Core.Scene
                 return;
             }
 
+            int maxGameObjectId = -1;
+            int maxComponentId = -1;
+
             var gameObjects = JsonConvert.DeserializeObject<List<GameObject>>(src, new JsonSerializerSettings
             {
                 DefaultValueHandling = DefaultValueHandling.Include,
@@ -153,8 +157,23 @@ namespace Nyx.Core.Scene
             foreach (GameObject gameObject in gameObjects)
             {
                 AddGameObjectToScene(gameObject);
-                LevelLoaded = true;
+
+                maxComponentId = gameObject.Components.Select(component => component.Uid).Prepend(maxComponentId).Max();
+
+                if (gameObject.Uid > maxGameObjectId)
+                {
+                    maxGameObjectId = gameObject.Uid;
+                }
             }
+
+
+            // We need to make sure that these are higher than an actual max id
+            // that way we dont get duplicates
+            maxGameObjectId++;
+            maxComponentId++;
+            GameObject.Init(maxGameObjectId);
+            Component.Init(maxComponentId);
+            LevelLoaded = true;
         }
     }
 }

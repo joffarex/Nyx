@@ -31,6 +31,7 @@ namespace Nyx.Core.Scene
             _gameObject1.AddComponent(
                 new SpriteRenderer(new Vector4(1, 0, 0, 1), 256, 256));
             _gameObject1.AddComponent(new RigidBody());
+            _gameObject1.AddComponent(new RigidBody());
             AddGameObjectToScene(_gameObject1);
             var gameObject2 = new GameObject("Object 2",
                 new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)), 4);

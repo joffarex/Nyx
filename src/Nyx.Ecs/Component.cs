@@ -9,6 +9,9 @@ namespace Nyx.Ecs
 {
     public abstract class Component : IDisposable
     {
+        private static int _idCounter;
+        public int Uid { get; set; } = -1;
+
         [JsonIgnore] public GameObject GameObject { get; set; }
 
         public virtual void Dispose()
@@ -78,6 +81,19 @@ namespace Nyx.Ecs
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public void GenerateId()
+        {
+            if (Uid == -1)
+            {
+                Uid = _idCounter++;
+            }
+        }
+
+        public static void Init(int maxId)
+        {
+            _idCounter = maxId;
         }
     }
 }

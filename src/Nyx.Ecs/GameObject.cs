@@ -6,14 +6,13 @@ namespace Nyx.Ecs
 {
     public class GameObject : IDisposable
     {
+        private static int _idCounter = 0;
+        public int Uid { get; set; } = -1;
+        
         public GameObject()
         {
         }
 
-        public GameObject(string name)
-        {
-            Init(name, new Transform(), 0);
-        }
 
         public GameObject(string name, Transform transform, int zIndex)
         {
@@ -25,7 +24,7 @@ namespace Nyx.Ecs
         public int ZIndex { get; set; }
         public string Name { get; set; }
 
-        [JsonRequired] private List<Component> Components { get; set; }
+        public List<Component> Components { get; set; }
 
         public void Dispose()
         {
@@ -41,6 +40,8 @@ namespace Nyx.Ecs
             Components = new List<Component>();
             Transform = transform;
             ZIndex = zIndex;
+
+            Uid = _idCounter++;
         }
 
         public T GetComponent<T>() where T : Component
@@ -58,6 +59,7 @@ namespace Nyx.Ecs
 
         public void AddComponent(Component component)
         {
+            component.GenerateId();
             Components.Add(component);
             component.GameObject = this;
         }
@@ -104,5 +106,10 @@ namespace Nyx.Ecs
                 component.ImGui();
             }
         }
+        
+        public static void Init(int maxId)
+        {
+            _idCounter = maxId;
+        } 
     }
 }
