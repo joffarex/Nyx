@@ -10,37 +10,37 @@ namespace Nyx.Core.Scene
     {
         private const string SpriteSheetPath = "assets/sprites/spritesheets/decorationsAndBlocks.png";
 
-        private readonly MouseControl _mouseControl = new MouseControl();
-
-        private GameObject _gameObject1;
+        private readonly GameObject _levelEditorGameObjects =
+            new GameObject("LevelEditor", new Transform(new Vector2()), 0);
 
         private SpriteSheet _spriteSheet;
 
         public override void Init()
         {
+            _levelEditorGameObjects.AddComponent(new MouseControl());
+            _levelEditorGameObjects.AddComponent(new GridLines());
+
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
-            DebugDraw.AddLine2D(new Vector2(0, 0), new Vector2(800, 800), new Vector3(1, 0, 0), 120);
             if (LevelLoaded)
             {
                 ActiveGameObject = GameObjects.Find(g => g.Name == "Object 1");
-                return;
             }
 
-            _gameObject1 = new GameObject("Object 1",
-                new Transform(new Vector2(200.0f, 100.0f), new Vector2(256.0f, 256.0f)), 2);
-            _gameObject1.AddComponent(
-                new SpriteRenderer(new Vector4(1, 0, 0, 1), 256, 256));
-            _gameObject1.AddComponent(new RigidBody());
-            _gameObject1.AddComponent(new RigidBody());
-            AddGameObjectToScene(_gameObject1);
-            var gameObject2 = new GameObject("Object 2",
-                new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)), 4);
-            gameObject2.AddComponent(
-                new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage2.png"))));
-            AddGameObjectToScene(gameObject2);
+            // _gameObject1 = new GameObject("Object 1",
+            // new Transform(new Vector2(200.0f, 100.0f), new Vector2(256.0f, 256.0f)), 2);
+            // _gameObject1.AddComponent(
+            // new SpriteRenderer(new Vector4(1, 0, 0, 1), 256, 256));
+            // _gameObject1.AddComponent(new RigidBody());
+            // _gameObject1.AddComponent(new RigidBody());
+            // AddGameObjectToScene(_gameObject1);
+            // var gameObject2 = new GameObject("Object 2",
+            // new Transform(new Vector2(400.0f, 100.0f), new Vector2(256.0f, 256.0f)), 4);
+            // gameObject2.AddComponent(
+            // new SpriteRenderer(new Sprite(AssetManager.GetTexture("assets/sprites/blendImage2.png"))));
+            // AddGameObjectToScene(gameObject2);
 
-            ActiveGameObject = _gameObject1;
+            // ActiveGameObject = _gameObject1;
         }
 
         public override void LoadResources()
@@ -56,7 +56,7 @@ namespace Nyx.Core.Scene
         {
             // Fps.Print(deltaTime);
 
-            _mouseControl.Update(deltaTime);
+            _levelEditorGameObjects.Update(deltaTime);
 
             base.Update(deltaTime);
         }
@@ -88,22 +88,23 @@ namespace Nyx.Core.Scene
                 Sprite sprite = _spriteSheet.Sprites[i];
                 float spriteWidth = sprite.Width * 2;
                 float spriteHeight = sprite.Height * 2;
-                var spriteSize = new Vector2(spriteWidth, spriteHeight);
+                var spriteSizeForGui = new Vector2(spriteWidth * 2, spriteHeight * 2);
                 uint id = sprite.GetTextureHandle();
                 Vector2[] textureCoordinates = sprite.TextureCoordinates;
 
                 ImGuiNET.ImGui.PushID(i);
-                if (ImGuiNET.ImGui.ImageButton((IntPtr) id, spriteSize, textureCoordinates[0], textureCoordinates[2]))
+                if (ImGuiNET.ImGui.ImageButton((IntPtr) id, spriteSizeForGui, textureCoordinates[2],
+                    textureCoordinates[0]))
                 {
                     GameObject gameObject = Prefab.GenerateSpriteObject(sprite, spriteWidth, spriteHeight);
-                    _mouseControl.PickUpObject(gameObject);
+                    _levelEditorGameObjects.GetComponent<MouseControl>().PickUpObject(gameObject);
                 }
 
                 ImGuiNET.ImGui.PopID();
 
                 Vector2 lastButtonPos = ImGuiNET.ImGui.GetItemRectMax();
                 float lastButtonX2 = lastButtonPos.X;
-                float nextButtonX2 = lastButtonX2 + itemSpacing.X + spriteSize.X;
+                float nextButtonX2 = lastButtonX2 + itemSpacing.X + spriteSizeForGui.X;
                 if (((i + 1) < _spriteSheet.Count()) && (nextButtonX2 < windowX2))
                 {
                     ImGuiNET.ImGui.SameLine();
