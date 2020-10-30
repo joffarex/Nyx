@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Nyx.Ecs
 {
     public class GameObject : IDisposable
     {
-        private static int _idCounter = 0;
-        public int Uid { get; set; } = -1;
-        
+        private static int _idCounter;
+
         public GameObject()
         {
         }
@@ -18,6 +16,8 @@ namespace Nyx.Ecs
         {
             Init(name, transform, zIndex);
         }
+
+        public int Uid { get; set; } = -1;
 
 
         public Transform Transform { get; set; }
@@ -106,10 +106,10 @@ namespace Nyx.Ecs
                 component.ImGui();
             }
         }
-        
+
         public static void Init(int maxId)
         {
             _idCounter = maxId;
-        } 
+        }
     }
 }

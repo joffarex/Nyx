@@ -10,9 +10,9 @@ namespace Nyx.Core.Scene
     {
         private const string SpriteSheetPath = "assets/sprites/spritesheets/decorationsAndBlocks.png";
 
-        private GameObject _gameObject1;
-
         private readonly MouseControl _mouseControl = new MouseControl();
+
+        private GameObject _gameObject1;
 
         private SpriteSheet _spriteSheet;
 
@@ -20,6 +20,7 @@ namespace Nyx.Core.Scene
         {
             Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
+            DebugDraw.AddLine2D(new Vector2(0, 0), new Vector2(800, 800), new Vector3(1, 0, 0), 120);
             if (LevelLoaded)
             {
                 ActiveGameObject = GameObjects.Find(g => g.Name == "Object 1");

@@ -17,5 +17,10 @@ namespace Nyx.Core.Renderer
             Gl.DrawElements(type, count, DrawElementsType.UnsignedInt,
                 null);
         }
+
+        public static void DrawArrays(PrimitiveType type, uint count)
+        {
+            Gl.DrawArrays(type, 0, count);
+        }
     }
 }

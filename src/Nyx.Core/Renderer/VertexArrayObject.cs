@@ -4,26 +4,23 @@ using Silk.NET.OpenGL;
 
 namespace Nyx.Core.Renderer
 {
-    public class VertexArrayObject<TVertexType, TIndexType> : IDisposable
+    public class VertexArrayObject<TVertexType> : IDisposable
         where TVertexType : unmanaged
-        where TIndexType : unmanaged
     {
-        private readonly uint _handle;
+        protected readonly uint Handle;
 
-        private readonly List<uint> _locations = new List<uint>();
+        protected readonly List<uint> Locations = new List<uint>();
 
-        public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject,
-            BufferObject<TIndexType> elementBufferObject)
+        public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject)
         {
-            _handle = GraphicsContext.Gl.GenVertexArray();
+            Handle = GraphicsContext.Gl.GenVertexArray();
             Bind();
             vertexBufferObject.Bind();
-            elementBufferObject.Bind();
         }
 
         public void Dispose()
         {
-            GraphicsContext.Gl.DeleteVertexArray(_handle);
+            GraphicsContext.Gl.DeleteVertexArray(Handle);
         }
 
         public unsafe void VertexAttributePointer(uint location, int size, VertexAttribPointerType type,
@@ -34,12 +31,12 @@ namespace Nyx.Core.Renderer
                 (uint) (vertexSize * sizeof(TVertexType)),
                 (void*) (offset * sizeof(TVertexType)));
             GraphicsContext.Gl.EnableVertexAttribArray(location);
-            _locations.Add(location);
+            Locations.Add(location);
         }
 
         public void EnableVertexAttribPointers()
         {
-            foreach (uint location in _locations)
+            foreach (uint location in Locations)
             {
                 GraphicsContext.Gl.EnableVertexAttribArray(location);
             }
@@ -47,7 +44,7 @@ namespace Nyx.Core.Renderer
 
         public void Bind()
         {
-            GraphicsContext.Gl.BindVertexArray(_handle);
+            GraphicsContext.Gl.BindVertexArray(Handle);
         }
 
         public void Detach()
@@ -57,10 +54,22 @@ namespace Nyx.Core.Renderer
 
         public void DisableVertexAttribPointers()
         {
-            foreach (uint location in _locations)
+            foreach (uint location in Locations)
             {
                 GraphicsContext.Gl.DisableVertexAttribArray(location);
             }
+        }
+    }
+
+
+    public class VertexArrayObject<TVertexType, TIndexType> : VertexArrayObject<TVertexType>
+        where TVertexType : unmanaged
+        where TIndexType : unmanaged
+    {
+        public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject,
+            BufferObject<TIndexType> elementBufferObject) : base(vertexBufferObject)
+        {
+            elementBufferObject.Bind();
         }
     }
 }

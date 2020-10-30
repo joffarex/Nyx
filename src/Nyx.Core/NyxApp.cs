@@ -121,6 +121,7 @@ namespace Nyx.Core
         /// </summary>
         private void OnUpdate(double deltaTime)
         {
+            DebugDraw.BeginFrame();
             SceneContext.CurrentScene.Update((float) deltaTime);
 
             _imGuiWrapper.Update((float) deltaTime);
@@ -135,6 +136,7 @@ namespace Nyx.Core
             GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
             GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
 
+            DebugDraw.Draw();
             SceneContext.CurrentScene.Render();
 
             SceneContext.CurrentScene.SceneImGui();
@@ -148,6 +150,7 @@ namespace Nyx.Core
 
         private void OnClose()
         {
+            DebugDraw.Dispose();
             SceneContext.CurrentScene.SaveExit();
             SceneContext.CurrentScene.Dispose();
             _imGuiWrapper?.Dispose();
