@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
-using Nyx.Utils;
+using Nyx.Core.Utils;
 using Silk.NET.Input.Common;
 using Silk.NET.Input.Extensions;
 using Silk.NET.OpenGL;
