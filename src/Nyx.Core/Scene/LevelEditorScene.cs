@@ -3,6 +3,7 @@ using System.Numerics;
 using Nyx.Core.Components;
 using Nyx.Core.Renderer;
 using Nyx.Ecs;
+using Nyx.Utils;
 
 namespace Nyx.Core.Scene
 {
@@ -54,7 +55,7 @@ namespace Nyx.Core.Scene
 
         public override void Update(float deltaTime)
         {
-            // Fps.Print(deltaTime);
+            Fps.Print(deltaTime);
 
             _levelEditorGameObjects.Update(deltaTime);
 
@@ -92,9 +93,11 @@ namespace Nyx.Core.Scene
                 uint id = sprite.GetTextureHandle();
                 Vector2[] textureCoordinates = sprite.TextureCoordinates;
 
+                var uv0 = new Vector2(textureCoordinates[2].X, textureCoordinates[0].Y);
+                var uv1 = new Vector2(textureCoordinates[0].X, textureCoordinates[2].Y);
+
                 ImGuiNET.ImGui.PushID(i);
-                if (ImGuiNET.ImGui.ImageButton((IntPtr) id, spriteSizeForGui, textureCoordinates[2],
-                    textureCoordinates[0]))
+                if (ImGuiNET.ImGui.ImageButton((IntPtr) id, spriteSizeForGui, uv0, uv1))
                 {
                     GameObject gameObject = Prefab.GenerateSpriteObject(sprite, spriteWidth, spriteHeight);
                     _levelEditorGameObjects.GetComponent<MouseControl>().PickUpObject(gameObject);
