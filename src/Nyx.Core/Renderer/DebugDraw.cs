@@ -87,27 +87,27 @@ namespace Nyx.Core.Renderer
 
                     index += 6;
                 }
-
-                int subDataSize = _line2Ds.Count * 6 * 2;
-                var subData = new float[subDataSize];
-                Array.Copy(_vertexArray, subData, subDataSize);
-                _vertexBufferObject.Bind();
-                _vertexBufferObject.ReBufferData(subData);
-
-                _shader.Use();
-                _shader.SetUniform("uProjection", SceneContext.CurrentScene.Camera2D.ProjectionMatrix);
-                _shader.SetUniform("uView", SceneContext.CurrentScene.Camera2D.GetViewMatrix());
-
-                _vertexArrayobject.Bind();
-                _vertexArrayobject.EnableVertexAttribPointers();
-
-                GraphicsContext.DrawArrays(PrimitiveType.Lines, (uint) subDataSize);
-
-                _vertexArrayobject.DisableVertexAttribPointers();
-                _vertexArrayobject.Detach();
-
-                _shader.Detach();
             }
+
+            int subDataSize = _line2Ds.Count * 6 * 2;
+            var subData = new float[subDataSize];
+            Array.Copy(_vertexArray, subData, subDataSize);
+            _vertexBufferObject.Bind();
+            _vertexBufferObject.ReBufferData(subData);
+
+            _shader.Use();
+            _shader.SetUniform("uProjection", SceneContext.CurrentScene.Camera2D.ProjectionMatrix);
+            _shader.SetUniform("uView", SceneContext.CurrentScene.Camera2D.GetViewMatrix());
+
+            _vertexArrayobject.Bind();
+            _vertexArrayobject.EnableVertexAttribPointers();
+
+            GraphicsContext.DrawArrays(PrimitiveType.Lines, (uint) subDataSize);
+
+            _vertexArrayobject.DisableVertexAttribPointers();
+            _vertexArrayobject.Detach();
+
+            _shader.Detach();
         }
 
         public static void AddLine2D(Vector2 from, Vector2 to)
