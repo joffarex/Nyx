@@ -1,6 +1,4 @@
-﻿using Nyx.Ecs;
-
-namespace Nyx.Core.Components
+﻿namespace Nyx.Core.Components
 {
     public class FontRenderer : Component
     {

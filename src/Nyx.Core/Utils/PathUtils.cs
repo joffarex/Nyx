@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Nyx.Utils
+namespace Nyx.Core.Utils
 {
     public static class PathUtils
     {

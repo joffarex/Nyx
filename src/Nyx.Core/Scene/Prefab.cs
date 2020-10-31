@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Nyx.Core.Components;
-using Nyx.Ecs;
 
 namespace Nyx.Core.Scene
 {

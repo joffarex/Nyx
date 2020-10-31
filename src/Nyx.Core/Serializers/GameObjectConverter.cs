@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nyx.Ecs;
+using Nyx.Core.Components;
 
 namespace Nyx.Core.Serializers
 {

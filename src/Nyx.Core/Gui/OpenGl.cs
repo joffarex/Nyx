@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Gui
+namespace Nyx.Core.Gui
 {
     internal static class OpenGl
     {

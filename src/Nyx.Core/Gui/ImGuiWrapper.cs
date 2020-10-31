@@ -10,7 +10,7 @@ using Silk.NET.Input.Extensions;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing.Common;
 
-namespace Nyx.Gui
+namespace Nyx.Core.Gui
 {
     public class ImGuiWrapper : IDisposable
     {
@@ -326,7 +326,7 @@ void main()
             var totalVbSize = (uint) (drawData.TotalVtxCount * Unsafe.SizeOf<ImDrawVert>());
             if (totalVbSize > _vertexBufferSize)
             {
-                var newSize = (int) Math.Max(_vertexBufferSize * 1.5f, totalVbSize);
+                var newSize = (int) System.Math.Max(_vertexBufferSize * 1.5f, totalVbSize);
                 _gl.NamedBufferData(_vertexBuffer, (uint) newSize, null, VertexBufferObjectUsage.DynamicDraw);
                 _vertexBufferSize = (uint) newSize;
 
@@ -341,7 +341,7 @@ void main()
             var totalIbSize = (uint) (drawData.TotalIdxCount * sizeof(ushort));
             if (totalIbSize > _indexBufferSize)
             {
-                var newSize = (int) Math.Max(_indexBufferSize * 1.5f, totalIbSize);
+                var newSize = (int) System.Math.Max(_indexBufferSize * 1.5f, totalIbSize);
                 _gl.NamedBufferData(_indexBuffer, (uint) newSize, null, VertexBufferObjectUsage.DynamicDraw);
                 _indexBufferSize = (uint) newSize;
 

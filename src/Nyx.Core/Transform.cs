@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Nyx.Ecs
+namespace Nyx.Core
 {
     public class Transform
     {

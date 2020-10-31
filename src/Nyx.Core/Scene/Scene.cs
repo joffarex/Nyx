@@ -4,10 +4,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Nyx.Core.Components;
 using Nyx.Core.Renderer;
 using Nyx.Core.Serializers;
-using Nyx.Ecs;
-using Nyx.Utils;
+using Nyx.Core.Utils;
 using Silk.NET.Input.Common;
 
 namespace Nyx.Core.Scene

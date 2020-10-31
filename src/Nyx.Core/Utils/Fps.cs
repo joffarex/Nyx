@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nyx.Utils
+namespace Nyx.Core.Utils
 {
     public static class Fps
     {

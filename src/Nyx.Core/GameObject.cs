@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nyx.Core.Components;
 
-namespace Nyx.Ecs
+namespace Nyx.Core
 {
     public class GameObject : IDisposable
     {

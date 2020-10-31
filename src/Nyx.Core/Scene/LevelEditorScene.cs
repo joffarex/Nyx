@@ -2,8 +2,7 @@
 using System.Numerics;
 using Nyx.Core.Components;
 using Nyx.Core.Renderer;
-using Nyx.Ecs;
-using Nyx.Utils;
+using Nyx.Core.Utils;
 
 namespace Nyx.Core.Scene
 {

@@ -2,7 +2,6 @@
 using System;
 using Newtonsoft.Json.Linq;
 using Nyx.Core.Components;
-using Nyx.Ecs;
 
 namespace Nyx.Core.Serializers
 {

@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace Nyx.Ecs
+namespace Nyx.Core.Components
 {
     public abstract class Component : IDisposable
     {

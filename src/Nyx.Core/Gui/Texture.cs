@@ -1,7 +1,7 @@
 ﻿using System;
 using Silk.NET.OpenGL;
 
-namespace Nyx.Gui
+namespace Nyx.Core.Gui
 {
     public enum TextureCoordinate
     {
@@ -36,7 +36,7 @@ namespace Nyx.Gui
             InternalFormat = srgb ? Srgb8Alpha8 : InternalFormat.Rgba8;
             MipmapLevels = (uint) (generateMipmaps == false
                 ? 1
-                : (int) Math.Floor(Math.Log(Math.Max(Width, Height), 2)));
+                : (int) System.Math.Floor(System.Math.Log(System.Math.Max(Width, Height), 2)));
 
             _gl.CreateTexture(TextureTarget.Texture2D, Name, out GlTexture);
             _gl.TextureStorage2D(GlTexture, MipmapLevels, InternalFormat, Width, Height);

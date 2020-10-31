@@ -2,7 +2,6 @@
 using Nyx.Core.Event;
 using Nyx.Core.Scene;
 using Nyx.Core.Utils;
-using Nyx.Ecs;
 using Silk.NET.Input.Common;
 
 namespace Nyx.Core.Components

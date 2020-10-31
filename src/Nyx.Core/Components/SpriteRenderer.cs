@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using Newtonsoft.Json;
 using Nyx.Core.Renderer;
-using Nyx.Ecs;
 
 namespace Nyx.Core.Components
 {

@@ -2,7 +2,6 @@
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
 using Nyx.Core.Utils;
-using Nyx.Ecs;
 
 namespace Nyx.Core.Components
 {
