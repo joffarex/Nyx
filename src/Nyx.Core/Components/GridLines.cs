@@ -18,8 +18,8 @@ namespace Nyx.Core.Components
             int numVerticalLines = (int) (projectionSize.X / Settings.GridWidth) + 2;
             int numHorizontalLines = (int) (projectionSize.Y / Settings.GridHeight) + 2;
 
-            int width = (int) projectionSize.X + Settings.GridWidth * 2;
-            int height = (int) projectionSize.Y + Settings.GridHeight * 2;
+            int width = (int) projectionSize.X + (Settings.GridWidth * 2);
+            int height = (int) projectionSize.Y + (Settings.GridHeight * 2);
 
             int maxLines = System.Math.Max(numVerticalLines, numHorizontalLines);
             var color = new Vector3(0.2f, 0.2f, 0.2f);

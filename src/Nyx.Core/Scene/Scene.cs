@@ -111,6 +111,19 @@ namespace Nyx.Core.Scene
         {
         }
 
+        public T GetGameObject<T>(string name) where T : GameObject
+        {
+            foreach (GameObject gameObject in GameObjects)
+            {
+                if ((typeof(T) == gameObject.GetType()) && gameObject.Name.Equals(name))
+                {
+                    return (T) gameObject;
+                }
+            }
+
+            return null;
+        }
+
         public void SaveExit()
         {
             string json = JsonConvert.SerializeObject(GameObjects, Formatting.Indented, new JsonSerializerSettings
@@ -121,7 +134,7 @@ namespace Nyx.Core.Scene
                 Converters = new List<JsonConverter> {new ComponentConverter()},
             });
 
-            using (var writer = new StreamWriter(PathUtils.GetFullPath("levels/levelEditor.json")))
+            using (var writer = new StreamWriter(PathUtils.GetFullPath($"levels/{GetType().Name}.json")))
             {
                 writer.Write(json);
             }
@@ -133,7 +146,7 @@ namespace Nyx.Core.Scene
 
             try
             {
-                src = File.ReadAllText(PathUtils.GetFullPath("levels/levelEditor.json"));
+                src = File.ReadAllText(PathUtils.GetFullPath($"levels/{GetType().Name}.json"));
             }
             catch (FileNotFoundException)
             {

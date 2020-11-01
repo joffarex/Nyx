@@ -21,7 +21,6 @@ namespace Nyx.Core.Components
             Sprite = new Sprite(width, height);
             IsDirty = true;
             Texture = Sprite.Texture;
-            TextureCoordinates = Sprite.TextureCoordinates;
         }
 
         public SpriteRenderer(Sprite sprite)
@@ -30,7 +29,6 @@ namespace Nyx.Core.Components
             Color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             IsDirty = true;
             Texture = Sprite.Texture;
-            TextureCoordinates = Sprite.TextureCoordinates;
         }
 
         public Vector4 Color
@@ -46,7 +44,7 @@ namespace Nyx.Core.Components
             }
         }
 
-        public Vector2[] TextureCoordinates { get; set; }
+        [JsonIgnore] public Vector2[] TextureCoordinates => Sprite.TextureCoordinates;
 
         public Sprite Sprite
         {

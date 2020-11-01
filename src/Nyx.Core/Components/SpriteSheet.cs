@@ -12,6 +12,8 @@ namespace Nyx.Core.Components
 
             Texture = texture;
 
+            SpriteSize = new Vector2(spriteWidth, spriteHeight);
+
             // Bottom left cornet of top left sprite in sheet
             var currentX = 0;
             int currentY = texture.Height - spriteHeight;
@@ -43,6 +45,8 @@ namespace Nyx.Core.Components
                 }
             }
         }
+
+        public Vector2 SpriteSize { get; set; }
 
         public Texture Texture { get; set; }
         public List<Sprite> Sprites { get; }

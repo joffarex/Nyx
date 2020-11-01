@@ -67,11 +67,13 @@ namespace Nyx.Core
 
         public void RemoveComponent<T>() where T : Component
         {
-            foreach (Component component in Components)
+            for (var i = 0; i < Components.Count; i++)
             {
+                Component component = Components[i];
                 if (typeof(T) == component.GetType())
                 {
                     Components.Remove(component);
+                    i--;
                 }
             }
         }

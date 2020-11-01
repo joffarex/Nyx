@@ -25,7 +25,8 @@ namespace Nyx.Core.Scene
             }
 
             CurrentScene.LoadResources();
-            CurrentScene.Load();
+            // TODO: disabled temporarily, required fixing of gameobject serialization
+            // CurrentScene.Load();
             CurrentScene.Init();
             CurrentScene.Start();
         }

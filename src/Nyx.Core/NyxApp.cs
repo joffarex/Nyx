@@ -151,7 +151,8 @@ namespace Nyx.Core
         private void OnClose()
         {
             DebugDraw.Dispose();
-            SceneContext.CurrentScene.SaveExit();
+            // TODO: disabled temporarily, required fixing of gameobject serialization
+            // SceneContext.CurrentScene.SaveExit();
             SceneContext.CurrentScene.Dispose();
             _imGuiWrapper?.Dispose();
         }
