@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
 using Nyx.Core;
 using Nyx.Core.Components;
+using Nyx.Core.Event;
 using Nyx.Core.Renderer;
 using Nyx.Core.Scene;
+using Silk.NET.Input.Common;
 
 namespace Nyx.Playground
 {
@@ -28,8 +30,9 @@ namespace Nyx.Playground
             // }
 
             _animatedSprite = new AnimatedSprite(_spriteSheet, 0.1f,
-                new Vector2(200.0f, 100.0f), 10, 2);
+                new Vector2(200.0f, 100.0f), 5, 2);
             _animatedSprite.AddAnimation("idle1", new[] {0, 1, 2, 3});
+            _animatedSprite.AddAnimation("run1", new[] {8, 9, 10, 11, 12, 13});
 
             AddGameObjectToScene(_animatedSprite);
 
@@ -48,7 +51,19 @@ namespace Nyx.Playground
         {
             // Fps.Print(deltaTime);
 
-            _animatedSprite.PlayAnimation("idle1", deltaTime);
+
+            if (EventContext.KeyEvent.IsKeyPressed(Key.D))
+            {
+                _animatedSprite.PlayAnimation("run1", deltaTime);
+            }
+            else if (EventContext.KeyEvent.IsKeyPressed(Key.A))
+            {
+                _animatedSprite.PlayAnimation("run1", deltaTime, true);
+            }
+            else
+            {
+                _animatedSprite.PlayAnimation("idle1", deltaTime);
+            }
 
             base.Update(deltaTime);
         }

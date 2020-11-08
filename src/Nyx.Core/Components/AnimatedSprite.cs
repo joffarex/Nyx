@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace Nyx.Core.Components
@@ -16,7 +17,7 @@ namespace Nyx.Core.Components
 
         public AnimatedSprite(SpriteSheet spriteSheet, float timeBetweenFrames, Vector2 position, float scale,
             int zIndex)
-            : base("AnimatedSprite", new Transform(position, spriteSheet.SpriteSize * 10), zIndex)
+            : base("AnimatedSprite", new Transform(position, spriteSheet.SpriteSize * scale), zIndex)
         {
             SpriteSheet = spriteSheet;
             TimeBetweenFrames = timeBetweenFrames;
@@ -33,8 +34,13 @@ namespace Nyx.Core.Components
             Animations.Add(name, frames);
         }
 
-        public void PlayAnimation(string name, float deltaTime)
+        public void PlayAnimation(string name, float deltaTime, bool flipped = false)
         {
+            if (!_currentAnimation.Equals(name))
+            {
+                _animationStarted = false;
+            }
+
             if (Animations.TryGetValue(name, out int[] frames))
             {
                 if (!_animationStarted)
@@ -56,7 +62,21 @@ namespace Nyx.Core.Components
                         _currentFrame = frames[0];
                     }
 
-                    GetComponent<SpriteRenderer>().Sprite = SpriteSheet.Sprites[_currentFrame];
+                    var sprite = SpriteSheet.Sprites[_currentFrame];
+
+                    if (!flipped)
+                    {
+                        if (sprite.IsFlipped)
+                        {
+                            sprite.FlipY(true);
+                        }
+                        GetComponent<SpriteRenderer>().Sprite = sprite;
+                    }
+                    else
+                    {
+                        sprite.FlipY();
+                        GetComponent<SpriteRenderer>().Sprite = sprite;
+                    }
                 }
             }
             else

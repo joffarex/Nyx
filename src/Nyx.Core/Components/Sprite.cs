@@ -57,12 +57,29 @@ namespace Nyx.Core.Components
             Init(texture, textureCoordinates, width, height);
         }
 
+        public bool IsFlipped { get; private set; }
+
         public Texture Texture { get; set; }
 
         public Vector2[] TextureCoordinates { get; set; }
 
         public float Width { get; set; }
         public float Height { get; set; }
+
+        public void FlipY(bool backToNormal = false)
+        {
+            if (!IsFlipped)
+            {
+                Array.Reverse(TextureCoordinates);
+                IsFlipped = true;
+            }
+
+            if (backToNormal && IsFlipped)
+            {
+                Array.Reverse(TextureCoordinates);
+                IsFlipped = false;
+            }
+        }
 
         private void Init(Texture texture, Vector2[] textureCoordinates, int width, int height)
         {

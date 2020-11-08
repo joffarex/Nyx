@@ -102,7 +102,7 @@ namespace Nyx.Core
 
             _imGuiWrapper = new ImGuiWrapper(GraphicsContext.Gl, _window, _inputContext);
 
-            SceneContext.ChangeScene(0);
+            SceneContext.ChangeScene(2);
         }
 
         private void OnResize(Size size)
