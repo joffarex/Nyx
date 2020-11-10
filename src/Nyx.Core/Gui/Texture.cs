@@ -34,7 +34,7 @@ namespace Nyx.Core.Gui
             Width = (uint) width;
             Height = (uint) height;
             InternalFormat = srgb ? Srgb8Alpha8 : InternalFormat.Rgba8;
-            MipmapLevels = (uint) (generateMipmaps == false
+            MipmapLevels = (uint) (generateMipmaps is false
                 ? 1
                 : (int) System.Math.Floor(System.Math.Log(System.Math.Max(Width, Height), 2)));
 

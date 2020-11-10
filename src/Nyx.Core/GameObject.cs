@@ -38,7 +38,7 @@ namespace Nyx.Core
         public void Init(string name, Transform transform, int zIndex)
         {
             Name = name;
-            Components = new List<Component>();
+            Components = new();
             Transform = transform;
             ZIndex = zIndex;
 

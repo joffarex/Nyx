@@ -18,7 +18,7 @@ namespace Nyx.Playground
 
         public override void Init()
         {
-            Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
+            Camera2D = new(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
 
             // TODO: disabled temporarily, required fixing of gameobject serialization
@@ -29,7 +29,7 @@ namespace Nyx.Playground
             // return;
             // }
 
-            _animatedSprite = new AnimatedSprite(_spriteSheet, 0.1f,
+            _animatedSprite = new(_spriteSheet, 0.1f,
                 new Vector2(200.0f, 100.0f), 5, 2);
             _animatedSprite.AddAnimation("idle1", new[] {0, 1, 2, 3});
             _animatedSprite.AddAnimation("run1", new[] {8, 9, 10, 11, 12, 13});
@@ -44,7 +44,7 @@ namespace Nyx.Playground
             AssetManager.GetShader("assets/shaders/default.glsl");
             Texture texture = AssetManager.GetTexture(SpriteSheetPath);
             AssetManager.AddSpriteSheet(SpriteSheetPath,
-                new SpriteSheet(texture, 50, 37, 109, 0));
+                new(texture, 50, 37, 109, 0));
         }
 
         public override void Update(float deltaTime)

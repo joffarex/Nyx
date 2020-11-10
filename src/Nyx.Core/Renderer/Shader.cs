@@ -71,7 +71,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, int value)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -83,7 +83,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, Span<int> value)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            // if (location == -1)
+            // if (location is -1)
             // {
             // throw new Exception($"{name} uniform not found on shader.");
             // }
@@ -95,7 +95,7 @@ namespace Nyx.Core.Renderer
         public unsafe void SetUniform(string name, Matrix4x4 matrix)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -107,7 +107,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, Vector4 vector)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -119,7 +119,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, Vector3 vector)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -131,7 +131,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, Vector2 vector)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -143,7 +143,7 @@ namespace Nyx.Core.Renderer
         public void SetUniform(string name, float value)
         {
             int location = GraphicsContext.Gl.GetUniformLocation(_handle, name);
-            if (location == -1)
+            if (location is -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
@@ -157,7 +157,7 @@ namespace Nyx.Core.Renderer
             GraphicsContext.Gl.LinkProgram(program);
 
             GraphicsContext.Gl.GetProgram(program, GLEnum.LinkStatus, out int status);
-            if (status == 0)
+            if (status is 0)
             {
                 throw new Exception(
                     $"Program failed to link with error: {GraphicsContext.Gl.GetProgramInfoLog(program)}");

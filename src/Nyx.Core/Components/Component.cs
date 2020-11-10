@@ -85,7 +85,7 @@ namespace Nyx.Core.Components
 
         public void GenerateId()
         {
-            if (Uid == -1)
+            if (Uid is -1)
             {
                 Uid = _idCounter++;
             }

@@ -20,11 +20,11 @@ namespace Nyx.Core.Scene
             _levelEditorGameObjects.AddComponent(new MouseControl());
             _levelEditorGameObjects.AddComponent(new GridLines());
 
-            Camera2D = new Camera2D(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
+            Camera2D = new(new Vector2(-250.0f, 0.0f), SceneContext.BaseSize);
             _spriteSheet = AssetManager.GetSpriteSheet(SpriteSheetPath);
             if (LevelLoaded)
             {
-                ActiveGameObject = GameObjects.Find(g => g.Name == "Object 1");
+                ActiveGameObject = GameObjects.Find(g => g.Name is "Object 1");
             }
 
             // _gameObject1 = new GameObject("Object 1",
@@ -49,7 +49,7 @@ namespace Nyx.Core.Scene
             AssetManager.GetTexture("assets/sprites/blendImage2.png");
 
             Texture spriteSheetTexture = AssetManager.GetTexture(SpriteSheetPath);
-            AssetManager.AddSpriteSheet(SpriteSheetPath, new SpriteSheet(spriteSheetTexture, 16, 16, 81, 0));
+            AssetManager.AddSpriteSheet(SpriteSheetPath, new(spriteSheetTexture, 16, 16, 81, 0));
         }
 
         public override void Update(float deltaTime)

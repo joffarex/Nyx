@@ -12,7 +12,7 @@ namespace Nyx.Core.Renderer
 
         public BatchRenderer()
         {
-            _batches = new List<Batch>();
+            _batches = new();
         }
 
         public void Dispose()
@@ -41,7 +41,7 @@ namespace Nyx.Core.Renderer
                 // Make sure to only add same Z_Index sprites to the same batch
             {
                 Texture texture = sprite.Texture;
-                if (batch.HasTexture(texture) || batch.HasTextureRoom || (texture == null))
+                if (batch.HasTexture(texture) || batch.HasTextureRoom || (texture is null))
                 {
                     batch.AddSprite(sprite);
                     added = true;

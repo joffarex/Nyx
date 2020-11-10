@@ -11,7 +11,7 @@ namespace Nyx.Core.Serializers
     {
         public override void WriteJson(JsonWriter writer, GameObject? value, JsonSerializer serializer)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
@@ -29,8 +29,8 @@ namespace Nyx.Core.Serializers
             JToken? zIndexJToken = jObject.SelectToken("ZIndex");
             JToken? componentsJToken = jObject.SelectToken("Components");
 
-            if ((nameJToken == null) || (transformJToken == null) || (zIndexJToken == null) ||
-                (componentsJToken == null))
+            if ((nameJToken is null) || (transformJToken is null) || (zIndexJToken is null) ||
+                (componentsJToken is null))
             {
                 throw new JsonSerializationException("Components can not be null");
             }

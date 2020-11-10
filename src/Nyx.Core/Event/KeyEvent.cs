@@ -15,13 +15,13 @@ namespace Nyx.Core.Event
 
         public static KeyEvent Get(IKeyboard keyboard)
         {
-            if (_instance == null)
+            if (_instance is null)
             {
                 lock (_mutex)
                 {
-                    if (_instance == null)
+                    if (_instance is null)
                     {
-                        _instance = new KeyEvent(keyboard);
+                        _instance = new(keyboard);
                     }
                 }
             }

@@ -52,13 +52,13 @@ namespace Nyx.Core.Event
 
         public static MouseEvent Get(IMouse mouse)
         {
-            if (_instance == null)
+            if (_instance is null)
             {
                 lock (_mutex)
                 {
-                    if (_instance == null)
+                    if (_instance is null)
                     {
-                        _instance = new MouseEvent(mouse);
+                        _instance = new(mouse);
                     }
                 }
             }

@@ -14,10 +14,10 @@ namespace Nyx.Core.Scene
 {
     public abstract class Scene : IDisposable
     {
-        protected readonly BatchRenderer BatchRenderer = new BatchRenderer();
+        protected readonly BatchRenderer BatchRenderer = new();
 
         // protected static PointF LastMousePosition;
-        protected readonly List<GameObject> GameObjects = new List<GameObject>();
+        protected readonly List<GameObject> GameObjects = new();
 
         private bool _isRunning;
 

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -21,7 +21,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nyx.Core\Nyx.Core.csproj" />
-      <ProjectReference Include="..\Nyx.Utils\Nyx.Utils.csproj" />
     </ItemGroup>
 
 </Project>

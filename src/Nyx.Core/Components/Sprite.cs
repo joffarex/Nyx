@@ -12,7 +12,7 @@ namespace Nyx.Core.Components
 
         public Sprite(Texture texture)
         {
-            if (texture == null)
+            if (texture is null)
             {
                 throw new ArgumentNullException(nameof(texture));
             }
@@ -39,7 +39,7 @@ namespace Nyx.Core.Components
 
         public Sprite(Texture texture, Vector2[] textureCoordinates)
         {
-            if (texture == null)
+            if (texture is null)
             {
                 throw new ArgumentNullException(nameof(texture));
             }
@@ -49,7 +49,7 @@ namespace Nyx.Core.Components
 
         public Sprite(Texture texture, Vector2[] textureCoordinates, int width, int height)
         {
-            if (texture == null)
+            if (texture is null)
             {
                 throw new ArgumentNullException(nameof(texture));
             }
@@ -91,7 +91,7 @@ namespace Nyx.Core.Components
 
         public uint GetTextureHandle()
         {
-            return Texture == null ? 0 : Texture.Handle;
+            return Texture is null ? 0 : Texture.Handle;
         }
     }
 }

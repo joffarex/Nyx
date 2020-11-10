@@ -14,10 +14,10 @@ namespace Nyx.Core.Renderer
             Lifetime = lifetime;
         }
 
-        public Vector2 From { get; set; }
-        public Vector2 To { get; set; }
-        public Vector3 Color { get; set; }
-        public int Lifetime { get; set; }
+        public Vector2 From { get; init; }
+        public Vector2 To { get; init; }
+        public Vector3 Color { get; init; }
+        public int Lifetime { get; private set; }
 
         public int BeginFrame()
         {

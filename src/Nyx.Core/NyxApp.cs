@@ -27,7 +27,7 @@ namespace Nyx.Core
         private NyxApp(int width, int height, string title)
         {
             var options = WindowOptions.Default;
-            options.Size = new Size(width, height);
+            options.Size = new(width, height);
             options.Title = title;
             options.VSync = VSyncMode.On;
             options.ShouldSwapAutomatically = true;
@@ -54,9 +54,9 @@ namespace Nyx.Core
 
         public static NyxApp Get(int width, int height, string title)
         {
-            if (_instance == null)
+            if (_instance is null)
             {
-                _instance = new NyxApp(width, height, title);
+                _instance = new(width, height, title);
             }
 
             return _instance;
@@ -100,7 +100,7 @@ namespace Nyx.Core
             GraphicsContext.Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
             GraphicsContext.Gl.ClearColor(1, 1, 1, 1);
 
-            _imGuiWrapper = new ImGuiWrapper(GraphicsContext.Gl, _window, _inputContext);
+            _imGuiWrapper = new(GraphicsContext.Gl, _window, _inputContext);
 
             SceneContext.ChangeScene(2);
         }
@@ -167,7 +167,7 @@ namespace Nyx.Core
 
         private void KeyDown(IKeyboard keyboard, Key key, int keyCode)
         {
-            if (key == Key.Escape)
+            if (key is Key.Escape)
             {
                 _window.Close();
             }

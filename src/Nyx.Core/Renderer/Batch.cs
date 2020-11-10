@@ -46,13 +46,13 @@ namespace Nyx.Core.Renderer
 
             _numSprites = 0;
             HasRoom = true;
-            _textures = new List<Texture>();
+            _textures = new();
             Z_Index = zIndex;
         }
 
         public bool HasRoom { get; private set; }
         public bool HasTextureRoom => _textures.Count < 8;
-        public int Z_Index { get; }
+        public int Z_Index { get; init; }
 
         // We need this method in order to sort batches in renderer
         public int CompareTo(Batch other)

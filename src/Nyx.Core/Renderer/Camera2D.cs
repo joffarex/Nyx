@@ -17,7 +17,7 @@ namespace Nyx.Core.Renderer
             AdjustProjection();
         }
 
-        public Vector2 Position { get; }
+        public Vector2 Position { get; init; }
 
         public Matrix4x4 ProjectionMatrix { get; private set; }
 
@@ -28,7 +28,7 @@ namespace Nyx.Core.Renderer
 
         public Vector3 Front { get; set; }
 
-        public Vector3 Up { get; }
+        public Vector3 Up { get; init; }
 
         public Vector2 BaseSize { get; set; }
 

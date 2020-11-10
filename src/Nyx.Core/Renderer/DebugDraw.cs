@@ -11,7 +11,7 @@ namespace Nyx.Core.Renderer
     {
         private static readonly int _maxLines = 500;
 
-        private static readonly List<Line2D> _line2Ds = new List<Line2D>();
+        private static readonly List<Line2D> _line2Ds = new();
 
         // 6 float per vertex, 2 per line
         private static readonly float[] _vertexArray = new float[_maxLines * 6 * 2];
@@ -74,7 +74,7 @@ namespace Nyx.Core.Renderer
                 // 2 is verticies
                 for (var i = 0; i < 2; i++)
                 {
-                    Vector2 point = i == 0 ? line.From : line.To;
+                    Vector2 point = i is 0 ? line.From : line.To;
                     Vector3 color = line.Color;
 
                     _vertexArray[index] = point.X;
@@ -127,7 +127,7 @@ namespace Nyx.Core.Renderer
                 return;
             }
 
-            _line2Ds.Add(new Line2D(from, to, color, lifeTime));
+            _line2Ds.Add(new(from, to, color, lifeTime));
         }
     }
 }

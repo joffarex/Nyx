@@ -13,7 +13,7 @@ namespace Nyx.Core.Components
         private int _currentFrame;
         private float _timeBetweenFramesLeft;
 
-        public Dictionary<string, int[]> Animations = new Dictionary<string, int[]>();
+        public Dictionary<string, int[]> Animations = new();
 
         public AnimatedSprite(SpriteSheet spriteSheet, float timeBetweenFrames, Vector2 position, float scale,
             int zIndex)
@@ -26,7 +26,7 @@ namespace Nyx.Core.Components
             AddComponent(new SpriteRenderer(SpriteSheet.Sprites[0]));
         }
 
-        public SpriteSheet SpriteSheet { get; }
+        public SpriteSheet SpriteSheet { get; init; }
         public float TimeBetweenFrames { get; set; }
 
         public void AddAnimation(string name, int[] frames)

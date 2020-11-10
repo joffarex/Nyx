@@ -9,7 +9,7 @@ namespace Nyx.Core.Renderer
     {
         protected readonly uint Handle;
 
-        protected readonly List<uint> Locations = new List<uint>();
+        protected readonly List<uint> Locations = new();
 
         public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject)
         {

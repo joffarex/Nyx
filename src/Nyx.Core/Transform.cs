@@ -30,7 +30,7 @@ namespace Nyx.Core
 
         public Transform Copy()
         {
-            return new Transform(new Vector2(Position.X, Position.Y), new Vector2(Scale.X, Scale.Y));
+            return new(new Vector2(Position.X, Position.Y), new Vector2(Scale.X, Scale.Y));
         }
 
         public void Copy(Transform to)
@@ -41,7 +41,7 @@ namespace Nyx.Core
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return false;
             }

@@ -42,7 +42,7 @@ namespace Nyx.Core.Serializers
             object existingValue,
             JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null)
+            if (reader.TokenType is JsonToken.Null)
             {
                 return null;
             }

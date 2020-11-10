@@ -9,9 +9,9 @@ namespace Nyx.Core
 {
     public static class AssetManager
     {
-        private static readonly Dictionary<string, Shader> Shaders = new Dictionary<string, Shader>();
-        private static readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
-        private static readonly Dictionary<string, SpriteSheet> SpriteSheets = new Dictionary<string, SpriteSheet>();
+        private static readonly Dictionary<string, Shader> Shaders = new();
+        private static readonly Dictionary<string, Texture> Textures = new();
+        private static readonly Dictionary<string, SpriteSheet> SpriteSheets = new();
 
         public static Shader GetShader(string resourceName)
         {
@@ -22,7 +22,7 @@ namespace Nyx.Core
                 return shader;
             }
 
-            shader = new Shader(filePath);
+            shader = new(filePath);
             Shaders.Add(filePath, shader);
             return shader;
         }
@@ -36,7 +36,7 @@ namespace Nyx.Core
                 return texture;
             }
 
-            texture = new Texture(TextureType.PixelSprite, filePath);
+            texture = new(TextureType.PixelSprite, filePath);
             Textures.Add(filePath, texture);
             return texture;
         }
@@ -61,7 +61,7 @@ namespace Nyx.Core
                 .Value;
 
 #if DEBUG
-            if (spriteSheet == null)
+            if (spriteSheet is null)
             {
                 throw new Exception($"SpriteSheet: ${resourceName} has not been added to manager");
             }

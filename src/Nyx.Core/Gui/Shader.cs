@@ -18,7 +18,7 @@ namespace Nyx.Core.Gui
     {
         private readonly (ShaderType Type, string Path)[] _files;
         private readonly GL _gl;
-        private readonly Dictionary<string, int> _uniformToLocation = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _uniformToLocation = new();
         public readonly string Name;
         private bool _initialized;
 
@@ -34,7 +34,7 @@ namespace Nyx.Core.Gui
             Program = CreateProgram(name, _files);
         }
 
-        public uint Program { get; }
+        public uint Program { get; init; }
 
         public void UseShader()
         {
@@ -75,12 +75,12 @@ namespace Nyx.Core.Gui
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetUniformLocation(string uniform)
         {
-            if (_uniformToLocation.TryGetValue(uniform, out int location) == false)
+            if (_uniformToLocation.TryGetValue(uniform, out int location) is false)
             {
                 location = _gl.GetUniformLocation(Program, uniform);
                 _uniformToLocation.Add(uniform, location);
 
-                if (location == -1)
+                if (location is -1)
                 {
                     Debug.Print($"The uniform '{uniform}' does not exist in the shader '{Name}'!");
                 }
@@ -107,7 +107,7 @@ namespace Nyx.Core.Gui
             _gl.LinkProgram(program);
 
             _gl.GetProgram(program, GLEnum.LinkStatus, out int success);
-            if (success == 0)
+            if (success is 0)
             {
                 string info = _gl.GetProgramInfoLog(program);
                 Debug.WriteLine($"GL.LinkProgram had info log [{name}]:\n{info}");
@@ -131,7 +131,7 @@ namespace Nyx.Core.Gui
             _gl.CompileShader(shader);
 
             _gl.GetShader(shader, ShaderParameterName.CompileStatus, out int success);
-            if (success == 0)
+            if (success is 0)
             {
                 string info = _gl.GetShaderInfoLog(shader);
                 Debug.WriteLine($"GL.CompileShader for shader '{Name}' [{type}] had info log:\n{info}");

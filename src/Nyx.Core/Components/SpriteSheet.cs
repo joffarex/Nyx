@@ -8,7 +8,7 @@ namespace Nyx.Core.Components
     {
         public SpriteSheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing)
         {
-            Sprites = new List<Sprite>();
+            Sprites = new();
 
             Texture = texture;
 
@@ -49,7 +49,7 @@ namespace Nyx.Core.Components
         public Vector2 SpriteSize { get; set; }
 
         public Texture Texture { get; set; }
-        public List<Sprite> Sprites { get; }
+        public List<Sprite> Sprites { get; init; }
 
         public int Count()
         {

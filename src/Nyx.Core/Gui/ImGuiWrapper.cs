@@ -18,7 +18,7 @@ namespace Nyx.Core.Gui
         private readonly Version _glVersion;
         private readonly IInputContext _input;
         private readonly IKeyboard _keyboard;
-        private readonly List<char> _pressedChars = new List<char>();
+        private readonly List<char> _pressedChars = new();
 
         private readonly Vector2 _scaleFactor = Vector2.One;
         private readonly IView _view;
@@ -45,7 +45,7 @@ namespace Nyx.Core.Gui
         public ImGuiWrapper(GL gl, IView view, IInputContext input)
         {
             _gl = gl;
-            _glVersion = new Version(gl.GetInteger(GLEnum.MajorVersion), gl.GetInteger(GLEnum.MinorVersion));
+            _glVersion = new(gl.GetInteger(GLEnum.MajorVersion), gl.GetInteger(GLEnum.MinorVersion));
             _view = view;
             _input = input;
             _windowWidth = view.Size.Width;
@@ -149,7 +149,7 @@ void main()
 {
     outputColor = color * texture(in_fontTexture, texCoord);
 }";
-            _shader = new Shader(_gl, "ImGui", vertexSource, fragmentSource);
+            _shader = new(_gl, "ImGui", vertexSource, fragmentSource);
 
             _gl.VertexArrayVertexBuffer(_vertexArray, 0, _vertexBuffer, IntPtr.Zero,
                 (uint) Unsafe.SizeOf<ImDrawVert>());
@@ -178,7 +178,7 @@ void main()
             ImGuiIOPtr io = ImGui.GetIO();
             io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
 
-            _fontTexture = new Texture(_gl, "ImGui Text Atlas", width, height, pixels);
+            _fontTexture = new(_gl, "ImGui Text Atlas", width, height, pixels);
             _fontTexture.SetMagFilter(TextureMagFilter.Linear);
             _fontTexture.SetMinFilter(TextureMinFilter.Linear);
 
@@ -260,7 +260,7 @@ void main()
 
             foreach (Key key in Enum.GetValues(typeof(Key)))
             {
-                if (key == Key.Unknown)
+                if (key is Key.Unknown)
                 {
                     continue;
                 }
@@ -318,7 +318,7 @@ void main()
             uint vertexOffsetInVertices = 0;
             uint indexOffsetInElements = 0;
 
-            if (drawData.CmdListsCount == 0)
+            if (drawData.CmdListsCount is 0)
             {
                 return;
             }
