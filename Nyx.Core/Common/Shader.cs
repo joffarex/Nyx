@@ -43,6 +43,16 @@ namespace Nyx.Core.Common
             Init(vertexShader, fragmentShader);
         }
 
+        public Shader(string type, string vertSource, string fragSource)
+        {
+            Logger.LogInformation($"Creating {type} shader");
+            int vertexShader = CreateShader(ShaderType.VertexShader, vertSource);
+            int fragmentShader = CreateShader(ShaderType.FragmentShader, fragSource);
+
+            Init(vertexShader, fragmentShader);            
+            
+        }
+
         ~Shader()
         {
             Dispose(false);

@@ -29,6 +29,15 @@ namespace Nyx.Core.Common
         public abstract TextureTarget TextureTarget { get; }
         public virtual bool SupportsMipmaps => true;
 
+
+        protected unsafe Texture(int width, int height, IntPtr data)
+        {
+            Width = width;
+            Height = height;
+
+            Load(data);
+        }
+        
         protected unsafe Texture(string path)
         {
             FilePath = path;
@@ -39,13 +48,13 @@ namespace Nyx.Core.Common
 
             fixed (void* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
             {
-                Load(data);
+                Load((IntPtr)data);
             }
 
             img.Dispose();
         }
 
-        private unsafe void Load(void* data)
+        private unsafe void Load(IntPtr data)
         {
             Handle = GL.GenTexture();
             Use();
@@ -72,16 +81,16 @@ namespace Nyx.Core.Common
         }
 
 
-        private unsafe void SetTextureImage2D(void* data)
+        private unsafe void SetTextureImage2D(IntPtr data)
         {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Height, Width, 0, PixelFormat.Rgba,
-                PixelType.UnsignedByte, (IntPtr) data);
+                PixelType.UnsignedByte, data);
         }
 
-        private unsafe void SetTextureImage3D(void* data)
+        private unsafe void SetTextureImage3D(IntPtr data)
         {
             GL.TexImage3D(TextureTarget.Texture3D, 0, PixelInternalFormat.Rgba, Height, Width, Depth, 0, PixelFormat.Rgba,
-                PixelType.UnsignedByte, (IntPtr) data);
+                PixelType.UnsignedByte, data);
         }
 
         public void Use(TextureUnit unit = TextureUnit.Texture0)
