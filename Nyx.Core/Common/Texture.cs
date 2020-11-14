@@ -33,7 +33,7 @@ namespace Nyx.Core.Common
             Width = img.Width;
             Height = img.Height;
 
-            fixed (int* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
+            fixed (void* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
             {
                 Load(data);
             }
@@ -41,7 +41,7 @@ namespace Nyx.Core.Common
             img.Dispose();
         }
 
-        private unsafe void Load(int* data)
+        private unsafe void Load(void* data)
         {
             Handle = GL.GenTexture();
             Use();
@@ -68,13 +68,13 @@ namespace Nyx.Core.Common
         }
 
 
-        private unsafe void SetTextureImage2D(int* data)
+        private unsafe void SetTextureImage2D(void* data)
         {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Height, Width, 0, PixelFormat.Rgba,
                 PixelType.UnsignedByte, (IntPtr) data);
         }
 
-        private unsafe void SetTextureImage3D(int* data)
+        private unsafe void SetTextureImage3D(void* data)
         {
             GL.TexImage3D(TextureTarget.Texture3D, 0, PixelInternalFormat.Rgba, Height, Width, Depth, 0, PixelFormat.Rgba,
                 PixelType.UnsignedByte, (IntPtr) data);
