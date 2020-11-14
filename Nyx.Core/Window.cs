@@ -28,8 +28,16 @@ namespace Nyx.Core
             _windowSettings = windowSettings;
         }
 
+        private static void EnableAlphaBlending()
+        {
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+        }
+
         protected override void OnLoad()
         {
+            EnableAlphaBlending();
+
             _controller = new ImGuiController(ClientSize);
 
             base.OnLoad();
@@ -74,6 +82,9 @@ namespace Nyx.Core
             _controller.Render();
 
             Gui.Utils.CheckGlError("End of frame");
+
+            // We need to enable blending again because of internal imgui implementation
+            EnableAlphaBlending();
 
             SwapBuffers();
 
