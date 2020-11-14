@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
+using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using SixLabors.ImageSharp;
@@ -10,6 +12,8 @@ namespace Nyx.Core.Common
 {
     public abstract class Texture : IDisposable, IEquatable<Texture>
     {
+        private static readonly ILogger<Texture> Logger = SerilogLogger.Factory.CreateLogger<Texture>();
+
         public bool IsDisposed { get; private set; }
 
         public int Handle { get; private set; }
@@ -64,7 +68,7 @@ namespace Nyx.Core.Common
         ~Texture()
         {
             Dispose(false);
-            Console.WriteLine($"Memory leak detected on object: {this}");
+            Logger.LogError($"Memory leak detected on object: {this}");
         }
 
 

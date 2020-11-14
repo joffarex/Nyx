@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Nyx.Core.Common
@@ -7,6 +9,9 @@ namespace Nyx.Core.Common
     public class VertexArrayObject<TVertexType> : IDisposable, IEquatable<VertexArrayObject<TVertexType>>
         where TVertexType : unmanaged
     {
+        private static readonly ILogger<VertexArrayObject<TVertexType>> Logger =
+            SerilogLogger.Factory.CreateLogger<VertexArrayObject<TVertexType>>();
+
         public bool IsDisposed { get; private set; }
 
 
@@ -25,7 +30,7 @@ namespace Nyx.Core.Common
         ~VertexArrayObject()
         {
             Dispose(false);
-            Console.WriteLine($"Memory leak detected on object: {this}");
+            Logger.LogError($"Memory leak detected on object: {this}");
         }
 
         public unsafe void VertexAttributePointer(int location, int size, VertexAttribPointerType type,

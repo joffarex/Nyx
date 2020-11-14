@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -11,6 +13,8 @@ namespace Nyx.Core.Common
 {
     public class Shader : IDisposable, IEquatable<Shader>
     {
+        private static readonly ILogger<Shader> Logger = SerilogLogger.Factory.CreateLogger<Shader>();
+
         private bool _isBeingUsed;
         public bool IsDisposed { get; private set; }
 
@@ -42,7 +46,7 @@ namespace Nyx.Core.Common
         ~Shader()
         {
             Dispose(false);
-            Console.WriteLine($"Memory leak detected on object: {this}");
+            Logger.LogError($"Memory leak detected on object: {this}");
         }
 
         private void Init(int vertexShader, int fragmentShader)
@@ -232,7 +236,7 @@ namespace Nyx.Core.Common
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.LogError(e.Message);
             }
 
             return (vertexShaderSource, fragmentShaderSource);

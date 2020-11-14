@@ -1,10 +1,15 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
+using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Nyx.Core.Common
 {
     public class BufferObject<TDataType> : IDisposable, IEquatable<BufferObject<TDataType>> where TDataType : unmanaged
     {
+        private static readonly ILogger<BufferObject<TDataType>> Logger =
+            SerilogLogger.Factory.CreateLogger<BufferObject<TDataType>>();
+        
         public bool IsDisposed { get; private set; }
 
         public BufferTarget BufferType { get; private set; }
@@ -51,7 +56,7 @@ namespace Nyx.Core.Common
         ~BufferObject()
         {
             Dispose(false);
-            Console.WriteLine($"Memory leak detected on object: {this}");
+            Logger.LogError($"Memory leak detected on object: {this}");
         }
 
         public void ReBufferData(TDataType[] data)
