@@ -8,19 +8,21 @@ namespace Nyx.Core.Gui
     internal class GuiShader
     {
         private readonly string _name;
-        private int Program { get; }
         private readonly Dictionary<string, int> _uniformToLocation = new();
         private bool _initialized;
 
         public GuiShader(string name, string vertexShader, string fragmentShader)
         {
             _name = name;
-            (ShaderType Type, string Path)[] files = {
+            (ShaderType Type, string Path)[] files =
+            {
                 (ShaderType.VertexShader, vertexShader),
                 (ShaderType.FragmentShader, fragmentShader),
             };
             Program = CreateProgram(name, files);
         }
+
+        private int Program { get; }
 
         public void UseShader()
         {
@@ -86,7 +88,9 @@ namespace Nyx.Core.Gui
             }
 
             foreach (int shader in shaders)
+            {
                 GL.AttachShader(program, shader);
+            }
 
             GL.LinkProgram(program);
 

@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Globalization;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
@@ -11,15 +9,18 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Nyx.Core
 {
     public class Window : GameWindow
     {
         private readonly ILogger<Window> _logger = SerilogLogger.Factory.CreateLogger<Window>();
+        private readonly WindowSettings _windowSettings;
+
+        private Vector4 _color = new(1, 1, 1, 1);
 
         private ImGuiController _controller;
-        private readonly WindowSettings _windowSettings;
 
         public Window(WindowSettings windowSettings) : base(GameWindowSettings.Default,
             windowSettings.MapToNativeWindowSettings())
@@ -62,6 +63,11 @@ namespace Nyx.Core
             GL.ClearColor(new Color4(0, 32, 48, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
+
+
+            if (ImGui.ColorPicker4("Color Picker: ", ref _color))
+            {
+            }
 
             ImGui.ShowDemoWindow();
 

@@ -58,10 +58,16 @@ namespace Nyx.Core.Gui
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateVertexBuffer(string name, out int buffer) => CreateBuffer($"VBO: {name}", out buffer);
+        public static void CreateVertexBuffer(string name, out int buffer)
+        {
+            CreateBuffer($"VBO: {name}", out buffer);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateElementBuffer(string name, out int buffer) => CreateBuffer($"EBO: {name}", out buffer);
+        public static void CreateElementBuffer(string name, out int buffer)
+        {
+            CreateBuffer($"EBO: {name}", out buffer);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CreateVertexArray(string name, out int vao)
