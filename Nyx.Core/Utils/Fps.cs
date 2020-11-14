@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 

@@ -5,13 +5,12 @@ namespace Nyx.Core.Common
 {
     public class Texture2D : Texture
     {
-        public TextureType TextureType { get; }
-
-
         public Texture2D(TextureType textureType, string path) : base(path)
         {
             TextureType = textureType;
         }
+
+        public TextureType TextureType { get; }
 
         public override TextureTarget TextureTarget => TextureTarget.Texture2D;
 

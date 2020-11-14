@@ -3,6 +3,6 @@
     public enum TextureType
     {
         NormalSprite,
-        PixelSprite
+        PixelSprite,
     }
 }

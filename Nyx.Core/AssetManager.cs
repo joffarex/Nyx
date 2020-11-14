@@ -19,7 +19,7 @@ namespace Nyx.Core
                 return shader;
             }
 
-            shader = new(filePath);
+            shader = new Shader(filePath);
             Shaders.Add(filePath, shader);
             return shader;
         }
@@ -33,7 +33,7 @@ namespace Nyx.Core
                 return (T) texture;
             }
 
-            texture = TextureCreator.Validate<T>(TextureType.PixelSprite, filePath, factory);
+            texture = TextureCreator.Validate(TextureType.PixelSprite, filePath, factory);
             Textures.Add(filePath, texture);
             return (T) texture;
         }

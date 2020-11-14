@@ -9,20 +9,6 @@ namespace Nyx.Core.Common
     {
         private static readonly ILogger<BufferObject<TDataType>> Logger =
             SerilogLogger.Factory.CreateLogger<BufferObject<TDataType>>();
-        
-        public bool IsDisposed { get; private set; }
-
-        public BufferTarget BufferType { get; private set; }
-        public int Handle { get; private set; }
-
-        public int ElementCount { get; private set; }
-
-        /// <summary>
-        /// Element index which will be used to start subbuffering data
-        /// </summary>
-        public int CurrentElementIndex { get; private set; }
-
-        public int ActiveElementCount { get; private set; }
 
         public BufferObject(TDataType[] data, BufferTarget bufferType, BufferUsageHint bufferUsage)
         {
@@ -40,13 +26,47 @@ namespace Nyx.Core.Common
             CurrentElementIndex = 0;
         }
 
+        public bool IsDisposed { get; private set; }
+
+        public BufferTarget BufferType { get; private set; }
+        public int Handle { get; private set; }
+
+        public int ElementCount { get; private set; }
+
+        /// <summary>
+        ///     Element index which will be used to start subbuffering data
+        /// </summary>
+        public int CurrentElementIndex { get; private set; }
+
+        public int ActiveElementCount { get; private set; }
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            IsDisposed = true;
+            Dispose(true);
+            // prevent the destructor from being called
+            GC.SuppressFinalize(this);
+            // make sure the garbage collector does not eat our object before it is properly disposed
+            GC.KeepAlive(this);
+        }
+
+        public bool Equals(BufferObject<TDataType> other)
+        {
+            return (other != null) && Handle.Equals(other.Handle);
+        }
+
         public unsafe void Init(TDataType[] data, int elementCount, BufferTarget bufferType,
             BufferUsageHint bufferUsage)
         {
             BufferType = bufferType;
             Handle = GL.GenBuffer();
             ElementCount = elementCount;
-            int fullSize = (ElementCount * sizeof(TDataType));
+            int fullSize = ElementCount * sizeof(TDataType);
 
             Bind();
             GL.BufferData(bufferType, (IntPtr) fullSize, data, bufferUsage);
@@ -62,8 +82,10 @@ namespace Nyx.Core.Common
         public void ReBufferData(TDataType[] data)
         {
             if (data.Length > ElementCount)
+            {
                 throw new ArgumentException(
                     $"Buffer not large enough to hold data. Buffer size: {ElementCount}. Elements to write: {data.Length}.");
+            }
 
             // Check if data does not fit at the end of the buffer
             int rest = ElementCount - CurrentElementIndex;
@@ -78,7 +100,10 @@ namespace Nyx.Core.Common
                 }
 
                 // Make sure to reset offset as data exactly fits in buffer and reached the end of memory allocated to it
-                if (CurrentElementIndex >= ElementCount) CurrentElementIndex = 0;
+                if (CurrentElementIndex >= ElementCount)
+                {
+                    CurrentElementIndex = 0;
+                }
             }
             else
             {
@@ -98,12 +123,18 @@ namespace Nyx.Core.Common
 
         public unsafe void BufferSubData(int offset, TDataType[] data, int count)
         {
-            if (count > ElementCount - offset)
+            if (count > (ElementCount - offset))
+            {
                 throw new ArgumentException(
                     $"Buffer not large enough to hold data. Buffer size: {ElementCount}. Offset: {offset}. Elements to write: {count}.");
+            }
+
             if (count > data.Length)
+            {
                 throw new ArgumentException(
                     $"Not enough data to write to buffer. Data length: {data.Length}. Elements to write: {count}.");
+            }
+
             Bind();
 
             GL.BufferSubData(BufferType, (IntPtr) offset, (IntPtr) (count * sizeof(TDataType)), data);
@@ -119,10 +150,12 @@ namespace Nyx.Core.Common
             int uploadedSize;
             GL.GetBufferParameter(bufferTarget, BufferParameterName.BufferSize, out uploadedSize);
             if (uploadedSize != size)
+            {
                 throw new ApplicationException(
                     string.Format(
                         "Problem uploading data to buffer object. Tried to upload {0} bytes, but uploaded {1}.", size,
                         uploadedSize));
+            }
         }
 
         public void Clear()
@@ -130,27 +163,14 @@ namespace Nyx.Core.Common
             BufferSubData(0, new TDataType[ElementCount], ElementCount);
         }
 
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-            Dispose(true);
-            // prevent the destructor from being called
-            GC.SuppressFinalize(this);
-            // make sure the garbage collector does not eat our object before it is properly disposed
-            GC.KeepAlive(this);
-        }
-
         public void Dispose(bool manual)
         {
-            if (!manual) return;
-            GL.DeleteBuffer(Handle);
-        }
+            if (!manual)
+            {
+                return;
+            }
 
-        public bool Equals(BufferObject<TDataType> other)
-        {
-            return other != null && Handle.Equals(other.Handle);
+            GL.DeleteBuffer(Handle);
         }
 
         public override bool Equals(object obj)

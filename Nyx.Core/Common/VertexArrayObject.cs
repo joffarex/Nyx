@@ -12,11 +12,6 @@ namespace Nyx.Core.Common
         private static readonly ILogger<VertexArrayObject<TVertexType>> Logger =
             SerilogLogger.Factory.CreateLogger<VertexArrayObject<TVertexType>>();
 
-        public bool IsDisposed { get; private set; }
-
-
-        public int Handle { get; protected set; }
-
         public readonly List<int> Locations = new();
 
         public VertexArrayObject(BufferObject<TVertexType> vertexBufferObject)
@@ -25,6 +20,31 @@ namespace Nyx.Core.Common
             Bind();
             AssertActive();
             vertexBufferObject.Bind();
+        }
+
+        public bool IsDisposed { get; private set; }
+
+
+        public int Handle { get; protected set; }
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            IsDisposed = true;
+            Dispose(true);
+            // prevent the destructor from being called
+            GC.SuppressFinalize(this);
+            // make sure the garbage collector does not eat our object before it is properly disposed
+            GC.KeepAlive(this);
+        }
+
+        public bool Equals(VertexArrayObject<TVertexType> other)
+        {
+            return (other != null) && Handle.Equals(other.Handle);
         }
 
         ~VertexArrayObject()
@@ -39,7 +59,7 @@ namespace Nyx.Core.Common
         {
             Bind();
             GL.VertexAttribPointer(location, size, type, false,
-                (int) (vertexSize * sizeof(TVertexType)),
+                vertexSize * sizeof(TVertexType),
                 (IntPtr) (offset * sizeof(TVertexType)));
             EnableVertexAttribPointer(location);
             Locations.Add(location);
@@ -85,31 +105,21 @@ namespace Nyx.Core.Common
         {
 #if DEBUG
             GL.GetInteger(GetPName.VertexArrayBinding, out int activeHandle);
-            if (activeHandle != Handle) throw new Exception("Vertex array object is not bound.");
+            if (activeHandle != Handle)
+            {
+                throw new Exception("Vertex array object is not bound.");
+            }
 #endif
-        }
-
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-            Dispose(true);
-            // prevent the destructor from being called
-            GC.SuppressFinalize(this);
-            // make sure the garbage collector does not eat our object before it is properly disposed
-            GC.KeepAlive(this);
         }
 
         public void Dispose(bool manual)
         {
-            if (!manual) return;
-            GL.DeleteVertexArray(Handle);
-        }
+            if (!manual)
+            {
+                return;
+            }
 
-        public bool Equals(VertexArrayObject<TVertexType> other)
-        {
-            return other != null && Handle.Equals(other.Handle);
+            GL.DeleteVertexArray(Handle);
         }
 
         public override bool Equals(object obj)

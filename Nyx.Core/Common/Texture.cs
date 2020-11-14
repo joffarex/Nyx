@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -14,30 +13,15 @@ namespace Nyx.Core.Common
     {
         private static readonly ILogger<Texture> Logger = SerilogLogger.Factory.CreateLogger<Texture>();
 
-        public bool IsDisposed { get; private set; }
 
-        public int Handle { get; private set; }
-
-        public string FilePath { get; }
-
-        public int Height { get; }
-        public int Width { get; }
-        
-        // Only used for 3D textures
-        public int Depth { get; } = 0;
-
-        public abstract TextureTarget TextureTarget { get; }
-        public virtual bool SupportsMipmaps => true;
-
-
-        protected unsafe Texture(int width, int height, IntPtr data)
+        protected Texture(int width, int height, IntPtr data)
         {
             Width = width;
             Height = height;
 
             Load(data);
         }
-        
+
         protected unsafe Texture(string path)
         {
             FilePath = path;
@@ -48,13 +32,48 @@ namespace Nyx.Core.Common
 
             fixed (void* data = &MemoryMarshal.GetReference(img.GetPixelRowSpan(0)))
             {
-                Load((IntPtr)data);
+                Load((IntPtr) data);
             }
 
             img.Dispose();
         }
 
-        private unsafe void Load(IntPtr data)
+        public bool IsDisposed { get; private set; }
+
+        public int Handle { get; private set; }
+
+        public string FilePath { get; }
+
+        public int Height { get; }
+        public int Width { get; }
+
+        // Only used for 3D textures
+        public int Depth { get; } = 0;
+
+        public abstract TextureTarget TextureTarget { get; }
+        public virtual bool SupportsMipmaps => true;
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            IsDisposed = true;
+            Dispose(true);
+            // prevent the destructor from being called
+            GC.SuppressFinalize(this);
+            // make sure the garbage collector does not eat our object before it is properly disposed
+            GC.KeepAlive(this);
+        }
+
+        public bool Equals(Texture other)
+        {
+            return (other != null) && Handle.Equals(other.Handle);
+        }
+
+        private void Load(IntPtr data)
         {
             Handle = GL.GenTexture();
             Use();
@@ -70,7 +89,7 @@ namespace Nyx.Core.Common
                 default:
                     throw new InvalidOperationException("Invalid dimension");
             }
-            
+
             GenerateMipMaps();
         }
 
@@ -81,15 +100,16 @@ namespace Nyx.Core.Common
         }
 
 
-        private unsafe void SetTextureImage2D(IntPtr data)
+        private void SetTextureImage2D(IntPtr data)
         {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Height, Width, 0, PixelFormat.Rgba,
                 PixelType.UnsignedByte, data);
         }
 
-        private unsafe void SetTextureImage3D(IntPtr data)
+        private void SetTextureImage3D(IntPtr data)
         {
-            GL.TexImage3D(TextureTarget.Texture3D, 0, PixelInternalFormat.Rgba, Height, Width, Depth, 0, PixelFormat.Rgba,
+            GL.TexImage3D(TextureTarget.Texture3D, 0, PixelInternalFormat.Rgba, Height, Width, Depth, 0,
+                PixelFormat.Rgba,
                 PixelType.UnsignedByte, data);
         }
 
@@ -132,32 +152,23 @@ namespace Nyx.Core.Common
 
         public void GenerateMipMaps()
         {
-            if (!SupportsMipmaps) throw new InvalidOperationException("Texture does not support mipmaps.");
+            if (!SupportsMipmaps)
+            {
+                throw new InvalidOperationException("Texture does not support mipmaps.");
+            }
+
             Bind();
             GL.GenerateMipmap((GenerateMipmapTarget) TextureTarget);
         }
 
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-            Dispose(true);
-            // prevent the destructor from being called
-            GC.SuppressFinalize(this);
-            // make sure the garbage collector does not eat our object before it is properly disposed
-            GC.KeepAlive(this);
-        }
-
         public void Dispose(bool manual)
         {
-            if (!manual) return;
-            GL.DeleteTexture(Handle);
-        }
+            if (!manual)
+            {
+                return;
+            }
 
-        public bool Equals(Texture other)
-        {
-            return other != null && Handle.Equals(other.Handle);
+            GL.DeleteTexture(Handle);
         }
 
         public override bool Equals(object obj)

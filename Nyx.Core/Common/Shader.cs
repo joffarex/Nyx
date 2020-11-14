@@ -15,12 +15,9 @@ namespace Nyx.Core.Common
     {
         private static readonly ILogger<Shader> Logger = SerilogLogger.Factory.CreateLogger<Shader>();
 
-        private bool _isBeingUsed;
-        public bool IsDisposed { get; private set; }
-
-        public int Handle { get; private set; }
-
         private readonly Dictionary<string, int> _uniformLocations = new();
+
+        private bool _isBeingUsed;
 
         public Shader(string shaderPath)
         {
@@ -49,8 +46,31 @@ namespace Nyx.Core.Common
             int vertexShader = CreateShader(ShaderType.VertexShader, vertSource);
             int fragmentShader = CreateShader(ShaderType.FragmentShader, fragSource);
 
-            Init(vertexShader, fragmentShader);            
-            
+            Init(vertexShader, fragmentShader);
+        }
+
+        public bool IsDisposed { get; private set; }
+
+        public int Handle { get; private set; }
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            IsDisposed = true;
+            Dispose(true);
+            // prevent the destructor from being called
+            GC.SuppressFinalize(this);
+            // make sure the garbage collector does not eat our object before it is properly disposed
+            GC.KeepAlive(this);
+        }
+
+        public bool Equals(Shader other)
+        {
+            return (other != null) && Handle.Equals(other.Handle);
         }
 
         ~Shader()
@@ -92,7 +112,7 @@ namespace Nyx.Core.Common
         {
             GL.CompileShader(shader);
 
-            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out int code);
 
             if (code != (int) All.True)
             {
@@ -105,7 +125,7 @@ namespace Nyx.Core.Common
         {
             GL.LinkProgram(program);
 
-            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int code);
             if (code != (int) All.True)
             {
                 throw new Exception($"Error occurred whilst linking Program({program})");
@@ -252,27 +272,14 @@ namespace Nyx.Core.Common
             return (vertexShaderSource, fragmentShaderSource);
         }
 
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-            Dispose(true);
-            // prevent the destructor from being called
-            GC.SuppressFinalize(this);
-            // make sure the garbage collector does not eat our object before it is properly disposed
-            GC.KeepAlive(this);
-        }
-
         public void Dispose(bool manual)
         {
-            if (!manual) return;
+            if (!manual)
+            {
+                return;
+            }
+
             GL.DeleteShader(Handle);
-        }
-        
-        public bool Equals(Shader other)
-        {
-            return other != null && Handle.Equals(other.Handle);
         }
 
         public override bool Equals(object obj)
