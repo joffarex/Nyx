@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
+using Nyx.Core.Common;
 using Nyx.Core.Editor;
 using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
@@ -26,7 +27,7 @@ namespace Nyx.Core.Gui
         private int _indexBuffer;
         private int _indexBufferSize;
 
-        private GuiShader _shader;
+        private Shader _shader;
 
         private int _vertexArray;
         private int _vertexBuffer;
@@ -128,7 +129,7 @@ void main()
     outputColor = color * texture(in_fontTexture, texCoord);
 }";
 
-            _shader = new GuiShader("ImGui", vertexSource, fragmentSource);
+            _shader = new Shader("ImGui", vertexSource, fragmentSource);
 
             GL.VertexArrayVertexBuffer(_vertexArray, 0, _vertexBuffer, IntPtr.Zero, Unsafe.SizeOf<ImDrawVert>());
             GL.VertexArrayElementBuffer(_vertexArray, _indexBuffer);
@@ -294,7 +295,7 @@ void main()
             io.KeyMap[(int) ImGuiKey.Z] = (int) Keys.Z;
         }
 
-        private unsafe void RenderImDrawData(ImDrawDataPtr drawData)
+        private void RenderImDrawData(ImDrawDataPtr drawData)
         {
             var vertexOffsetInVertices = 0;
             var indexOffsetInElements = 0;
@@ -346,10 +347,9 @@ void main()
                 -1.0f,
                 1.0f);
 
-            _shader.UseShader();
-            GL.UniformMatrix4(_shader.GetUniformLocation("projection_matrix"), 1, false,
-                (float*) Unsafe.AsPointer(ref mvp));
-            GL.Uniform1(_shader.GetUniformLocation("in_fontTexture"), 0);
+            _shader.Use();
+            _shader.SetMatrix4("projection_matrix", 1, false, ref mvp);
+            _shader.SetInt("in_fontTexture", 0);
             GlUtils.CheckError("Projection");
 
             GL.BindVertexArray(_vertexArray);

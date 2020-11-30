@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -8,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Nyx.Core.Common
 {
@@ -15,7 +19,7 @@ namespace Nyx.Core.Common
     {
         private static readonly ILogger<Shader> Logger = SerilogLogger.Factory.CreateLogger<Shader>();
 
-        private readonly Dictionary<string, int> _uniformLocations = new();
+        private readonly List<UniformFieldInfo> _uniforms = new();
 
         private bool _isBeingUsed;
 
@@ -101,10 +105,10 @@ namespace Nyx.Core.Common
             GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out int numberOfUniforms);
             for (var i = 0; i < numberOfUniforms; i++)
             {
-                string key = GL.GetActiveUniform(Handle, i, out _, out _);
-                int location = GL.GetUniformLocation(Handle, key);
+                string name = GL.GetActiveUniform(Handle, i, out int size, out ActiveUniformType type);
+                int location = GL.GetUniformLocation(Handle, name);
 
-                _uniformLocations.Add(key, location);
+                _uniforms.Add(new UniformFieldInfo {Name = name, Size = size, Type = type, Location = location});
             }
         }
 
@@ -170,53 +174,76 @@ namespace Nyx.Core.Common
 
         public void SetInt(string name, int data)
         {
-            if (_uniformLocations.TryGetValue(name, out int location))
+            try
             {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
                 Use();
-                GL.Uniform1(_uniformLocations[name], data);
+                GL.Uniform1(uniform.Value.Location, data);
             }
-            else
+            catch (Exception e)
             {
-                throw new Exception($"{name} uniform not found on shader.");
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
             }
         }
 
         public void SetFloat(string name, float data)
         {
-            if (_uniformLocations.TryGetValue(name, out int location))
+            try
             {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
                 Use();
-                GL.Uniform1(_uniformLocations[name], data);
+                GL.Uniform1(uniform.Value.Location, data);
             }
-            else
+            catch (Exception e)
             {
-                throw new Exception($"{name} uniform not found on shader.");
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
             }
         }
 
         public void SetMatrix4(string name, Matrix4 data)
         {
-            if (_uniformLocations.TryGetValue(name, out int location))
+            try
             {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
                 Use();
-                GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+                GL.UniformMatrix4(uniform.Value.Location, true, ref data);
             }
-            else
+            catch (Exception e)
             {
-                throw new Exception($"{name} uniform not found on shader.");
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
+            }
+        }
+
+        public unsafe void SetMatrix4(string name, int count, bool transpose, ref Matrix4x4 data)
+        {
+            try
+            {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
+                Use();
+                GL.UniformMatrix4(uniform.Value.Location, count, transpose, (float*) Unsafe.AsPointer(ref data));
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
             }
         }
 
         public void SetVector3(string name, Vector3 data)
         {
-            if (_uniformLocations.TryGetValue(name, out int location))
+            try
             {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
                 Use();
-                GL.Uniform3(location, data);
+                GL.Uniform3(uniform.Value.Location, data);
             }
-            else
+            catch (Exception e)
             {
-                throw new Exception($"{name} uniform not found on shader.");
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
             }
         }
 

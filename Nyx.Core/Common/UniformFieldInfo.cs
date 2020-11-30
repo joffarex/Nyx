@@ -1,8 +1,8 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace Nyx.Core.Gui
+namespace Nyx.Core.Common
 {
-    internal struct UniformFieldInfo
+    public struct UniformFieldInfo
     {
         public int Location;
         public string Name;
