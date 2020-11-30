@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ImGuiNET;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 
@@ -8,6 +9,29 @@ namespace Nyx.Core.Utils
     public class Fps
     {
         private static readonly ILogger<Fps> Logger = SerilogLogger.Factory.CreateLogger<Fps>();
+
+        private static readonly double _fpsDisplayDelay = 1;
+        private static double _timeBetweenFpsDisplay;
+
+        private static string _currentFps;
+
+        public static void ImGuiWindow(double deltaTime)
+        {
+            _timeBetweenFpsDisplay -= deltaTime;
+
+            if (_timeBetweenFpsDisplay <= 0)
+            {
+                _timeBetweenFpsDisplay = _fpsDisplayDelay;
+                _currentFps = Get(deltaTime);
+            }
+
+            Console.WriteLine(_timeBetweenFpsDisplay);
+
+            ImGui.Begin("Benchmarks");
+            ImGui.SetWindowFontScale(1.2f);
+            ImGui.Text($"FPS: {_currentFps}");
+            ImGui.End();
+        }
 
         public static float Get(float deltaTime)
         {

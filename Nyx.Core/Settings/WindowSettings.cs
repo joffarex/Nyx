@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
 namespace Nyx.Core.Settings
@@ -20,6 +21,7 @@ namespace Nyx.Core.Settings
             {
                 Title = Title,
                 Size = Size,
+                WindowState = WindowState.Fullscreen,
             };
         }
     }

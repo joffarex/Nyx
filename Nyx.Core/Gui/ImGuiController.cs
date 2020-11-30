@@ -45,6 +45,7 @@ namespace Nyx.Core.Gui
             ImGuiIOPtr io = ImGui.GetIO();
 
             io.WantSaveIniSettings = true;
+            io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable;
 
             var fontConfig = new ImFontConfigPtr();
 
@@ -165,6 +166,9 @@ void main()
             if (_frameBegun)
             {
                 _frameBegun = false;
+
+                ImGui.End();
+
                 ImGui.Render();
                 RenderImDrawData(ImGui.GetDrawData());
             }
@@ -182,6 +186,27 @@ void main()
 
             _frameBegun = true;
             ImGui.NewFrame();
+            SetupDockSpace();
+        }
+
+        private void SetupDockSpace()
+        {
+            ImGuiWindowFlags windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+
+            ImGui.SetNextWindowPos(new Vector2(0.0f, 0.0f), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(_windowWidth, _windowHeight));
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+            windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                           ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus |
+                           ImGuiWindowFlags.NoNavFocus;
+
+            var pOpen = true;
+            ImGui.Begin("DockSpace Demo", ref pOpen, windowFlags);
+            ImGui.PopStyleVar(2);
+
+            // DockSpace
+            ImGui.DockSpace(ImGui.GetID("DockSpace"));
         }
 
         private void SetPerFrameImGuiData(float deltaSeconds)
