@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics.OpenGL4;
 
@@ -11,16 +10,6 @@ namespace Nyx.Core.Gui
         public static float Clamp(float value, float min, float max)
         {
             return value < min ? min : value > max ? max : value;
-        }
-
-        [Conditional("DEBUG")]
-        public static void CheckGlError(string title)
-        {
-            ErrorCode error = GL.GetError();
-            if (error != ErrorCode.NoError)
-            {
-                Debug.Print($"{title}: {error}");
-            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

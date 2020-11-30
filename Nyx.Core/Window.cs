@@ -4,6 +4,7 @@ using Nyx.Core.Common;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
 using Nyx.Core.Settings;
+using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -88,7 +89,7 @@ namespace Nyx.Core
 
             _controller.Render(e.Time);
 
-            Gui.Utils.CheckGlError("End of frame");
+            GlUtils.CheckError("End of frame");
 
             // We need to enable blending again because of internal imgui implementation
             EnableAlphaBlending();

@@ -145,7 +145,7 @@ void main()
             GL.VertexArrayAttribBinding(_vertexArray, 2, 0);
             GL.VertexArrayAttribFormat(_vertexArray, 2, 4, VertexAttribType.UnsignedByte, true, 16);
 
-            Utils.CheckGlError("End of ImGui setup");
+            GlUtils.CheckError("End of ImGui setup");
         }
 
         private void RecreateFontDeviceTexture()
@@ -327,11 +327,11 @@ void main()
 
                 GL.NamedBufferSubData(_vertexBuffer, (IntPtr) (vertexOffsetInVertices * Unsafe.SizeOf<ImDrawVert>()),
                     cmdList.VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>(), cmdList.VtxBuffer.Data);
-                Utils.CheckGlError($"Data Vert {i}");
+                GlUtils.CheckError($"Data Vert {i}");
                 GL.NamedBufferSubData(_indexBuffer, (IntPtr) (indexOffsetInElements * sizeof(ushort)),
                     cmdList.IdxBuffer.Size * sizeof(ushort), cmdList.IdxBuffer.Data);
 
-                Utils.CheckGlError($"Data Idx {i}");
+                GlUtils.CheckError($"Data Idx {i}");
 
                 vertexOffsetInVertices += cmdList.VtxBuffer.Size;
                 indexOffsetInElements += cmdList.IdxBuffer.Size;
@@ -350,10 +350,10 @@ void main()
             GL.UniformMatrix4(_shader.GetUniformLocation("projection_matrix"), 1, false,
                 (float*) Unsafe.AsPointer(ref mvp));
             GL.Uniform1(_shader.GetUniformLocation("in_fontTexture"), 0);
-            Utils.CheckGlError("Projection");
+            GlUtils.CheckError("Projection");
 
             GL.BindVertexArray(_vertexArray);
-            Utils.CheckGlError("VAO");
+            GlUtils.CheckError("VAO");
 
             drawData.ScaleClipRects(io.DisplayFramebufferScale);
 
@@ -380,16 +380,16 @@ void main()
 
                     GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, (uint) pcmd.TextureId);
-                    Utils.CheckGlError("Texture");
+                    GlUtils.CheckError("Texture");
 
                     Vector4 clip = pcmd.ClipRect;
                     GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) (clip.Z - clip.X),
                         (int) (clip.W - clip.Y));
-                    Utils.CheckGlError("Scissor");
+                    GlUtils.CheckError("Scissor");
 
                     GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int) pcmd.ElemCount,
                         DrawElementsType.UnsignedShort, (IntPtr) (idxOffset * sizeof(ushort)), vtxOffset);
-                    Utils.CheckGlError("Draw");
+                    GlUtils.CheckError("Draw");
 
                     idxOffset += (int) pcmd.ElemCount;
                 }
