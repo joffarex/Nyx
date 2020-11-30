@@ -4,7 +4,6 @@ using Nyx.Core.Common;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
 using Nyx.Core.Settings;
-using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -17,18 +16,19 @@ namespace Nyx.Core
     public class Window : GameWindow
     {
         private readonly ILogger<Window> _logger = SerilogLogger.Factory.CreateLogger<Window>();
-        private readonly WindowSettings _windowSettings;
 
         private Vector4 _color = new(1, 1, 1, 1);
 
         private ImGuiController _controller;
-        private Framebuffer _framebuffer;
 
         public Window(WindowSettings windowSettings) : base(GameWindowSettings.Default,
             windowSettings.MapToNativeWindowSettings())
         {
-            _windowSettings = windowSettings;
+            WindowSettings = windowSettings;
         }
+
+        public static WindowSettings WindowSettings { get; private set; }
+        public static Framebuffer Framebuffer { get; private set; }
 
         private static void EnableAlphaBlending()
         {
@@ -41,7 +41,8 @@ namespace Nyx.Core
             EnableAlphaBlending();
 
             _controller = new ImGuiController(ClientSize);
-            _framebuffer = new Framebuffer(1920, 1080);
+            Framebuffer = new Framebuffer(1920, 1080);
+            GL.Viewport(0, 0, 1920, 1080);
 
             base.OnLoad();
         }
@@ -70,11 +71,11 @@ namespace Nyx.Core
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            Framebuffer.Bind();
             GL.ClearColor(new Color4(0, 32, 48, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
 
-            _framebuffer.Bind();
             // Current scene renders
             ImGui.Begin("Picker");
             if (ImGui.ColorPicker4("Color Picker: ", ref _color))
@@ -83,12 +84,9 @@ namespace Nyx.Core
 
             ImGui.End();
 
-            ImGui.ShowDemoWindow();
+            Framebuffer.Detach();
 
-            Fps.ImGuiWindow(e.Time);
-            _framebuffer.Detach();
-
-            _controller.Render();
+            _controller.Render(e.Time);
 
             Gui.Utils.CheckGlError("End of frame");
 
@@ -110,7 +108,7 @@ namespace Nyx.Core
         public override void Close()
         {
             _controller.Dispose();
-            _framebuffer.Dispose();
+            Framebuffer.Dispose();
 
             base.Close();
         }

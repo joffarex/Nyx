@@ -19,7 +19,7 @@ namespace Nyx.Core.Common
             Height = height;
             FilePath = "Generated";
 
-            SetTextureImage2D(IntPtr.Zero, false);
+            Load(IntPtr.Zero, false);
         }
 
         protected Texture(int width, int height, IntPtr data)

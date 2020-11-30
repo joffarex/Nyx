@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
+using Nyx.Core.Editor;
 using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -161,11 +162,14 @@ void main()
             io.Fonts.ClearTexData();
         }
 
-        public void Render()
+        public void Render(double deltaTime)
         {
             if (_frameBegun)
             {
                 _frameBegun = false;
+                ImGui.ShowDemoWindow();
+                GameViewWindow.ImGui();
+                Fps.ImGuiWindow(deltaTime);
 
                 ImGui.End();
 

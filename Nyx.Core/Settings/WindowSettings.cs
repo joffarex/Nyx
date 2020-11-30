@@ -15,6 +15,8 @@ namespace Nyx.Core.Settings
         public Vector2i Size { get; }
         public string Title { get; }
 
+        public float AspectRatio => (float) Size.X / Size.Y;
+
         public NativeWindowSettings MapToNativeWindowSettings()
         {
             return new()

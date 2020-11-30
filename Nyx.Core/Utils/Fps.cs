@@ -25,8 +25,6 @@ namespace Nyx.Core.Utils
                 _currentFps = Get(deltaTime);
             }
 
-            Console.WriteLine(_timeBetweenFpsDisplay);
-
             ImGui.Begin("Benchmarks");
             ImGui.SetWindowFontScale(1.2f);
             ImGui.Text($"FPS: {_currentFps}");
