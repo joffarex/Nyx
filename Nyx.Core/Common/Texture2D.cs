@@ -10,6 +10,11 @@ namespace Nyx.Core.Common
             TextureType = textureType;
         }
 
+        public Texture2D(int width, int height) : base(width, height)
+        {
+            TextureType = TextureType.PixelSprite;
+        }
+
         public TextureType TextureType { get; }
 
         public override TextureTarget TextureTarget => TextureTarget.Texture2D;

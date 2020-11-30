@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Extensions.Logging;
+using Nyx.Core.Common;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
 using Nyx.Core.Settings;
@@ -21,6 +22,7 @@ namespace Nyx.Core
         private Vector4 _color = new(1, 1, 1, 1);
 
         private ImGuiController _controller;
+        private Framebuffer _framebuffer;
 
         public Window(WindowSettings windowSettings) : base(GameWindowSettings.Default,
             windowSettings.MapToNativeWindowSettings())
@@ -39,6 +41,7 @@ namespace Nyx.Core
             EnableAlphaBlending();
 
             _controller = new ImGuiController(ClientSize);
+            _framebuffer = new Framebuffer(1920, 1080);
 
             base.OnLoad();
         }
@@ -64,20 +67,26 @@ namespace Nyx.Core
             base.OnUpdateFrame(e);
         }
 
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            Fps.Print(e.Time);
-
             GL.ClearColor(new Color4(0, 32, 48, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
 
-
+            _framebuffer.Bind();
+            // Current scene renders
+            ImGui.Begin("Picker");
             if (ImGui.ColorPicker4("Color Picker: ", ref _color))
             {
             }
 
+            ImGui.End();
+
             ImGui.ShowDemoWindow();
+
+            Fps.ImGuiWindow(e.Time);
+            _framebuffer.Detach();
 
             _controller.Render();
 
@@ -101,6 +110,7 @@ namespace Nyx.Core
         public override void Close()
         {
             _controller.Dispose();
+            _framebuffer.Dispose();
 
             base.Close();
         }

@@ -13,11 +13,20 @@ namespace Nyx.Core.Common
     {
         private static readonly ILogger<Texture> Logger = SerilogLogger.Factory.CreateLogger<Texture>();
 
+        protected Texture(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            FilePath = "Generated";
+
+            SetTextureImage2D(IntPtr.Zero, false);
+        }
 
         protected Texture(int width, int height, IntPtr data)
         {
             Width = width;
             Height = height;
+            FilePath = "Generated";
 
             Load(data);
         }
@@ -73,15 +82,17 @@ namespace Nyx.Core.Common
             return (other != null) && Handle.Equals(other.Handle);
         }
 
-        private void Load(IntPtr data)
+        private void Load(IntPtr data, bool withAlpha = true)
         {
             Handle = GL.GenTexture();
             Use();
 
+            SetupTextureParameters();
+
             switch (TextureTarget)
             {
                 case TextureTarget.Texture2D:
-                    SetTextureImage2D(data);
+                    SetTextureImage2D(data, withAlpha);
                     break;
                 case TextureTarget.Texture3D:
                     SetTextureImage3D(data);
@@ -100,9 +111,12 @@ namespace Nyx.Core.Common
         }
 
 
-        private void SetTextureImage2D(IntPtr data)
+        private void SetTextureImage2D(IntPtr data, bool withAlpha = true)
         {
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Height, Width, 0, PixelFormat.Rgba,
+            PixelInternalFormat internalFormat = withAlpha ? PixelInternalFormat.Rgba : PixelInternalFormat.Rgb;
+            PixelFormat format = withAlpha ? PixelFormat.Rgba : PixelFormat.Rgb;
+
+            GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, Height, Width, 0, format,
                 PixelType.UnsignedByte, data);
         }
 
