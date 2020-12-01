@@ -1,8 +1,8 @@
 ﻿using ImGuiNET;
 using Microsoft.Extensions.Logging;
-using Nyx.Core.Common;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
+using Nyx.Core.Renderer;
 using Nyx.Core.Settings;
 using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;

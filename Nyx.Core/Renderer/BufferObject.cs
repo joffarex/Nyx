@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public class BufferObject<TDataType> : IDisposable, IEquatable<BufferObject<TDataType>> where TDataType : unmanaged
     {

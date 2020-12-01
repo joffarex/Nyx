@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public struct UniformFieldInfo
     {

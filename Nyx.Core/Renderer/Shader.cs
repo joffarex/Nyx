@@ -13,7 +13,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public class Shader : IDisposable, IEquatable<Shader>
     {

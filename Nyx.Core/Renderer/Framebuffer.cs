@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public class Framebuffer : IDisposable, IEquatable<Framebuffer>
     {

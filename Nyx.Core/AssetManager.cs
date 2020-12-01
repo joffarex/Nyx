@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nyx.Core.Common;
+using Nyx.Core.Renderer;
 using Nyx.Core.Utils;
 
 namespace Nyx.Core

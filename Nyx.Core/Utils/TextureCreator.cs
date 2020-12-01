@@ -1,5 +1,5 @@
 ﻿using System;
-using Nyx.Core.Common;
+using Nyx.Core.Renderer;
 
 namespace Nyx.Core.Utils
 {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
 using OpenTK.Graphics.OpenGL4;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public class VertexArrayObject<TVertexType> : IDisposable, IEquatable<VertexArrayObject<TVertexType>>
         where TVertexType : unmanaged

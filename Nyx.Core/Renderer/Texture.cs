@@ -7,7 +7,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace Nyx.Core.Common
+namespace Nyx.Core.Renderer
 {
     public abstract class Texture : IDisposable, IEquatable<Texture>
     {
