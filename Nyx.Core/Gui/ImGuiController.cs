@@ -59,7 +59,8 @@ namespace Nyx.Core.Gui
             CreateDeviceResources();
             SetKeyMappings();
 
-            SetPerFrameImGuiData(1f / 60f);
+            double deltaTime = 1.0 / 60.0;
+            SetPerFrameImGuiData(ref deltaTime);
 
             ImGui.NewFrame();
             _frameBegun = true;
@@ -163,14 +164,14 @@ void main()
             io.Fonts.ClearTexData();
         }
 
-        public void Render(double deltaTime)
+        public void Render(ref double deltaTime)
         {
             if (_frameBegun)
             {
                 _frameBegun = false;
                 ImGui.ShowDemoWindow();
                 GameViewWindow.ImGui();
-                Fps.ImGuiWindow(deltaTime);
+                Fps.ImGuiWindow(ref deltaTime);
 
                 ImGui.End();
 
@@ -179,14 +180,14 @@ void main()
             }
         }
 
-        public void Update(GameWindow wnd, float deltaSeconds)
+        public void Update(GameWindow wnd, ref double deltaTime)
         {
             if (_frameBegun)
             {
                 ImGui.Render();
             }
 
-            SetPerFrameImGuiData(deltaSeconds);
+            SetPerFrameImGuiData(ref deltaTime);
             UpdateImGuiInput(wnd);
 
             _frameBegun = true;
@@ -214,14 +215,14 @@ void main()
             ImGui.DockSpace(ImGui.GetID("DockSpace"));
         }
 
-        private void SetPerFrameImGuiData(float deltaSeconds)
+        private void SetPerFrameImGuiData(ref double deltaTime)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             io.DisplaySize = new Vector2(
                 _windowWidth / _scaleFactor.X,
                 _windowHeight / _scaleFactor.Y);
             io.DisplayFramebufferScale = _scaleFactor;
-            io.DeltaTime = deltaSeconds;
+            io.DeltaTime = (float) deltaTime;
         }
 
         private void UpdateImGuiInput(GameWindow wnd)

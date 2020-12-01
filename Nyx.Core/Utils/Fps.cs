@@ -15,14 +15,14 @@ namespace Nyx.Core.Utils
 
         private static string _currentFps;
 
-        public static void ImGuiWindow(double deltaTime)
+        public static void ImGuiWindow(ref double deltaTime)
         {
             _timeBetweenFpsDisplay -= deltaTime;
 
             if (_timeBetweenFpsDisplay <= 0)
             {
                 _timeBetweenFpsDisplay = _fpsDisplayDelay;
-                _currentFps = Get(deltaTime);
+                _currentFps = Get(ref deltaTime);
             }
 
             ImGui.Begin("Benchmarks");
@@ -36,14 +36,14 @@ namespace Nyx.Core.Utils
             return 1.0f / deltaTime;
         }
 
-        public static string Get(double deltaTime)
+        public static string Get(ref double deltaTime)
         {
             return Math.Round(1.0 / deltaTime, 2).ToString(CultureInfo.InvariantCulture);
         }
 
-        public static void Print(double deltaTime)
+        public static void Print(ref double deltaTime)
         {
-            Logger.LogInformation(Get(deltaTime));
+            Logger.LogInformation(Get(ref deltaTime));
         }
 
         public static void Print(float deltaTime)
