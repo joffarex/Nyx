@@ -2,7 +2,7 @@
 using System.Numerics;
 using Nyx.Core.Renderer;
 
-namespace Nyx.Core.Components
+namespace Nyx.Core.Graphics
 {
     public class Sprite
     {
