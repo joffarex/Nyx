@@ -1,8 +1,8 @@
-﻿using ImGuiNET;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Nyx.Core.Gui;
 using Nyx.Core.Logger;
 using Nyx.Core.Renderer;
+using Nyx.Core.Scenes;
 using Nyx.Core.Settings;
 using Nyx.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
@@ -37,6 +37,11 @@ namespace Nyx.Core
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
         }
 
+        public static void AddScene(string name, Scene scene)
+        {
+            SceneManager.AddScene(name, scene);
+        }
+
         protected override void OnLoad()
         {
             EnableAlphaBlending();
@@ -44,6 +49,8 @@ namespace Nyx.Core
             _controller = new ImGuiController(ClientSize);
             Framebuffer = new Framebuffer(1920, 1080);
             GL.Viewport(0, 0, 1920, 1080);
+
+            SceneManager.ChangeScene("test");
 
             base.OnLoad();
         }
@@ -64,7 +71,10 @@ namespace Nyx.Core
                 Close();
             }
 
-            _controller.Update(this, (float) e.Time);
+            double deltaTime = e.Time;
+            SceneManager.CurrentScene.Update(ref deltaTime);
+
+            _controller.Update(this, ref deltaTime);
 
             base.OnUpdateFrame(e);
         }
@@ -72,22 +82,19 @@ namespace Nyx.Core
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            double deltaTime = e.Time;
+
             Framebuffer.Bind();
             GL.ClearColor(new Color4(0, 32, 48, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
 
             // Current scene renders
-            ImGui.Begin("Picker");
-            if (ImGui.ColorPicker4("Color Picker: ", ref _color))
-            {
-            }
-
-            ImGui.End();
+            SceneManager.CurrentScene.Render(ref deltaTime);
 
             Framebuffer.Detach();
 
-            _controller.Render(e.Time);
+            _controller.Render(ref deltaTime);
 
             GlUtils.CheckError("End of frame");
 
@@ -108,6 +115,7 @@ namespace Nyx.Core
 
         public override void Close()
         {
+            SceneManager.CurrentScene.Dispose();
             _controller.Dispose();
             Framebuffer.Dispose();
 
