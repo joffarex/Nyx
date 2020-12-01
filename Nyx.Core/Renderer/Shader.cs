@@ -187,6 +187,21 @@ namespace Nyx.Core.Renderer
             }
         }
 
+        public void SetIntArray(string name, int[] data)
+        {
+            try
+            {
+                UniformFieldInfo? uniform = _uniforms.SingleOrDefault(u => u.Name.Equals(name));
+                Use();
+                GL.Uniform1(uniform.Value.Location, data.Length, data);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                Logger.LogDebug($"{name} uniform not found on shader.");
+            }
+        }
+
         public void SetFloat(string name, float data)
         {
             try
@@ -254,7 +269,8 @@ namespace Nyx.Core.Renderer
 
             try
             {
-                string src = await File.ReadAllTextAsync(fullShaderPath);
+                string src = (await File.ReadAllTextAsync(fullShaderPath)).Replace("\n", "\r\n");
+
                 string[] splitString = Regex.Split(src, @"(#type)( )+([a-zA-Z]+)", RegexOptions.ExplicitCapture);
 
                 int index = src.IndexOf("#type", StringComparison.Ordinal) + 6;

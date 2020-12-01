@@ -10,6 +10,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Vector2 = OpenTK.Mathematics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
 namespace Nyx.Core
@@ -40,6 +41,11 @@ namespace Nyx.Core
         public static void AddScene(string name, Scene scene)
         {
             SceneManager.AddScene(name, scene);
+        }
+
+        public static void AddBaseSize(Vector2 baseSize)
+        {
+            SceneManager.BaseSize = baseSize;
         }
 
         protected override void OnLoad()
@@ -90,9 +96,12 @@ namespace Nyx.Core
                      ClearBufferMask.StencilBufferBit);
 
             // Current scene renders
-            SceneManager.CurrentScene.Render(ref deltaTime);
+            // TODO: fix this! something wrong happenes in this render call
+            // SceneManager.CurrentScene.Render(ref deltaTime);
 
+            SceneManager.CurrentScene.ImGui();
             Framebuffer.Detach();
+
 
             _controller.Render(ref deltaTime);
 

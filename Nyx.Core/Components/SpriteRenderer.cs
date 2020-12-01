@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Numerics;
 using System.Text.Json.Serialization;
+using Nyx.Core.Graphics;
 using Nyx.Core.Renderer;
 using Nyx.Core.Shared;
 
@@ -9,7 +10,7 @@ namespace Nyx.Core.Components
     public class SpriteRenderer : Component
     {
         private Vector4 _color;
-        private Sprite _sprite = null!;
+        private Sprite _sprite;
 
         public SpriteRenderer()
         {
@@ -51,11 +52,11 @@ namespace Nyx.Core.Components
             }
         }
 
-        [JsonIgnore] public Transform LastTransform { get; private set; } = null!;
+        [JsonIgnore] public Transform LastTransform { get; private set; }
 
         [JsonIgnore] public bool IsDirty { get; set; }
 
-        public Texture Texture { get; private set; } = null!;
+        public Texture? Texture { get; private set; }
 
         public void Init(Vector4 color, Sprite sprite)
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Logger;
+using OpenTK.Mathematics;
 
 namespace Nyx.Core.Scenes
 {
@@ -11,6 +12,7 @@ namespace Nyx.Core.Scenes
         private static Scene _currentScene;
 
         public static readonly Dictionary<string, Scene> Scenes = new();
+        public static Vector2 BaseSize { get; set; }
         public static Scene CurrentScene => _currentScene;
 
         public static void AddScene(string name, Scene scene)
