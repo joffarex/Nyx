@@ -4,21 +4,27 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Nyx.Core.Entities;
 using Nyx.Core.Logger;
+using Nyx.Core.Renderer;
 
 namespace Nyx.Core.Scenes
 {
     public abstract class Scene : IDisposable
     {
+        protected readonly BatchRenderer BatchRenderer = new();
+
         protected readonly List<Entity> Entities = new();
         protected readonly ILogger<Scene> Logger = SerilogLogger.Factory.CreateLogger<Scene>();
         public bool IsRunning { get; private set; }
         public bool SceneLoaded { get; protected set; }
         public Entity ActiveEntity { get; protected set; }
 
-        //camera
+
+        public Camera2D Camera2D { get; set; }
 
         public virtual void Dispose()
         {
+            BatchRenderer.Dispose();
+
             foreach (Entity entity in Entities)
             {
                 entity.Dispose();
@@ -32,6 +38,7 @@ namespace Nyx.Core.Scenes
             foreach (Entity entity in Entities)
             {
                 entity.Start();
+                BatchRenderer.Add(entity);
             }
 
             IsRunning = true;
@@ -47,6 +54,7 @@ namespace Nyx.Core.Scenes
             {
                 Entities.Add(entity);
                 entity.Start();
+                BatchRenderer.Add(entity);
             }
         }
 
@@ -56,6 +64,8 @@ namespace Nyx.Core.Scenes
             {
                 entity.Update(ref deltaTime);
             }
+
+            BatchRenderer.Update(ref deltaTime);
         }
 
         public virtual void Render(ref double deltaTime)
@@ -64,6 +74,8 @@ namespace Nyx.Core.Scenes
             {
                 entity.Render(ref deltaTime);
             }
+
+            BatchRenderer.Render(ref deltaTime);
         }
 
         public virtual void ImGui()
